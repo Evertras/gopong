@@ -52,12 +52,18 @@ The `join` message is sent by the client and indicates that the client would lik
 ### Joined
 
 ```
-joined <side> <paddleHeight> <paddleSpeed> <ballSpeed> <ballIncrease>
+joined <side> <tick> <paddleHeight> <paddleSpeed> <ballSpeed> <ballIncrease>
 ```
 
 The `joined` message is sent by the server and contains all configuration information about gameplay
 that the client needs to know.  The `side` parameter is either `1` or `2` and indicates the side that
-the client is controlling.
+the client is controlling if the client is able to join, or `0` if the client is an observer to a game
+that's already in progress.  If `1` or `2` is received, the client should immediately begin allowing
+control of the respective paddle.
+
+The `tick` rate is how many times per second the server updates.  This value should be used by the client
+to time its own messages to the server; the clietn should send messages to the server as often as it's
+receiving them.
 
 ### Paddle position
 
