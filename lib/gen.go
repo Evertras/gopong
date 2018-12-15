@@ -3,12 +3,19 @@
 package main
 
 import (
-	"html/template"
+	"io/ioutil"
 	"os"
+	"text/template"
 	"time"
 )
 
 func main() {
+	contents, err := ioutil.ReadFile("../front/index.html")
+
+	if err != nil {
+		panic(err)
+	}
+
 	f, err := os.Create("tmp.go")
 	defer f.Close()
 
@@ -21,7 +28,7 @@ func main() {
 		Index     string
 	}{
 		Timestamp: time.Now(),
-		Index:     "hello\nhello",
+		Index:     string(contents),
 	})
 }
 
