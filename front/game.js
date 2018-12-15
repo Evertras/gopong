@@ -4,8 +4,8 @@
 const canvas = document.getElementById("playArea");
 const ctx = canvas.getContext("2d");
 
-// Use this as a multiplier for drawing
-let currentScale = 1.0;
+// Use this as a multiplier for drawing, will be set to pixel size of canvas
+let currentScale = 1;
 
 console.log("Starting game")
 
