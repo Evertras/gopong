@@ -31,15 +31,6 @@ hit will increase it by 0.02/sec.  These values are configurable.
 
 Uses a simple protocol that's just space delimited text.  Each message is separated by a new line.
 
-```
-join 1
-join 2
-pos 1 0.4
-pos 2 0.4
-pos 1 0.4
-pos 2 0.53
-```
-
 The server has a configurable tick rate that defaults to 20 Hz.  Position information will be sent on each tick for both paddles and the ball.
 
 The following messages are sent:
