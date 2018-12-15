@@ -3,11 +3,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/evertras/gopong/lib"
+	"github.com/evertras/gopong/lib/static"
 )
 
-//go:generate go run gen.go
-
 func main() {
-	fmt.Println(lib.Index())
+	fmt.Println(static.StaticHtmlIndex)
 }
