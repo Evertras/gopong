@@ -1,11 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
-	"github.com/evertras/gopong/lib/static"
+	"github.com/evertras/gopong/lib/server"
 )
 
 func main() {
-	fmt.Println(static.StaticHtmlIndex)
+	s := server.Server{}
+
+	log.Fatal(s.Listen(":8000"))
 }
