@@ -15,10 +15,10 @@ const (
 
 // Paddle describes the current state of a paddle
 type Paddle struct {
-	Side   PaddleSide
-	Center float64
-	Speed  float64
-	Height float64
+	Side   PaddleSide `json:"p"`
+	Center float64    `json:"c"`
+	Speed  float64    `json:"s"`
+	Height float64    `json:"h"`
 }
 
 // Step will update the paddle's state for the given duration, bounding the paddle to the play area

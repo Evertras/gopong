@@ -1,12 +1,67 @@
 package game
 
 import (
+	"encoding/json"
 	"math"
 	"testing"
 	"time"
 )
 
-const epsilon = 0.0001
+func TestPaddleMarshalsToJson(t *testing.T) {
+	paddle := &Paddle{
+		Center: 0.5,
+		Height: 0.4,
+		Side:   PaddleLeft,
+		Speed:  0.1,
+	}
+
+	b, err := json.Marshal(paddle)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	unmarshaled := &Paddle{}
+
+	err = json.Unmarshal(b, unmarshaled)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if unmarshaled.Speed != paddle.Speed {
+		t.Error("Speed not equal")
+	}
+
+	if unmarshaled.Height != paddle.Height {
+		t.Error("Height not equal")
+	}
+
+	if unmarshaled.Side != paddle.Side {
+		t.Error("Side not equal")
+	}
+
+	if unmarshaled.Speed != paddle.Speed {
+		t.Error("Speed not equal")
+	}
+}
+
+func BenchmarkPaddleMarshalJson(b *testing.B) {
+	paddle := &Paddle{
+		Center: 0.5,
+		Height: 0.4,
+		Side:   PaddleLeft,
+		Speed:  0.1,
+	}
+
+	for n := 0; n < b.N; n++ {
+		_, err := json.Marshal(paddle)
+
+		if err != nil {
+			b.Fatal(err)
+		}
+	}
+}
 
 func TestPaddleStepMovesPaddle(t *testing.T) {
 	const initialPos = 0.5
