@@ -4,7 +4,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/evertras/gopong/lib/static"
+	"github.com/Evertras/gopong/lib/static"
 )
 
 // Server is an HTTP server that will serve static content and handle web socket connections

@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/evertras/gopong/lib/server"
+	"github.com/Evertras/gopong/lib/server"
 )
 
 func main() {
