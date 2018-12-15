@@ -27,13 +27,19 @@ The paddle can be referenced as either `1` or `2`, with `1` on the left and `2` 
 The ball will slowly speed up over time with each paddle hit.  Its initial speed is 0.05/sec, and each paddle
 hit will increase it by 0.02/sec.  These values are configurable.
 
+## Connecting
+
+To connect, a client must send a GET to `/connect`.  An upgrade request will be sent, and if successful,
+messages will begin to flow as described below.
+
 ## Web socket protocol
 
 Uses a simple protocol that's just space delimited text.  Each message is separated by a new line.
 
-The server has a configurable tick rate that defaults to 20 Hz.  Position information will be sent on each tick for both paddles and the ball.
+The server has a configurable tick rate that defaults to 20 Hz.  Position information will be sent on
+each tick for both paddles and the ball.
 
-The following messages are sent:
+The following messages are sent.
 
 ### Join
 
