@@ -9,5 +9,7 @@ import (
 func main() {
 	s := server.Server{}
 
+	log.Println("Starting")
+
 	log.Fatal(s.Listen(":8000"))
 }

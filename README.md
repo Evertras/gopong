@@ -4,6 +4,13 @@
 
 A simple game of multiplayer Pong in HTML with a Go server backing it.
 
+## Running
+
+`make run` will generate static content into the build and run the server.
+
+If you don't have `make`, do `go run ./cmd/gopong/main.go` to run.  You'll need to do
+`go generate ./lib/static/` beforehand if you make any changes in the `static` folder.
+
 ## Playfield
 
 The playfield is an X/Y coordinate system where positive X points to the right and positive Y
