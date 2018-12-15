@@ -54,3 +54,29 @@ sizeCanvas();
 drawPaddle(1, 0.5, 0.2);
 drawPaddle(2, 0.75, 0.2);
 drawBall(0.6, 0.75);
+
+window.addEventListener("load", function(evt) {
+    let ws = new WebSocket("ws://localhost:8000/join");
+
+    ws.onopen = function(evt) {
+        console.log("OPEN");
+    }
+
+    ws.onclose = function(evt) {
+        console.log("CLOSE");
+    }
+
+    ws.onmessage = function(evt) {
+        console.log("RESPONSE: " + evt.data);
+    }
+
+    ws.onerror = function(evt) {
+        console.log("ERROR: " + evt.data);
+    }
+
+    setInterval(() => {
+        let time = new Date();
+        console.log("SEND: " + time);
+        ws.send(time);
+    }, 1000);
+});

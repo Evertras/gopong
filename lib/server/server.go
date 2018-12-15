@@ -29,6 +29,8 @@ func (s *Server) Listen(addr string) error {
 	})
 	// </jank>
 
+	mux.HandleFunc("/join", join)
+
 	httpServer := http.Server{
 		Addr:    ":8000",
 		Handler: mux,

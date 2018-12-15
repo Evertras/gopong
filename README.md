@@ -4,6 +4,9 @@
 
 A simple game of multiplayer Pong in HTML with a Go server backing it.
 
+Note: the `vendor` folder is checked in intentionally, but in a 'real' project this should
+be handled better by the build system.  For this, it's fine.
+
 ## Running
 
 `make run` will generate static content into the build and run the server.
