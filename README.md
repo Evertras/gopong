@@ -30,8 +30,6 @@ at the start of the game.
 The paddles are a configurable height, with a default of 0.2.  Movement is done with the arrow keys at
 a configurable speed that defaults to 0.5/sec.
 
-The paddle can be referenced as either `1` or `2`, with `1` on the left and `2` on the right.
-
 ## Ball
 
 The ball will slowly speed up over time with each paddle hit.  Its initial speed is 0.05/sec, and each paddle
@@ -44,70 +42,5 @@ messages will begin to flow as described below.
 
 ## Web socket protocol
 
-Uses a simple protocol that's just space delimited text.  Each message is separated by a new line.
-
-The server has a configurable tick rate that defaults to 20 Hz.  Position information will be sent on
-each tick for both paddles and the ball.
-
-The following messages are sent.
-
-### Join
-
-```
-join
-```
-
-The `join` message is sent by the client and indicates that the client would like to join the game.
-
-### Joined
-
-```
-joined <side> <tick> <paddleHeight> <paddleSpeed> <ballSpeed> <ballIncrease>
-```
-
-The `joined` message is sent by the server and contains all configuration information about gameplay
-that the client needs to know.  The `side` parameter is either `1` or `2` and indicates the side that
-the client is controlling if the client is able to join, or `0` if the client is an observer to a game
-that's already in progress.  If `1` or `2` is received, the client should immediately begin allowing
-control of the respective paddle.
-
-The `tick` rate is how many times per second the server updates.  This value should be used by the client
-to time its own messages to the server; the clietn should send messages to the server as often as it's
-receiving them.
-
-### Paddle position
-
-```
-paddle <side> <center> <speed>
-
-paddle 1 0.358 -0.2
-```
-
-The `player` is either `1` or `2`.
-
-The `center` is a value from 0 to 1 that indicates the center of the player's paddle in terms of a
-percentage of the height of the playfield.  For example, a value of `0.5` would indicate the player's
-paddle is precisely in the center.  Since the player's paddle has a height component to it, this
-value will technically range from `[paddleHeight/2, 1 - paddleHeight/2]`.
-
-The `speed` is the current speed of the paddle.  When positive, the paddle is moving down.  When negative,
-the paddle is moving up.  When 0, the paddle is stationary.  The client should use this value to interpolate
-paddle movement between ticks.
-
-When sent by the server, this indicates the player's authoritative position/speed.  When sent by the client,
-this indicates the client's desired position/speed.  The server will only contradict the client if the difference
-is noticeable to prevent cheating while allowing relatively smooth controls for the client.
-
-### Ball position
-
-```
-ball <x> <y> <xVel> <yVel>
-
-ball 0.4 0.85 0.03 0.048
-```
-
-This message indicates the authoritative position and velocity of the ball.
-
-For example, a message with `0.5 0.75 0.03 0.048` indicates the ball is precisely in the center for its X coordinate
-and 75% of the way to the bottom for its Y coordinate, and it is moving at a speed of 0.03 in the X direction and 0.048
-in the Y direction.  The client should use the velocity to interpolate the ball's position between ticks.
+The server has a configurable tick rate that defaults to 20 Hz.  Each message is the full state of the game
+encoded in JSON.
