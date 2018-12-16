@@ -8,8 +8,6 @@ window.addEventListener("load", function(evt) {
     // Use this as a multiplier for drawing, will be set to pixel size of canvas
     let currentScale = 1;
 
-    console.log("Starting game")
-
     function sizeCanvas() {
         let dim = Math.min(window.innerWidth, window.innerHeight);
 

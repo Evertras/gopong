@@ -12,12 +12,18 @@ import (
 	"github.com/Evertras/gopong/lib/static"
 )
 
+// Config contains all configuration to run the server
+type Config struct {
+	TickRate time.Duration
+	GameCfg  game.Config
+}
+
 // Server is an HTTP server that will serve static content and handle web socket connections
 type Server struct {
 	State *game.State
 
 	ctx context.Context
-	cfg game.Config
+	cfg Config
 
 	connectionMutex sync.Mutex
 
@@ -25,9 +31,9 @@ type Server struct {
 }
 
 // New creates a new server and initializes its game state, but does not start the game
-func New(ctx context.Context, cfg game.Config) *Server {
+func New(ctx context.Context, cfg Config) *Server {
 	return &Server{
-		State: game.New(cfg),
+		State: game.New(cfg.GameCfg),
 
 		ctx:         ctx,
 		cfg:         cfg,
@@ -56,7 +62,7 @@ func (s *Server) Listen(addr string) error {
 	mux.HandleFunc("/join", join(s))
 
 	go func() {
-		ticker := time.NewTicker(time.Millisecond * 100)
+		ticker := time.NewTicker(s.cfg.TickRate)
 		defer ticker.Stop()
 		d := time.Now()
 		for {
