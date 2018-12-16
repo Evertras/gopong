@@ -9,30 +9,68 @@ import (
 
 var upgrader = websocket.Upgrader{}
 
-func join(w http.ResponseWriter, req *http.Request) {
-	c, err := upgrader.Upgrade(w, req, nil)
+var connectionIDCounter = 0
 
-	if err != nil {
-		log.Println("upgrade error:", err)
-		return
-	}
+type connection struct {
+	out chan []byte
+	in  chan []byte
+}
 
-	defer c.Close()
-
-	for {
-		mt, message, err := c.ReadMessage()
+func join(s *Server) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
+		c, err := upgrader.Upgrade(w, req, nil)
 
 		if err != nil {
-			log.Println("read error:", err)
+			log.Println("upgrade error:", err)
+			return
 		}
 
-		log.Println("recv:", mt, string(message))
+		conn := connection{
+			out: make(chan []byte, 5),
+			in:  make(chan []byte, 5),
+		}
 
-		err = c.WriteMessage(mt, message)
+		// Conveniently this mutex will double to make connectionIDCounter thread safe
+		s.connectionMutex.Lock()
 
-		if err != nil {
-			log.Println("write error:", err)
-			break
+		connectionID := connectionIDCounter
+		connectionIDCounter++
+		s.connections[connectionID] = conn
+
+		s.connectionMutex.Unlock()
+
+		defer func() {
+			s.connectionMutex.Lock()
+			defer s.connectionMutex.Unlock()
+
+			c.Close()
+			delete(s.connections, connectionID)
+		}()
+
+		go func() {
+			for {
+				_, message, err := c.ReadMessage()
+
+				if err != nil {
+					log.Println("read error:", err)
+					return
+				}
+
+				conn.in <- message
+			}
+		}()
+
+		for {
+			select {
+			case msg := <-conn.out:
+				if err := c.WriteMessage(websocket.TextMessage, msg); err != nil {
+					log.Println("write error:", err)
+					return
+				}
+
+			case msg := <-conn.in:
+				log.Println("recv:", string(msg))
+			}
 		}
 	}
 }

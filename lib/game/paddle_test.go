@@ -11,7 +11,6 @@ func TestPaddleMarshalsToJson(t *testing.T) {
 	paddle := &Paddle{
 		Center: 0.5,
 		Height: 0.4,
-		Side:   PaddleLeft,
 		Speed:  0.1,
 	}
 
@@ -37,10 +36,6 @@ func TestPaddleMarshalsToJson(t *testing.T) {
 		t.Error("Height not equal")
 	}
 
-	if unmarshaled.Side != paddle.Side {
-		t.Error("Side not equal")
-	}
-
 	if unmarshaled.Speed != paddle.Speed {
 		t.Error("Speed not equal")
 	}
@@ -50,7 +45,6 @@ func BenchmarkPaddleMarshalJson(b *testing.B) {
 	paddle := &Paddle{
 		Center: 0.5,
 		Height: 0.4,
-		Side:   PaddleLeft,
 		Speed:  0.1,
 	}
 

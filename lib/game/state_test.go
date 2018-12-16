@@ -10,13 +10,11 @@ func TestStateMarshalsToJson(t *testing.T) {
 		PaddleLeft: &Paddle{
 			Center: 0.5,
 			Height: 0.4,
-			Side:   PaddleLeft,
 			Speed:  0.3,
 		},
 		PaddleRight: &Paddle{
 			Center: 0.6,
 			Height: 0.7,
-			Side:   PaddleRight,
 			Speed:  0.8,
 		},
 		Ball: &Ball{
@@ -60,13 +58,11 @@ func BenchmarkStateMarshalJson(b *testing.B) {
 		PaddleLeft: &Paddle{
 			Center: 0.5,
 			Height: 0.4,
-			Side:   PaddleLeft,
 			Speed:  0.3,
 		},
 		PaddleRight: &Paddle{
 			Center: 0.6,
 			Height: 0.7,
-			Side:   PaddleRight,
 			Speed:  0.8,
 		},
 		Ball: &Ball{

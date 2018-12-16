@@ -10,14 +10,12 @@ func TestBallStepMovesBall(t *testing.T) {
 	pLeft := &Paddle{
 		Center: 0.5,
 		Height: 0.1,
-		Side:   PaddleLeft,
 		Speed:  0,
 	}
 
 	pRight := &Paddle{
 		Center: 0.5,
 		Height: 0.1,
-		Side:   PaddleLeft,
 		Speed:  0,
 	}
 
@@ -54,14 +52,12 @@ func TestBallStepBouncesBallOffFloor(t *testing.T) {
 	pLeft := &Paddle{
 		Center: 0.5,
 		Height: 0.1,
-		Side:   PaddleLeft,
 		Speed:  0,
 	}
 
 	pRight := &Paddle{
 		Center: 0.5,
 		Height: 0.1,
-		Side:   PaddleLeft,
 		Speed:  0,
 	}
 
@@ -101,14 +97,12 @@ func TestBallStepBouncesBallOffCeiling(t *testing.T) {
 	pLeft := &Paddle{
 		Center: 0.5,
 		Height: 0.1,
-		Side:   PaddleLeft,
 		Speed:  0,
 	}
 
 	pRight := &Paddle{
 		Center: 0.5,
 		Height: 0.1,
-		Side:   PaddleLeft,
 		Speed:  0,
 	}
 
