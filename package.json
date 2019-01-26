@@ -1,0 +1,22 @@
+{
+  "name": "gopong",
+  "version": "0.0.1",
+  "main": "index.js",
+  "dependencies": {
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evertras/gopong.git"
+  },
+  "author": "Brandon Fulljames",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/evertras/gopong/issues"
+  }
+}

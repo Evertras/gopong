@@ -13,3 +13,7 @@ gopong
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+# Javascript stuff
+node_modules/
+
