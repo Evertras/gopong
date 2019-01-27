@@ -1,3 +1,5 @@
+import { Paddle } from "./types";
+
 export class Connection {
     constructor(endpoint: string) {
         let ws = new WebSocket(endpoint);

@@ -8,8 +8,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Evertras/gopong/lib/game"
-	"github.com/Evertras/gopong/lib/static"
+	metrics "github.com/armon/go-metrics"
+	"github.com/evertras/gopong/lib/game"
+	"github.com/evertras/gopong/lib/static"
 )
 
 // Config contains all configuration to run the server
@@ -41,6 +42,8 @@ func New(ctx context.Context, cfg Config) *Server {
 	}
 }
 
+var metricKeyGameLoopActive = []string{"game", "loop", "active"}
+
 // Listen will start listening and block until the server closes
 func (s *Server) Listen(addr string) error {
 	mux := http.NewServeMux()
@@ -65,9 +68,11 @@ func (s *Server) Listen(addr string) error {
 		ticker := time.NewTicker(s.cfg.TickRate)
 		defer ticker.Stop()
 		d := time.Now()
+		startTime := d
 		for {
 			select {
 			case <-ticker.C:
+				startTime = time.Now()
 				msg, err := s.State.Step(time.Since(d))
 
 				if err != nil {
@@ -81,6 +86,8 @@ func (s *Server) Listen(addr string) error {
 				s.connectionMutex.Unlock()
 
 				d = time.Now()
+
+				metrics.MeasureSince(metricKeyGameLoopActive, startTime)
 			}
 		}
 	}()

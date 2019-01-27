@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	metrics "github.com/armon/go-metrics"
 	"github.com/gorilla/websocket"
 )
 
@@ -15,6 +16,9 @@ type connection struct {
 	out chan []byte
 	in  chan []byte
 }
+
+var metricKeyWsDataWrite = []string{"ws", "data", "write"}
+var metricKeyWsDataRead = []string{"ws", "data", "recv"}
 
 func join(s *Server) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
@@ -63,6 +67,8 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 		for {
 			select {
 			case msg := <-conn.out:
+				metrics.IncrCounter(metricKeyWsDataWrite, float32(len(msg)))
+
 				if err := c.WriteMessage(websocket.TextMessage, msg); err != nil {
 					log.Println("write error:", err)
 					return
@@ -70,6 +76,8 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 
 			case msg := <-conn.in:
 				log.Println("recv:", string(msg))
+
+				metrics.IncrCounter(metricKeyWsDataRead, float32(len(msg)))
 			}
 		}
 	}

@@ -14,6 +14,9 @@ gopong
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# TICK sandbox volume
+tick/data
+
 # Javascript stuff
 node_modules/
 front/build
