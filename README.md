@@ -40,9 +40,55 @@ hit will increase it by 0.02/sec.  These values are configurable.
 ## Connecting
 
 To connect, a client must send a GET to `/connect`.  An upgrade request will be sent, and if successful,
-messages will begin to flow as described below.
+messages will begin to flow as described below.  All messages sent via WebSocket will be encoded in JSON for
+simplicity.  **Note:** for future performance/optimization this is likely better served with a binary
+protocol to drastically cut down on network traffic.  This is just simpler for now.
 
 ## Web socket protocol
 
-The server has a configurable tick rate that defaults to 20 Hz.  Each message is the full state of the game
-encoded in JSON.
+The first message sent back to the client immediately describes the game they are joining.
+
+```json
+{
+    "paddleHeight": 0.2,
+    "paddleSpeedPerSecond": 0.5,
+    "ballRadius": 0.1
+}
+```
+
+Each subsequent message is the full state of the game encoded in JSON.  The schema contains extremely
+short names for bandwidth reasons.  Comments have been added below for clarity.
+
+```json
+{
+    // Left paddle
+    "pL": {
+        // Center
+        "c": 0.5,
+
+        // Speed
+        "s": 0.3,
+    },
+
+    // Right paddle
+    "pR": {
+        "c": 0.5,
+        "s": -0.1,
+    },
+
+    // Ball
+    "b": {
+        // Center X coordinate
+        "pX": 0.3,
+
+        // Center Y coordinate
+        "pY": 0.853,
+
+        // Velocity X coordinate (units/sec)
+        "vX": 0.3,
+
+        // Velocity Y coordinate (units/sec)
+        "vY": -0.2,
+    }
+}
+```

@@ -2,11 +2,13 @@
   "name": "gopong",
   "version": "0.0.1",
   "main": "index.js",
-  "dependencies": {
+  "devDependencies": {
+    "ts-loader": "^5.3.3",
     "tslint": "^5.12.1",
-    "typescript": "^3.2.4"
+    "typescript": "^3.2.4",
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.1"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

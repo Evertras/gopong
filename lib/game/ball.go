@@ -10,7 +10,7 @@ type Ball struct {
 	VelX float64 `json:"vX"`
 	VelY float64 `json:"vY"`
 
-	Radius float64 `json:"r"`
+	Radius float64 `json:"-"`
 }
 
 // Step moves the ball, bouncing off the ceiling, floor, and paddles

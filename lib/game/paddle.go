@@ -6,7 +6,7 @@ import "time"
 type Paddle struct {
 	Center float64 `json:"c"`
 	Speed  float64 `json:"s"`
-	Height float64 `json:"h"`
+	Height float64 `json:"-"`
 }
 
 // Step will update the paddle's state for the given duration, bounding the paddle to the play area
