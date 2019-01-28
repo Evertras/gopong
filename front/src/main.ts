@@ -1,5 +1,6 @@
 import { SquareRenderTarget } from './graphics/renderTarget';
 import { Connection } from './network/connection';
+import { StateMessage, GameConfigMessage } from './network/types';
 
 function getContext(): CanvasRenderingContext2D {
     const canvas = document.getElementById("playArea") as HTMLCanvasElement;
@@ -26,7 +27,9 @@ window.addEventListener("load", function() {
         target.updateSize(window.innerWidth, window.innerHeight);
     })
 
-    /*
+    const paddleHeight = 0.1;
+    const ballRadius = 0.02;
+
     function drawPaddle(player: number, pos: number, heightPercent: number) {
         // Dealing with [0,1] coordinates
         const width = 0.03;
@@ -41,13 +44,22 @@ window.addEventListener("load", function() {
         target.circle(x, y, r);
     }
 
-    function drawState(s) {
+    function drawState(s: StateMessage) {
         target.begin();
-        drawPaddle(1, s.pL.c, s.pL.h);
-        drawPaddle(2, s.pR.c, s.pR.h);
-        drawBall(s.b.pX, s.b.pY, s.b.r);
+        drawPaddle(1, s.pL.c, paddleHeight);
+        drawPaddle(2, s.pR.c, paddleHeight);
+        drawBall(s.b.pX, s.b.pY, ballRadius);
     }
-    */
 
-    const connection = new Connection("ws://localhost:8000/join");
+    const onState = (s: StateMessage) => {
+        drawState(s);
+    };
+
+    const onGameConfig = (c: GameConfigMessage) => {
+        console.log("Got config!", c);
+    };
+
+    const connection = new Connection("ws://localhost:8000/join", onState, onGameConfig);
+
+    connection.start();
 });
