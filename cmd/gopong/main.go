@@ -18,6 +18,7 @@ func main() {
 			BallRadius:   0.02,
 			PaddleHeight: 0.2,
 		},
+		ReadStaticFilesPerRequest: true,
 	}
 
 	sink, err := metrics.NewMetricSinkFromURL("statsd://localhost:8125")

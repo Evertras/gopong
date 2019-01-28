@@ -17,8 +17,14 @@ function getContext(): CanvasRenderingContext2D {
     return ctxOrNull as CanvasRenderingContext2D;
 }
 
-window.addEventListener("load", function(evt) {
+window.addEventListener("load", function() {
     const target: SquareRenderTarget = new SquareRenderTarget(getContext());
+
+    target.updateSize(window.innerWidth, window.innerHeight);
+
+    window.addEventListener("resize", function() {
+        target.updateSize(window.innerWidth, window.innerHeight);
+    })
 
     /*
     function drawPaddle(player: number, pos: number, heightPercent: number) {

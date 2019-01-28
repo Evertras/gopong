@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"sync"
@@ -15,8 +16,16 @@ import (
 
 // Config contains all configuration to run the server
 type Config struct {
+	// TickRate is how long between each update tick
 	TickRate time.Duration
-	GameCfg  game.Config
+
+	// GameCfg is the game configuration, such as paddle height, etc.
+	GameCfg game.Config
+
+	// ReadStaticFilesPerRequest determines if the server will read from disk on each request
+	// or use the precompiled static files.  Useful for development, should not
+	// be on otherwise.
+	ReadStaticFilesPerRequest bool
 }
 
 // Server is an HTTP server that will serve static content and handle web socket connections
@@ -51,15 +60,37 @@ func (s *Server) Listen(addr string) error {
 	// <jank>
 	// Note: the following is jank for prototype purposes, this should
 	// be an in-memory file system in a for-reals app... but this is easier
-	mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		io.WriteString(w, static.StaticHtmlIndex)
-	})
-	mux.HandleFunc("/game.js", func(w http.ResponseWriter, req *http.Request) {
-		io.WriteString(w, static.StaticJsGame)
-	})
-	mux.HandleFunc("/style.css", func(w http.ResponseWriter, req *http.Request) {
-		io.WriteString(w, static.StaticCssStyle)
-	})
+	if s.cfg.ReadStaticFilesPerRequest {
+		log.Println("Reading files from disk for every request, ONLY USE THIS FOR DEV MODE!")
+
+		fileReaderFactory := func(f string) func(w http.ResponseWriter, req *http.Request) {
+			return func(w http.ResponseWriter, req *http.Request) {
+				index, err := ioutil.ReadFile(f)
+
+				if err != nil {
+					log.Printf("Error reading index.html: %v", err)
+					w.WriteHeader(500)
+					return
+				}
+
+				io.WriteString(w, string(index))
+			}
+		}
+
+		mux.HandleFunc("/", fileReaderFactory("./front/index.html"))
+		mux.HandleFunc("/game.js", fileReaderFactory("./front/game.js"))
+		mux.HandleFunc("/style.css", fileReaderFactory("./front/style.css"))
+	} else {
+		mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+			io.WriteString(w, static.StaticHtmlIndex)
+		})
+		mux.HandleFunc("/game.js", func(w http.ResponseWriter, req *http.Request) {
+			io.WriteString(w, static.StaticJsGame)
+		})
+		mux.HandleFunc("/style.css", func(w http.ResponseWriter, req *http.Request) {
+			io.WriteString(w, static.StaticCssStyle)
+		})
+	}
 	// </jank>
 
 	mux.HandleFunc("/join", join(s))

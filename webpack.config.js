@@ -18,5 +18,6 @@ module.exports = {
     output: {
         filename: 'game.js',
         path: path.resolve(__dirname, 'front')
-    }
+    },
+    watch: false
 };

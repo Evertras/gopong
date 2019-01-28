@@ -19,10 +19,10 @@ export class SquareRenderTarget {
      * @param height The height in pixels
      */
     public updateSize(width: number, height: number) {
-        this.pixelScale = Math.min(this.ctx.canvas.height, this.ctx.canvas.width);
+        this.pixelScale = Math.min(width, height);
 
-        this.ctx.canvas.width = width;
-        this.ctx.canvas.height = height;
+        this.ctx.canvas.width = this.pixelScale;
+        this.ctx.canvas.height = this.pixelScale;
     }
 
     /**
