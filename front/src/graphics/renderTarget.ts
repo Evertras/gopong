@@ -48,7 +48,7 @@ export class SquareRenderTarget {
             height * this.pixelScale
         );
 
-        //this.ctx.fill();
+        this.ctx.fill();
     }
 
     /**
