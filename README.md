@@ -59,7 +59,7 @@ The first message sent back to the client immediately describes the game they ar
 Each subsequent message is the full state of the game encoded in JSON.  The schema contains extremely
 short names for bandwidth reasons.  Comments have been added below for clarity.
 
-```json
+```javascript
 {
     // Left paddle
     "pL": {
