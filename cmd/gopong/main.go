@@ -13,7 +13,7 @@ import (
 func main() {
 	ctx := context.Background()
 	cfg := server.Config{
-		TickRate: time.Millisecond * 10,
+		TickRate: time.Millisecond * 50,
 		GameCfg: game.Config{
 			BallRadius:   0.02,
 			PaddleHeight: 0.2,

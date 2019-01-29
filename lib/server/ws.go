@@ -75,7 +75,7 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 				}
 
 			case msg := <-conn.in:
-				log.Println("recv:", string(msg))
+				//log.Println("recv:", string(msg))
 
 				metrics.IncrCounter(metricKeyWsDataRead, float32(len(msg)))
 			}

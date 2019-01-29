@@ -5,7 +5,7 @@ import "time"
 // Paddle describes the current state of a paddle
 type Paddle struct {
 	Center float64 `json:"c"`
-	Speed  float64 `json:"s"`
+	Speed  float64 `json:"-"`
 	Height float64 `json:"-"`
 }
 

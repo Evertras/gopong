@@ -28,16 +28,16 @@ func TestPaddleMarshalsToJson(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if unmarshaled.Speed != paddle.Speed {
-		t.Error("Speed not equal")
+	if unmarshaled.Speed == paddle.Speed {
+		t.Error("Speed should not be marshaled, but it was")
 	}
 
 	if unmarshaled.Height == paddle.Height {
 		t.Error("Height should not be marshaled, but it was")
 	}
 
-	if unmarshaled.Speed != paddle.Speed {
-		t.Error("Speed not equal")
+	if unmarshaled.Center != paddle.Center {
+		t.Error("Center not equal")
 	}
 }
 

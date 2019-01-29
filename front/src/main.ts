@@ -1,6 +1,7 @@
 import { SquareRenderTarget } from './graphics/renderTarget';
 import { Connection } from './network/connection';
 import { StateMessage, GameConfigMessage } from './network/types';
+import { GameState } from './game/state';
 
 function getContext(): CanvasRenderingContext2D {
     const canvas = document.getElementById("playArea") as HTMLCanvasElement;
@@ -29,6 +30,9 @@ window.addEventListener("load", function() {
 
     const paddleHeight = 0.1;
     const ballRadius = 0.02;
+    const paddleMaxSpeedPerSecond = 0.1;
+
+    const game = new GameState(paddleHeight, paddleMaxSpeedPerSecond, ballRadius);
 
     function drawPaddle(player: number, pos: number, heightPercent: number) {
         // Dealing with [0,1] coordinates
@@ -44,15 +48,17 @@ window.addEventListener("load", function() {
         target.circle(x, y, r);
     }
 
-    function drawState(s: StateMessage) {
+    function drawState(s: GameState) {
         target.begin();
-        drawPaddle(1, s.pL.c, paddleHeight);
-        drawPaddle(2, s.pR.c, paddleHeight);
-        drawBall(s.b.pX, s.b.pY, ballRadius);
+        drawPaddle(1, s.paddleLeft.center, s.paddleLeft.height);
+        drawPaddle(2, s.paddleRight.center, s.paddleRight.height);
+        drawBall(s.ball.x, s.ball.y, s.ball.radius);
     }
 
     const onState = (s: StateMessage) => {
-        drawState(s);
+        game.applyServerUpdate(s);
+
+        drawState(game);
     };
 
     const onGameConfig = (c: GameConfigMessage) => {
