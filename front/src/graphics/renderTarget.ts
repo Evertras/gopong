@@ -55,7 +55,7 @@ export class SquareRenderTarget {
      * Draws a circle in [0,1] space.
      * @param x The x coordinate of the center within [0,1]
      * @param y The y coordinate of the center within [0,1]
-     * @param r The z coordinate of the center within [0,1]
+     * @param r The radius of the circle within [0,1]
      */
     public circle(x: number, y: number, r: number) {
         this.ctx.arc(
