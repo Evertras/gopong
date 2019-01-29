@@ -11,7 +11,7 @@ export class Ball implements GameObject {
     }
 
     public applyServerUpdate(ballState: BallMessage) {
-        this.x = ballState.pX;
-        this.y = ballState.pY;
+        this.x = ballState.x;
+        this.y = ballState.y;
     }
 }

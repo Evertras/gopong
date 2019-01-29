@@ -65,30 +65,20 @@ short names for bandwidth reasons.  Comments have been added below for clarity.
     "pL": {
         // Center
         "c": 0.5,
-
-        // Speed
-        "s": 0.3,
     },
 
     // Right paddle
     "pR": {
         "c": 0.5,
-        "s": -0.1,
     },
 
     // Ball
     "b": {
         // Center X coordinate
-        "pX": 0.3,
+        "x": 0.3,
 
         // Center Y coordinate
-        "pY": 0.853,
-
-        // Velocity X coordinate (units/sec)
-        "vX": 0.3,
-
-        // Velocity Y coordinate (units/sec)
-        "vY": -0.2,
+        "y": 0.853,
     }
 }
 ```

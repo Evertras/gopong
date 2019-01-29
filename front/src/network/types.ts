@@ -1,13 +1,10 @@
 export interface PaddleMessage {
     c: number;
-    s: number;
 }
 
 export interface BallMessage {
-    pX: number;
-    pY: number;
-    vX: number;
-    vY: number;
+    x: number;
+    y: number;
 }
 
 export interface StateMessage {

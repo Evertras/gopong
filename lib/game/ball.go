@@ -4,11 +4,11 @@ import "time"
 
 // Ball represents the ball with a position, size, and velocity
 type Ball struct {
-	PosX float64 `json:"pX"`
-	PosY float64 `json:"pY"`
+	PosX float64 `json:"x"`
+	PosY float64 `json:"y"`
 
-	VelX float64 `json:"vX"`
-	VelY float64 `json:"vY"`
+	VelX float64 `json:"-"`
+	VelY float64 `json:"-"`
 
 	Radius float64 `json:"-"`
 }
