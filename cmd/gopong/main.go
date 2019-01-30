@@ -26,7 +26,7 @@ func main() {
 }
 
 func getConfig() server.Config {
-	tickRate := pflag.IntP("tick-rate", "t", 3, "How many ticks per second to update clients.")
+	tickRate := pflag.IntP("tick-rate", "t", 5, "How many ticks per second to update clients.")
 	devMode := pflag.BoolP("dev", "d", false, "If set, serve files from disk rather than in-memory so changes can be served without a restart.")
 
 	pflag.Parse()
