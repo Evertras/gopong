@@ -4,8 +4,6 @@
 
 A simple game of multiplayer Pong in HTML with a Go server backing it.
 
-The following is optimistic/naive DDD that isn't implemented yet, and subject to all kinds of change.
-
 Note: the `vendor` folder is checked in intentionally, but in a 'real' project this should
 be handled better by the build system.  For this, it's fine.
 
