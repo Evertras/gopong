@@ -1,60 +1,41 @@
-import { StateMessage, GameConfigMessage } from "./types";
+export type DataCallback = (data: string) => void;
 
-export type StateCallback = (s: StateMessage) => void;
-export type GameConfigCallback = (s: GameConfigMessage) => void;
-
-export class Connection {
+export class LagConnection {
     private endpoint: string;
-    private stateCallback: StateCallback;
-    private gameConfigCallback: GameConfigCallback;
 
-    constructor(endpoint: string, stateCallback: StateCallback, gameConfigCallback: GameConfigCallback) {
-        this.endpoint = endpoint;
-        this.stateCallback = stateCallback;
-        this.gameConfigCallback = gameConfigCallback;
+    private ws: WebSocket | null = null;
+
+    public onData: DataCallback | null = null;
+
+    write(data: string) {
+        if (this.ws) {
+            this.ws.send(data);
+        }
     }
 
-    start() {
-        const ws = new WebSocket(this.endpoint);
+    constructor(endpoint: string) {
+        this.endpoint = endpoint;
+    }
 
-        // For now, just send some random messages for the server to read
-        const i = setInterval(() => {
-            let time = new Date();
-            ws.send(time.toISOString());
-        }, 5000);
+    public start() {
+        this.ws = new WebSocket(this.endpoint);
 
-        ws.onopen = function() {
+        this.ws.onopen = () => {
             console.log("OPEN");
         }
 
-        ws.onclose = function() {
+        this.ws.onclose = () => {
             console.log("CLOSE");
-            clearInterval(i);
+            this.ws = null;
         }
 
-        ws.onmessage = (evt: any) => {
-            const parsed = JSON.parse(evt.data);
-
-            const state = parsed as StateMessage;
-
-            if (state) {
-                // We have a state message
-                this.stateCallback(state);
-                return;
+        this.ws.onmessage = (evt: any) => {
+            if (this.onData) {
+                this.onData(evt.data);
             }
-
-            const gameConfig = parsed as GameConfigMessage;
-
-            if (gameConfig) {
-                // We have game config
-                this.gameConfigCallback(gameConfig);
-                return;
-            }
-
-            console.warn("Unknown message received:", evt.data);
         }
 
-        ws.onerror = function(evt) {
+        this.ws.onerror = function(evt) {
             console.log("ERROR: " + evt);
         }
     }

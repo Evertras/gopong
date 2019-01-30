@@ -13,6 +13,7 @@ export interface StateMessage {
     b: BallMessage;
 }
 
-export interface GameConfigMessage {
-
+export interface InputMessage {
+    m: number;
+    n: number;
 }
