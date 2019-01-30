@@ -3,7 +3,7 @@ import { Ball } from "./ball";
 import { StateMessage, InputMessage } from "./networkTypes";
 import { InputState } from "./input";
 import { SquareRenderTarget } from "../graphics/renderTarget";
-import { LagConnection } from "../network/connection";
+import { Connection } from "../network/connection";
 
 export class Game {
     public paddleLeft: Paddle;
@@ -22,9 +22,9 @@ export class Game {
 
     private renderTarget: SquareRenderTarget;
 
-    private connection: LagConnection;
+    private connection: Connection;
 
-    constructor(renderTarget: SquareRenderTarget, connection: LagConnection) {
+    constructor(renderTarget: SquareRenderTarget, connection: Connection) {
         // Temporary
         const paddleHeight = 0.1;
         const paddleMaxSpeedPerSecond = 0.1;
