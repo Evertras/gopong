@@ -5,9 +5,9 @@ import (
 	"log"
 	"time"
 
+	"github.com/Evertras/gopong/lib/game"
+	"github.com/Evertras/gopong/lib/server"
 	metrics "github.com/armon/go-metrics"
-	"github.com/evertras/gopong/lib/game"
-	"github.com/evertras/gopong/lib/server"
 	"github.com/spf13/pflag"
 )
 

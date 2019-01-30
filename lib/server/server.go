@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Evertras/gopong/lib/game"
+	"github.com/Evertras/gopong/lib/static"
 	metrics "github.com/armon/go-metrics"
-	"github.com/evertras/gopong/lib/game"
-	"github.com/evertras/gopong/lib/static"
 )
 
 // Config contains all configuration to run the server
