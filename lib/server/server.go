@@ -68,7 +68,7 @@ func (s *Server) Listen(addr string) error {
 				index, err := ioutil.ReadFile(f)
 
 				if err != nil {
-					log.Printf("Error reading index.html: %v", err)
+					log.Printf("Error reading %s: %v", f, err)
 					w.WriteHeader(500)
 					return
 				}
