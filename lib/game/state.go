@@ -1,7 +1,6 @@
 package game
 
 import (
-	"encoding/json"
 	"time"
 )
 
@@ -36,13 +35,10 @@ func New(cfg Config) *State {
 	}
 }
 
-// Step will update the game state for the given duration and
-// return the new state as a JSON marshaled byte string
-func (s *State) Step(d time.Duration) ([]byte, error) {
+// Step will update the game state for the given duration
+func (s *State) Step(d time.Duration) {
 	s.PaddleLeft.Step(d)
 	s.PaddleRight.Step(d)
 
 	s.Ball.Step(d, s.PaddleLeft, s.PaddleRight)
-
-	return json.Marshal(s)
 }

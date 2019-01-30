@@ -23,6 +23,9 @@ export class SquareRenderTarget {
 
         this.ctx.canvas.width = this.pixelScale;
         this.ctx.canvas.height = this.pixelScale;
+
+        this.ctx.font = "30px Arial";
+        this.ctx.textAlign = "center";
     }
 
     /**
@@ -67,5 +70,9 @@ export class SquareRenderTarget {
         );
 
         this.ctx.fill();
+    }
+
+    public text(s: string, x: number, y: number) {
+        this.ctx.fillText(s, x * this.pixelScale, y * this.pixelScale);
     }
 }

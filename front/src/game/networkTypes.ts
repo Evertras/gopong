@@ -1,4 +1,7 @@
 export interface PaddleMessage {
+    /**
+     * The center of the paddle from [0,1]
+     */
     c: number;
 }
 
@@ -8,12 +11,40 @@ export interface BallMessage {
 }
 
 export interface StateMessage {
-    pL: PaddleMessage;
-    pR: PaddleMessage;
-    b: BallMessage;
+    /**
+     * The inner state of the game
+     */
+    s: {
+        /**
+         * Left paddle
+         */
+        pL: PaddleMessage;
+
+        /**
+         * Right paddle
+         */
+        pR: PaddleMessage;
+
+        /**
+         * Ball
+         */
+        b: BallMessage;
+    }
+
+    /**
+     * The last input index received by this client for this state
+     */
+    n: number;
 }
 
 export interface InputMessage {
+    /**
+     * Movement axis from [-1,1]
+     */
     m: number;
+
+    /**
+     * Index of the input
+     */
     n: number;
 }

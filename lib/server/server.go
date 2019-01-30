@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"encoding/json"
 	"io"
 	"io/ioutil"
 	"log"
@@ -37,7 +38,12 @@ type Server struct {
 
 	connectionMutex sync.Mutex
 
-	connections map[int]connection
+	clients map[int]client
+}
+
+type stateMessage struct {
+	State          *game.State `json:"s"`
+	LastInputIndex int         `json:"n"`
 }
 
 // New creates a new server and initializes its game state, but does not start the game
@@ -45,9 +51,9 @@ func New(ctx context.Context, cfg Config) *Server {
 	return &Server{
 		State: game.New(cfg.GameCfg),
 
-		ctx:         ctx,
-		cfg:         cfg,
-		connections: make(map[int]connection),
+		ctx:     ctx,
+		cfg:     cfg,
+		clients: make(map[int]client),
 	}
 }
 
@@ -104,15 +110,23 @@ func (s *Server) Listen(addr string) error {
 			select {
 			case <-ticker.C:
 				startTime = time.Now()
-				msg, err := s.State.Step(time.Since(d))
+				s.State.Step(time.Since(d))
 
-				if err != nil {
-					log.Fatal(err)
+				stateMessage := stateMessage{
+					State: s.State,
 				}
 
 				s.connectionMutex.Lock()
-				for _, v := range s.connections {
-					v.out <- msg
+				for _, c := range s.clients {
+					stateMessage.LastInputIndex = 100
+
+					msg, err := json.Marshal(stateMessage)
+
+					if err != nil {
+						log.Fatal(err)
+					}
+
+					c.out <- msg
 				}
 				s.connectionMutex.Unlock()
 

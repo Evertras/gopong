@@ -12,9 +12,10 @@ var upgrader = websocket.Upgrader{}
 
 var connectionIDCounter = 0
 
-type connection struct {
-	out chan []byte
-	in  chan []byte
+type client struct {
+	out       chan []byte
+	in        chan []byte
+	lastInput int
 }
 
 var metricKeyWsDataWrite = []string{"ws", "data", "write"}
@@ -29,7 +30,7 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
-		conn := connection{
+		client := client{
 			out: make(chan []byte, 5),
 			in:  make(chan []byte, 5),
 		}
@@ -39,7 +40,7 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 
 		connectionID := connectionIDCounter
 		connectionIDCounter++
-		s.connections[connectionID] = conn
+		s.clients[connectionID] = client
 
 		s.connectionMutex.Unlock()
 
@@ -48,7 +49,7 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 			defer s.connectionMutex.Unlock()
 
 			c.Close()
-			delete(s.connections, connectionID)
+			delete(s.clients, connectionID)
 		}()
 
 		go func() {
@@ -60,13 +61,13 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 					return
 				}
 
-				conn.in <- message
+				client.in <- message
 			}
 		}()
 
 		for {
 			select {
-			case msg := <-conn.out:
+			case msg := <-client.out:
 				metrics.IncrCounter(metricKeyWsDataWrite, float32(len(msg)))
 
 				if err := c.WriteMessage(websocket.TextMessage, msg); err != nil {
@@ -74,7 +75,7 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 					return
 				}
 
-			case msg := <-conn.in:
+			case msg := <-client.in:
 				//log.Println("recv:", string(msg))
 
 				metrics.IncrCounter(metricKeyWsDataRead, float32(len(msg)))

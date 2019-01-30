@@ -15,6 +15,7 @@ export class Game {
         up: false,
         down: false
     }
+    private inputBuffer: InputState[] = [];
 
     private updateInterval: number | undefined;
     private lastUpdateMilliseconds: number = 0;
@@ -49,9 +50,19 @@ export class Game {
     }
 
     public applyServerUpdate(serverState: StateMessage) {
-        this.paddleLeft.applyServerUpdate(serverState.pL);
-        this.paddleRight.applyServerUpdate(serverState.pR);
-        this.ball.applyServerUpdate(serverState.b);
+        this.paddleLeft.applyServerUpdate(serverState.s.pL);
+        this.paddleRight.applyServerUpdate(serverState.s.pR);
+        this.ball.applyServerUpdate(serverState.s.b);
+
+        let trim = 0;
+        while(
+            trim < this.inputBuffer.length
+            && this.inputBuffer[trim].index < serverState.n
+        ) {
+            ++trim;
+        }
+
+        this.inputBuffer.splice(0, trim);
     }
 
     public inputUp(pressed: boolean) {
@@ -89,6 +100,8 @@ export class Game {
                 n: input.index
             };
 
+            this.inputBuffer.push(input);
+
             this.connection.write(JSON.stringify(inputMessage));
 
         }, stepSizeMilliseconds);
@@ -116,5 +129,7 @@ export class Game {
         this.paddleLeft.draw(this.renderTarget);
         this.paddleRight.draw(this.renderTarget);
         this.ball.draw(this.renderTarget);
+
+        this.renderTarget.text("Unprocessed inputs: " + this.inputBuffer.length, 0.5, 0.1);
     }
 }
