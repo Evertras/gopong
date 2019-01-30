@@ -2,3 +2,12 @@ language: go
 
 go:
 - "1.11"
+
+node_js:
+- "8.12"
+
+install:
+- "npm install"
+
+script:
+- "make"
