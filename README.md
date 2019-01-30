@@ -1,6 +1,6 @@
 # gopong
 
-[![Build Status](https://travis-ci.org/Evertras/gopong.svg?branch=master)](https://trapis-ci.org/Evertras/gopong)
+[![Build Status](https://travis-ci.org/Evertras/gopong.svg?branch=master)](https://travis-ci.org/Evertras/gopong)
 
 A simple game of multiplayer Pong in HTML with a Go server backing it.
 
