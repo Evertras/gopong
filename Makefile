@@ -11,8 +11,8 @@ clean:
 test:
 	go test -v ./lib/...
 
-run: generate
-	go run ./cmd/gopong/main.go
+run-dev:
+	go run ./cmd/gopong/main.go -d -t 3
 
 generate:
 	npx webpack
