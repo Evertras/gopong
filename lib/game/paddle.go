@@ -1,26 +1,21 @@
 package game
 
-import "time"
-
 // Paddle describes the current state of a paddle
 type Paddle struct {
-	Center float64 `json:"c"`
-	Speed  float64 `json:"-"`
-	Height float64 `json:"-"`
+	Center            float64 `json:"c"`
+	Height            float64 `json:"-"`
+	MaxSpeedPerSecond float64 `json:"-"`
 }
 
-// Step will update the paddle's state for the given duration, bounding the paddle to the play area
-func (p *Paddle) Step(d time.Duration) {
-	p.Center += p.Speed * d.Seconds()
+// Bound will ensure that the paddle stays within the playfield
+func (p *Paddle) Bound() {
 	halfHeight := p.Height * 0.5
 
-	if p.Speed > 0 {
-		if p.Center+halfHeight > 1 {
-			p.Center = 1 - halfHeight
-		}
-	} else if p.Speed < 0 {
-		if p.Center-halfHeight < 0 {
-			p.Center = halfHeight
-		}
+	if p.Center+halfHeight > 1 {
+		p.Center = 1 - halfHeight
+	}
+
+	if p.Center-halfHeight < 0 {
+		p.Center = halfHeight
 	}
 }

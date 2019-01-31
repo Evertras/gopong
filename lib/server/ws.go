@@ -1,9 +1,12 @@
 package server
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
+	"sync"
 
+	"github.com/Evertras/gopong/lib/game"
 	metrics "github.com/armon/go-metrics"
 	"github.com/gorilla/websocket"
 )
@@ -13,9 +16,12 @@ var upgrader = websocket.Upgrader{}
 var connectionIDCounter = 0
 
 type client struct {
-	out       chan []byte
-	in        chan []byte
-	lastInput int
+	out            chan []byte
+	in             chan []byte
+	lastInput      int
+	receivedInputs []game.InputMessage
+
+	mu sync.RWMutex
 }
 
 var metricKeyWsDataWrite = []string{"ws", "data", "write"}
@@ -30,18 +36,16 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
-		client := client{
+		client := &client{
 			out: make(chan []byte, 5),
 			in:  make(chan []byte, 5),
 		}
 
 		// Conveniently this mutex will double to make connectionIDCounter thread safe
 		s.connectionMutex.Lock()
-
 		connectionID := connectionIDCounter
 		connectionIDCounter++
 		s.clients[connectionID] = client
-
 		s.connectionMutex.Unlock()
 
 		defer func() {
@@ -76,9 +80,19 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 				}
 
 			case msg := <-client.in:
-				//log.Println("recv:", string(msg))
-
 				metrics.IncrCounter(metricKeyWsDataRead, float32(len(msg)))
+
+				inputMessage := game.InputMessage{}
+
+				// Assuming it's this for now, figure out how to select between multiple message types later
+				json.Unmarshal(msg, &inputMessage)
+
+				client.mu.Lock()
+
+				client.lastInput = inputMessage.InputIndex
+				client.receivedInputs = append(client.receivedInputs, inputMessage)
+
+				client.mu.Unlock()
 			}
 		}
 	}

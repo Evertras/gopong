@@ -12,7 +12,7 @@ test:
 	go test -v ./lib/...
 
 run-dev:
-	go run ./cmd/gopong/main.go -d -t 3
+	go run -race ./cmd/gopong/main.go -d -t 3
 
 generate:
 	npx webpack

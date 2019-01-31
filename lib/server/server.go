@@ -38,7 +38,7 @@ type Server struct {
 
 	connectionMutex sync.Mutex
 
-	clients map[int]client
+	clients map[int]*client
 }
 
 type stateMessage struct {
@@ -53,7 +53,7 @@ func New(ctx context.Context, cfg Config) *Server {
 
 		ctx:     ctx,
 		cfg:     cfg,
-		clients: make(map[int]client),
+		clients: make(map[int]*client),
 	}
 }
 
@@ -112,13 +112,23 @@ func (s *Server) Listen(addr string) error {
 				startTime = time.Now()
 				s.State.Step(time.Since(d))
 
+				s.connectionMutex.Lock()
+				for _, c := range s.clients {
+					c.mu.Lock()
+					for _, i := range c.receivedInputs {
+						s.State.ApplyInput(i)
+					}
+					c.receivedInputs = []game.InputMessage{}
+					c.mu.Unlock()
+				}
+
 				stateMessage := stateMessage{
 					State: s.State,
 				}
 
-				s.connectionMutex.Lock()
 				for _, c := range s.clients {
-					stateMessage.LastInputIndex = 100
+					c.mu.RLock()
+					stateMessage.LastInputIndex = c.lastInput
 
 					msg, err := json.Marshal(stateMessage)
 
@@ -127,6 +137,7 @@ func (s *Server) Listen(addr string) error {
 					}
 
 					c.out <- msg
+					c.mu.RUnlock()
 				}
 				s.connectionMutex.Unlock()
 

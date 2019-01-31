@@ -47,4 +47,9 @@ export interface InputMessage {
      * Index of the input
      */
     n: number;
+
+    /**
+     * How long the input lasted, in seconds
+     */
+    d: number
 }

@@ -10,13 +10,11 @@ func TestBallStepMovesBall(t *testing.T) {
 	pLeft := &Paddle{
 		Center: 0.5,
 		Height: 0.1,
-		Speed:  0,
 	}
 
 	pRight := &Paddle{
 		Center: 0.5,
 		Height: 0.1,
-		Speed:  0,
 	}
 
 	duration := time.Millisecond * 100
@@ -52,13 +50,11 @@ func TestBallStepBouncesBallOffFloor(t *testing.T) {
 	pLeft := &Paddle{
 		Center: 0.5,
 		Height: 0.1,
-		Speed:  0,
 	}
 
 	pRight := &Paddle{
 		Center: 0.5,
 		Height: 0.1,
-		Speed:  0,
 	}
 
 	duration := time.Second
@@ -97,13 +93,11 @@ func TestBallStepBouncesBallOffCeiling(t *testing.T) {
 	pLeft := &Paddle{
 		Center: 0.5,
 		Height: 0.1,
-		Speed:  0,
 	}
 
 	pRight := &Paddle{
 		Center: 0.5,
 		Height: 0.1,
-		Speed:  0,
 	}
 
 	duration := time.Second

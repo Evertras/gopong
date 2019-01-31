@@ -34,8 +34,9 @@ func getConfig() server.Config {
 	cfg := server.Config{
 		TickRate: time.Second / time.Duration(*tickRate),
 		GameCfg: game.Config{
-			BallRadius:   0.02,
-			PaddleHeight: 0.2,
+			BallRadius:              0.02,
+			PaddleHeight:            0.2,
+			MaxPaddleSpeedPerSecond: 0.1,
 		},
 		ReadStaticFilesPerRequest: *devMode,
 	}

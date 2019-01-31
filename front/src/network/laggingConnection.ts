@@ -8,11 +8,12 @@ export class LaggingConnection implements Connection {
     private endpoint: string;
 
     private ws: WebSocket | null = null;
+    private isOpen: boolean = false;
 
     public onData: DataCallback | null = null;
 
     write(data: string) {
-        if (this.ws) {
+        if (this.ws && this.isOpen) {
             this.ws.send(data);
         }
     }
@@ -26,6 +27,7 @@ export class LaggingConnection implements Connection {
 
         this.ws.onopen = () => {
             console.log("OPEN");
+            this.isOpen = true;
         }
 
         this.ws.onclose = () => {

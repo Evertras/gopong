@@ -18,7 +18,7 @@ export class Game {
     private inputBuffer: InputState[] = [];
 
     private updateInterval: number | undefined;
-    private lastUpdateMilliseconds: number = 0;
+    private lastUpdateMs: number = 0;
     private timeAccumulatedMilliseconds: number = 0;
 
     private renderTarget: SquareRenderTarget;
@@ -75,29 +75,31 @@ export class Game {
 
     public start(fps: number) {
         clearInterval(this.updateInterval);
-        this.lastUpdateMilliseconds = Date.now();
+        this.lastUpdateMs = Date.now();
 
         const stepSizeMilliseconds = 1000.0/fps;
 
         this.updateInterval = setInterval(() => {
 
-            const now = Date.now();
+            const nowMs = Date.now();
+            const frameElapsedMs = nowMs - this.lastUpdateMs;
 
-            this.timeAccumulatedMilliseconds += now - this.lastUpdateMilliseconds;
+            this.timeAccumulatedMilliseconds += frameElapsedMs;
 
-            this.lastUpdateMilliseconds = now;
+            this.lastUpdateMs = nowMs;
 
             while (this.timeAccumulatedMilliseconds > 0) {
                 this.timeAccumulatedMilliseconds -= stepSizeMilliseconds;
             }
 
-            const input = this.getCurrentInput();
+            const input = this.getCurrentInput(frameElapsedMs * 0.001);
 
             this.draw();
 
             const inputMessage: InputMessage = {
                 m: input.movementAxis,
-                n: input.index
+                n: input.index,
+                d: input.durationSeconds
             };
 
             this.inputBuffer.push(input);
@@ -107,7 +109,7 @@ export class Game {
         }, stepSizeMilliseconds);
     }
 
-    private getCurrentInput(): InputState {
+    private getCurrentInput(durationSeconds: number): InputState {
         let axis = 0;
 
         if (this.currentInputs.up) {
@@ -120,7 +122,8 @@ export class Game {
 
         return {
             movementAxis: axis,
-            index: this.inputIndex++
+            index: this.inputIndex++,
+            durationSeconds: durationSeconds
         };
     }
 

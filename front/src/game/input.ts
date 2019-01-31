@@ -8,4 +8,9 @@ export interface InputState {
      * The incrementing index of the input for ordering purposes
      */
     index: number;
+
+    /**
+     * How long the input was applied for, in seconds
+     */
+    durationSeconds: number
 }
