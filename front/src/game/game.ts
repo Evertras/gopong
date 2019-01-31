@@ -66,10 +66,12 @@ export class Game {
 
         this.inputBuffer.splice(0, trim);
 
-        for (let i = 0; i < this.inputBuffer.length; ++i) {
-            this.paddleLeft.applyMovementInput(
-                this.inputBuffer[i].movementAxis,
-                this.inputBuffer[i].durationSeconds);
+        if(this.currentInputs.serverReconciliationEnabled) {
+            for (let i = 0; i < this.inputBuffer.length; ++i) {
+                this.paddleLeft.applyMovementInput(
+                    this.inputBuffer[i].movementAxis,
+                    this.inputBuffer[i].durationSeconds);
+            }
         }
     }
 
@@ -163,8 +165,8 @@ export class Game {
         const step = 0.05;
 
         const text = [
-            "Client Side Prediction: " + (this.currentInputs.clientSidePredictionEnabled ? "ON" : "off"),
-            "Server Reconciliation: " + (this.currentInputs.serverReconciliationEnabled ? "ON" : "off"),
+            "Client Side Prediction (P): " + (this.currentInputs.clientSidePredictionEnabled ? "ON" : "off"),
+            "Server Reconciliation (R): " + (this.currentInputs.serverReconciliationEnabled ? "ON" : "off"),
             "Unprocessed inputs: " + this.inputBuffer.length,
             "Latency: " + this.connection.currentLatencyMs() + "ms"
         ];
