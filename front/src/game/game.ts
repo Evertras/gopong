@@ -29,7 +29,7 @@ export class Game {
 
     constructor(renderTarget: SquareRenderTarget, connection: Connection) {
         // Temporary
-        const paddleHeight = 0.1;
+        const paddleHeight = 0.2;
         const paddleMaxSpeedPerSecond = 0.1;
         const ballRadius = 0.02;
 

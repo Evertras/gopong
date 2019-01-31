@@ -15,6 +15,7 @@ type State struct {
 }
 
 var sampleKeyReceivedInputDuration = []string{"game", "input", "duration", "seconds"}
+var counterInputInvalid = []string{"game", "input", "invalid"}
 
 // New creates a fresh game state ready to play
 func New(cfg Config) *State {
@@ -51,8 +52,8 @@ func (s *State) ApplyInput(i InputMessage) {
 	// TODO: More sanity checks for cheating, check for accumulated time to avoid spamming
 	// input, etc.
 
-	// TODO: Notify potential cheating
 	if i.MovementAxis > 1 || i.MovementAxis < -1 || i.DurationSeconds > 0.1 {
+		metrics.IncrCounter(counterInputInvalid, 1)
 		return
 	}
 
