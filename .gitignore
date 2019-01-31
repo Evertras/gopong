@@ -20,3 +20,6 @@ tick/data
 # Javascript stuff
 node_modules/
 front/build
+
+# Build artifact for Javascript
+front/game.js
