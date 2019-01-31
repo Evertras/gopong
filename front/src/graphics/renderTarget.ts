@@ -25,7 +25,6 @@ export class SquareRenderTarget {
         this.ctx.canvas.height = this.pixelScale;
 
         this.ctx.font = "30px Arial";
-        this.ctx.textAlign = "center";
     }
 
     /**

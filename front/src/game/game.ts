@@ -133,6 +133,18 @@ export class Game {
         this.paddleRight.draw(this.renderTarget);
         this.ball.draw(this.renderTarget);
 
-        this.renderTarget.text("Unprocessed inputs: " + this.inputBuffer.length, 0.5, 0.1);
+        // Some info/debug text
+        const left = 0.3;
+        const top = 0.05;
+        const step = 0.05;
+
+        const text = [
+            "Unprocessed inputs: " + this.inputBuffer.length,
+            "Latency: " + this.connection.currentLatencyMs() + "ms"
+        ];
+
+        for (let i = 0; i < text.length; ++i) {
+            this.renderTarget.text(text[i], left, top + step*i);
+        }
     }
 }

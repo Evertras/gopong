@@ -29,6 +29,10 @@ export class LaggingConnection implements Connection {
         this.latencyMs = latencyMs;
     }
 
+    public currentLatencyMs(): number {
+        return this.latencyMs;
+    }
+
     public start() {
         this.ws = new WebSocket(this.endpoint);
 

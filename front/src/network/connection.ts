@@ -14,6 +14,11 @@ export interface Connection {
     write(data: string): void;
 
     /**
+     * The current latency of the connection, in milliseconds.
+     */
+    currentLatencyMs(): number;
+
+    /**
      * Callback for when data is received, passed back as a simple string
      */
     onData: DataCallback | null;
