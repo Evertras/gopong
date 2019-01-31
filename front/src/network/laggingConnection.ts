@@ -43,13 +43,11 @@ export class LaggingConnection implements Connection {
         }
 
         this.ws.onmessage = (evt: any) => {
-            if (this.onData) {
-                setTimeout(() => {
-                    if (this.onData) {
-                        this.onData(evt.data);
-                    }
-                }, this.latencyMs);
-            }
+            setTimeout(() => {
+                if (this.onData) {
+                    this.onData(evt.data);
+                }
+            }, this.latencyMs);
         }
 
         this.ws.onerror = function(evt) {
