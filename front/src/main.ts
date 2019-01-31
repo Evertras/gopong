@@ -31,6 +31,7 @@ window.addEventListener("load", function() {
 
     const game = new Game(target, connection);
 
+    connection.setLatencyMs(400);
     connection.start();
     game.start(30);
 

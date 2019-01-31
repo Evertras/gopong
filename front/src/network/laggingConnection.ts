@@ -9,17 +9,24 @@ export class LaggingConnection implements Connection {
 
     private ws: WebSocket | null = null;
     private isOpen: boolean = false;
+    private latencyMs: number = 0;
 
     public onData: DataCallback | null = null;
 
     write(data: string) {
-        if (this.ws && this.isOpen) {
-            this.ws.send(data);
-        }
+        setTimeout(() => {
+            if (this.ws && this.isOpen) {
+                this.ws.send(data);
+            }
+        }, this.latencyMs);
     }
 
     constructor(endpoint: string) {
         this.endpoint = endpoint;
+    }
+
+    public setLatencyMs(latencyMs: number) {
+        this.latencyMs = latencyMs;
     }
 
     public start() {
@@ -37,7 +44,11 @@ export class LaggingConnection implements Connection {
 
         this.ws.onmessage = (evt: any) => {
             if (this.onData) {
-                this.onData(evt.data);
+                setTimeout(() => {
+                    if (this.onData) {
+                        this.onData(evt.data);
+                    }
+                }, this.latencyMs);
             }
         }
 
