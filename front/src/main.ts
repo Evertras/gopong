@@ -50,6 +50,11 @@ window.addEventListener("load", function() {
         if (evt.keyCode == 80 && evt.type == "keyup") {
             game.inputToggleClientSidePrediction();
         }
+
+        // R
+        if (evt.keyCode == 82 && evt.type == "keyup") {
+            game.inputToggleServerReconciliation();
+        }
     };
 
     document.body.onkeydown = keyHandler;

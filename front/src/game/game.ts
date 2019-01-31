@@ -14,7 +14,8 @@ export class Game {
     private currentInputs = {
         up: false,
         down: false,
-        clientSidePrediction: false,
+        clientSidePredictionEnabled: false,
+        serverReconciliationEnabled: false,
     };
     private inputBuffer: InputState[] = [];
 
@@ -58,12 +59,18 @@ export class Game {
         let trim = 0;
         while(
             trim < this.inputBuffer.length
-            && this.inputBuffer[trim].index < serverState.n
+            && this.inputBuffer[trim].index <= serverState.n
         ) {
             ++trim;
         }
 
         this.inputBuffer.splice(0, trim);
+
+        for (let i = 0; i < this.inputBuffer.length; ++i) {
+            this.paddleLeft.applyMovementInput(
+                this.inputBuffer[i].movementAxis,
+                this.inputBuffer[i].durationSeconds);
+        }
     }
 
     public inputUp(pressed: boolean) {
@@ -75,7 +82,15 @@ export class Game {
     }
 
     public inputToggleClientSidePrediction() {
-        this.currentInputs.clientSidePrediction = !this.currentInputs.clientSidePrediction;
+        this.currentInputs.clientSidePredictionEnabled = !this.currentInputs.clientSidePredictionEnabled;
+    }
+
+    public inputToggleServerReconciliation() {
+        this.currentInputs.serverReconciliationEnabled = !this.currentInputs.serverReconciliationEnabled;
+
+        this.currentInputs.clientSidePredictionEnabled =
+               this.currentInputs.clientSidePredictionEnabled
+            || this.currentInputs.serverReconciliationEnabled;
     }
 
     public start(fps: number) {
@@ -109,7 +124,7 @@ export class Game {
 
             this.inputBuffer.push(input);
 
-            if (this.currentInputs.clientSidePrediction) {
+            if (this.currentInputs.clientSidePredictionEnabled) {
                 this.paddleLeft.applyMovementInput(input.movementAxis, input.durationSeconds);
             }
 
@@ -148,7 +163,8 @@ export class Game {
         const step = 0.05;
 
         const text = [
-            "Client Side Prediction: " + (this.currentInputs.clientSidePrediction ? "ON" : "off"),
+            "Client Side Prediction: " + (this.currentInputs.clientSidePredictionEnabled ? "ON" : "off"),
+            "Server Reconciliation: " + (this.currentInputs.serverReconciliationEnabled ? "ON" : "off"),
             "Unprocessed inputs: " + this.inputBuffer.length,
             "Latency: " + this.connection.currentLatencyMs() + "ms"
         ];
