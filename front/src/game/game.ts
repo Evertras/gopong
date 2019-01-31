@@ -13,8 +13,9 @@ export class Game {
     private inputIndex: number = 0;
     private currentInputs = {
         up: false,
-        down: false
-    }
+        down: false,
+        clientSidePrediction: false,
+    };
     private inputBuffer: InputState[] = [];
 
     private updateInterval: number | undefined;
@@ -73,6 +74,10 @@ export class Game {
         this.currentInputs.down = pressed;
     }
 
+    public inputToggleClientSidePrediction() {
+        this.currentInputs.clientSidePrediction = !this.currentInputs.clientSidePrediction;
+    }
+
     public start(fps: number) {
         clearInterval(this.updateInterval);
         this.lastUpdateMs = Date.now();
@@ -103,6 +108,10 @@ export class Game {
             };
 
             this.inputBuffer.push(input);
+
+            if (this.currentInputs.clientSidePrediction) {
+                this.paddleLeft.applyMovementInput(input.movementAxis, input.durationSeconds);
+            }
 
             this.connection.write(JSON.stringify(inputMessage));
 
@@ -139,6 +148,7 @@ export class Game {
         const step = 0.05;
 
         const text = [
+            "Client Side Prediction: " + (this.currentInputs.clientSidePrediction ? "ON" : "off"),
             "Unprocessed inputs: " + this.inputBuffer.length,
             "Latency: " + this.connection.currentLatencyMs() + "ms"
         ];

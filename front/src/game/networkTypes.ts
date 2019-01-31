@@ -6,7 +6,14 @@ export interface PaddleMessage {
 }
 
 export interface BallMessage {
+    /**
+     * The center X coordinate of the ball from [0,1]
+     */
     x: number;
+
+    /**
+     * The center Y coordinate of the ball from [0,1]
+     */
     y: number;
 }
 

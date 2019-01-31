@@ -45,6 +45,11 @@ window.addEventListener("load", function() {
         if (evt.keyCode == 40 || evt.keyCode == 83) {
             game.inputDown(evt.type == "keydown");
         }
+
+        // P
+        if (evt.keyCode == 80 && evt.type == "keyup") {
+            game.inputToggleClientSidePrediction();
+        }
     };
 
     document.body.onkeydown = keyHandler;

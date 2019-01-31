@@ -19,7 +19,7 @@ export interface Connection {
     currentLatencyMs(): number;
 
     /**
-     * Callback for when data is received, passed back as a simple string
+     * Callback for when data is received, passed back as a simple string.
      */
     onData: DataCallback | null;
 }
