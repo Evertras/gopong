@@ -99,7 +99,8 @@ func (c *Client) FlushInputs() []message.Input {
 	return inputs
 }
 
-// WriteState writes a state message to the client
+// WriteState writes a state message to the client.  Note that the last input index
+// is filled in automatically by WriteState.
 func (c *Client) WriteState(m message.State) error {
 	m.LastInputIndex = c.GetLastInputIndex()
 	msg, err := json.Marshal(m)
