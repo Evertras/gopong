@@ -19,29 +19,32 @@ export interface BallMessage {
 
 export interface StateMessage {
     /**
-     * The inner state of the game
+     * The inner state data of the game, which is itself a JSON serialized object that depends on
+     * the type of state to determine its schema.
      */
-    s: {
-        /**
-         * Left paddle
-         */
-        pL: PaddleMessage;
-
-        /**
-         * Right paddle
-         */
-        pR: PaddleMessage;
-
-        /**
-         * Ball
-         */
-        b: BallMessage;
-    }
+    s: string;
 
     /**
      * The last input index received by this client for this state
      */
     n: number;
+}
+
+export interface StatePlayMessage {
+    /**
+     * Left paddle
+     */
+    pL: PaddleMessage;
+
+    /**
+     * Right paddle
+     */
+    pR: PaddleMessage;
+
+    /**
+     * Ball
+     */
+    b: BallMessage;
 }
 
 export interface InputMessage {

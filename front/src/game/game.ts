@@ -1,6 +1,6 @@
 import { Paddle, PaddleSide } from "./paddle";
 import { Ball } from "./ball";
-import { StateMessage, InputMessage } from "./networkTypes";
+import { StateMessage, InputMessage, StatePlayMessage } from "./networkTypes";
 import { InputState } from "./input";
 import { SquareRenderTarget } from "../graphics/renderTarget";
 import { Connection } from "../network/connection";
@@ -52,9 +52,16 @@ export class Game {
     }
 
     public applyServerUpdate(serverState: StateMessage) {
-        this.paddleLeft.applyServerUpdate(serverState.s.pL);
-        this.paddleRight.applyServerUpdate(serverState.s.pR);
-        this.ball.applyServerUpdate(serverState.s.b);
+        // For now...
+        const parsed = JSON.parse(serverState.s) as StatePlayMessage;
+
+        if (!parsed) {
+            return;
+        }
+
+        this.paddleLeft.applyServerUpdate(parsed.pL);
+        this.paddleRight.applyServerUpdate(parsed.pR);
+        this.ball.applyServerUpdate(parsed.b);
 
         let trim = 0;
         while(

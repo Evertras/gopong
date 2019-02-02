@@ -71,7 +71,7 @@ func (i *Instance) Run() {
 				return
 			}
 
-			if err := i.clientLeft.WriteState(stateMessage); err != nil {
+			if err := i.clientRight.WriteState(stateMessage); err != nil {
 				log.Println("Error writing state to right client:", err)
 				return
 			}

@@ -31,11 +31,11 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 		c := client.New(connectionIDCounter, conn)
 		s.clients[connectionID] = c
 
-		s.connectionMutex.Unlock()
-
 		if s.waitingClient == nil {
+			log.Println("Client connected, waiting for another...")
 			s.waitingClient = c
 		} else {
+			log.Println("Game starting")
 			cfg := instance.Config{
 				Play:         s.cfg.GameCfg,
 				StepInterval: s.cfg.TickRate,
@@ -43,8 +43,15 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 
 			i := instance.New(cfg, s.waitingClient, c)
 
-			go i.Run()
+			s.waitingClient = nil
+
+			go func() {
+				i.Run()
+				log.Println("Game finished")
+			}()
 		}
+
+		s.connectionMutex.Unlock()
 
 		defer func() {
 			s.connectionMutex.Lock()
@@ -55,5 +62,7 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 		}()
 
 		<-c.Done()
+
+		log.Println("Client disconnected")
 	}
 }
