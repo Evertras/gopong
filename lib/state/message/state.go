@@ -15,4 +15,7 @@ type State struct {
 
 	// Type is the current state type
 	Type StateType `json:"t"`
+
+	// LastInputIndex is the last input index seen by the server for the receiving client
+	LastInputIndex int `json:"n"`
 }

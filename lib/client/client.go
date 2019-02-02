@@ -101,6 +101,7 @@ func (c *Client) FlushInputs() []message.Input {
 
 // WriteState writes a state message to the client
 func (c *Client) WriteState(m message.State) error {
+	m.LastInputIndex = c.GetLastInputIndex()
 	msg, err := json.Marshal(m)
 
 	if err != nil {
