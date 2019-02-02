@@ -36,3 +36,11 @@
 [[constraint]]
   name = "github.com/spf13/pflag"
   version = "1.0.3"
+
+[[constraint]]
+  name = "github.com/gorilla/websocket"
+  version = "1.4.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/pkg/errors"
