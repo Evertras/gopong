@@ -8,7 +8,7 @@ build: generate
 clean:
 	rm -rf front/build
 
-test:
+test: generate
 	go test -v ./lib/...
 
 run-dev:
