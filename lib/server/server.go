@@ -69,7 +69,7 @@ func (s *Server) Listen(addr string) error {
 	if s.cfg.ReadStaticFilesPerRequest {
 		log.Println("Reading files from disk for every request, ONLY USE THIS FOR DEV MODE!")
 
-		fileReaderFactory := func(f string) func(w http.ResponseWriter, req *http.Request) {
+		fileReaderFactory := func(f string, contentType string) func(w http.ResponseWriter, req *http.Request) {
 			return func(w http.ResponseWriter, req *http.Request) {
 				index, err := ioutil.ReadFile(f)
 
@@ -79,21 +79,25 @@ func (s *Server) Listen(addr string) error {
 					return
 				}
 
+				w.Header().Set("Content-Type", contentType)
 				io.WriteString(w, string(index))
 			}
 		}
 
-		mux.HandleFunc("/", fileReaderFactory("./front/index.html"))
-		mux.HandleFunc("/game.js", fileReaderFactory("./front/game.js"))
-		mux.HandleFunc("/style.css", fileReaderFactory("./front/style.css"))
+		mux.HandleFunc("/", fileReaderFactory("./front/index.html", "text/html"))
+		mux.HandleFunc("/game.js", fileReaderFactory("./front/game.js", "script/javascript"))
+		mux.HandleFunc("/style.css", fileReaderFactory("./front/style.css", "text/css"))
 	} else {
 		mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+			w.Header().Set("Content-Type", "text/html")
 			io.WriteString(w, static.StaticHtmlIndex)
 		})
 		mux.HandleFunc("/game.js", func(w http.ResponseWriter, req *http.Request) {
+			w.Header().Set("Content-Type", "script/javascript")
 			io.WriteString(w, static.StaticJsGame)
 		})
 		mux.HandleFunc("/style.css", func(w http.ResponseWriter, req *http.Request) {
+			w.Header().Set("Content-Type", "text/css")
 			io.WriteString(w, static.StaticCssStyle)
 		})
 	}
