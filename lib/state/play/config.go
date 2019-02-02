@@ -1,4 +1,4 @@
-package game
+package play
 
 // Config contains all configuration for a game to start
 type Config struct {

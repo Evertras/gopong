@@ -1,4 +1,4 @@
-package game
+package play
 
 // Paddle describes the current state of a paddle
 type Paddle struct {

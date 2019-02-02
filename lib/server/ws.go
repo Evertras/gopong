@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/Evertras/gopong/lib/game"
+	"github.com/Evertras/gopong/lib/state/play"
 	metrics "github.com/armon/go-metrics"
 	"github.com/gorilla/websocket"
 )
@@ -19,7 +19,7 @@ type client struct {
 	out            chan []byte
 	in             chan []byte
 	lastInput      int
-	receivedInputs []game.InputMessage
+	receivedInputs []play.InputMessage
 
 	mu sync.RWMutex
 }
@@ -82,7 +82,7 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 			case msg := <-client.in:
 				metrics.IncrCounter(metricKeyWsDataRead, float32(len(msg)))
 
-				inputMessage := game.InputMessage{}
+				inputMessage := play.InputMessage{}
 
 				// Assuming it's this for now, figure out how to select between multiple message types later
 				json.Unmarshal(msg, &inputMessage)

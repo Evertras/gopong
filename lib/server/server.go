@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Evertras/gopong/lib/game"
+	"github.com/Evertras/gopong/lib/state/play"
 	"github.com/Evertras/gopong/lib/static"
 	metrics "github.com/armon/go-metrics"
 )
@@ -21,7 +21,7 @@ type Config struct {
 	TickRate time.Duration
 
 	// GameCfg is the game configuration, such as paddle height, etc.
-	GameCfg game.Config
+	GameCfg play.Config
 
 	// ReadStaticFilesPerRequest determines if the server will read from disk on each request
 	// or use the precompiled static files.  Useful for development, should not
@@ -31,7 +31,7 @@ type Config struct {
 
 // Server is an HTTP server that will serve static content and handle web socket connections
 type Server struct {
-	State *game.State
+	State *play.State
 
 	ctx context.Context
 	cfg Config
@@ -42,14 +42,14 @@ type Server struct {
 }
 
 type stateMessage struct {
-	State          *game.State `json:"s"`
+	State          *play.State `json:"s"`
 	LastInputIndex int         `json:"n"`
 }
 
 // New creates a new server and initializes its game state, but does not start the game
 func New(ctx context.Context, cfg Config) *Server {
 	return &Server{
-		State: game.New(cfg.GameCfg),
+		State: play.New(cfg.GameCfg),
 
 		ctx:     ctx,
 		cfg:     cfg,
@@ -122,7 +122,7 @@ func (s *Server) Listen(addr string) error {
 					for _, i := range c.receivedInputs {
 						s.State.ApplyInput(i)
 					}
-					c.receivedInputs = []game.InputMessage{}
+					c.receivedInputs = []play.InputMessage{}
 					c.mu.Unlock()
 				}
 
