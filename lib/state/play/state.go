@@ -3,6 +3,7 @@ package play
 import (
 	"time"
 
+	"github.com/Evertras/gopong/lib/state/message"
 	metrics "github.com/armon/go-metrics"
 )
 
@@ -46,7 +47,7 @@ func (s *State) Step(d time.Duration) {
 }
 
 // ApplyInput applies a given input to the state
-func (s *State) ApplyInput(i InputMessage) {
+func (s *State) ApplyInput(i message.InputMessage) {
 	metrics.AddSample(sampleKeyReceivedInputDuration, float32(i.DurationSeconds))
 
 	// TODO: More sanity checks for cheating, check for accumulated time to avoid spamming

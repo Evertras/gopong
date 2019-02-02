@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Evertras/gopong/lib/state/message"
 	"github.com/Evertras/gopong/lib/state/play"
 	"github.com/Evertras/gopong/lib/static"
 	metrics "github.com/armon/go-metrics"
@@ -122,7 +123,7 @@ func (s *Server) Listen(addr string) error {
 					for _, i := range c.receivedInputs {
 						s.State.ApplyInput(i)
 					}
-					c.receivedInputs = []play.InputMessage{}
+					c.receivedInputs = []message.InputMessage{}
 					c.mu.Unlock()
 				}
 

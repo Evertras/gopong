@@ -1,4 +1,4 @@
-package play
+package message
 
 // InputMessage is a serialized input message from the client
 type InputMessage struct {
