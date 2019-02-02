@@ -113,6 +113,8 @@ func (c *Client) WriteState(m message.State) error {
 		return errors.Wrap(err, "error writing message")
 	}
 
+	metrics.IncrCounter(metricKeyWsDataWrite, float32(len(msg)))
+
 	return nil
 }
 
