@@ -11,6 +11,9 @@ clean:
 test: generate
 	go test -v ./lib/...
 
+bench:
+	go test -benchmem -bench . ./...
+
 run-dev:
 	go run -race ./cmd/gopong/main.go -d -t 3
 
