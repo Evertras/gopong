@@ -1,7 +1,10 @@
 package message
 
-// InputMessage is a serialized input message from the client
-type InputMessage struct {
+// Input is a serialized input message from the client
+type Input struct {
+	// ID is the client's ID; this is not supplied by the client for obvious cheaty reasons
+	ID int `json:"-"`
+
 	// MovementAxis is a value from [-1,1] where -1 is up and 1 is down
 	MovementAxis float64 `json:"m"`
 

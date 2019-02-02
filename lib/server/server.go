@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"encoding/json"
 	"io"
 	"io/ioutil"
 	"log"
@@ -10,10 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Evertras/gopong/lib/state/message"
+	"github.com/Evertras/gopong/lib/client"
 	"github.com/Evertras/gopong/lib/state/play"
 	"github.com/Evertras/gopong/lib/static"
-	metrics "github.com/armon/go-metrics"
 )
 
 // Config contains all configuration to run the server
@@ -39,26 +37,21 @@ type Server struct {
 
 	connectionMutex sync.Mutex
 
-	clients map[int]*client
+	clients map[int]*client.Client
+
+	waitingClient *client.Client
 }
 
-type stateMessage struct {
-	State          *play.State `json:"s"`
-	LastInputIndex int         `json:"n"`
-}
-
-// New creates a new server and initializes its game state, but does not start the game
+// New creates a new server that's ready to listen but hasn't started yet
 func New(ctx context.Context, cfg Config) *Server {
 	return &Server{
 		State: play.New(cfg.GameCfg),
 
 		ctx:     ctx,
 		cfg:     cfg,
-		clients: make(map[int]*client),
+		clients: make(map[int]*client.Client),
 	}
 }
-
-var metricKeyGameLoopActive = []string{"game", "loop", "active"}
 
 // Listen will start listening and block until the server closes
 func (s *Server) Listen(addr string) error {
@@ -105,53 +98,6 @@ func (s *Server) Listen(addr string) error {
 	// </jank>
 
 	mux.HandleFunc("/join", join(s))
-
-	go func() {
-		ticker := time.NewTicker(s.cfg.TickRate)
-		defer ticker.Stop()
-		d := time.Now()
-		startTime := d
-		for {
-			select {
-			case <-ticker.C:
-				startTime = time.Now()
-				s.State.Step(time.Since(d))
-
-				s.connectionMutex.Lock()
-				for _, c := range s.clients {
-					c.mu.Lock()
-					for _, i := range c.receivedInputs {
-						s.State.ApplyInput(i)
-					}
-					c.receivedInputs = []message.InputMessage{}
-					c.mu.Unlock()
-				}
-
-				stateMessage := stateMessage{
-					State: s.State,
-				}
-
-				for _, c := range s.clients {
-					c.mu.RLock()
-					stateMessage.LastInputIndex = c.lastInput
-
-					msg, err := json.Marshal(stateMessage)
-
-					if err != nil {
-						log.Fatal(err)
-					}
-
-					c.out <- msg
-					c.mu.RUnlock()
-				}
-				s.connectionMutex.Unlock()
-
-				d = time.Now()
-
-				metrics.MeasureSince(metricKeyGameLoopActive, startTime)
-			}
-		}
-	}()
 
 	httpServer := http.Server{
 		Addr:    addr,

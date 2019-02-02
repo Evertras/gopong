@@ -1,8 +1,10 @@
 package play
 
 import (
+	"encoding/json"
 	"time"
 
+	"github.com/Evertras/gopong/lib/state"
 	"github.com/Evertras/gopong/lib/state/message"
 	metrics "github.com/armon/go-metrics"
 )
@@ -42,12 +44,14 @@ func New(cfg Config) *State {
 }
 
 // Step will update the game state for the given duration
-func (s *State) Step(d time.Duration) {
+func (s *State) Step(d time.Duration) state.State {
 	s.Ball.Step(d, s.PaddleLeft, s.PaddleRight)
+
+	return s
 }
 
 // ApplyInput applies a given input to the state
-func (s *State) ApplyInput(i message.InputMessage) {
+func (s *State) ApplyInput(i message.Input) {
 	metrics.AddSample(sampleKeyReceivedInputDuration, float32(i.DurationSeconds))
 
 	// TODO: More sanity checks for cheating, check for accumulated time to avoid spamming
@@ -61,4 +65,18 @@ func (s *State) ApplyInput(i message.InputMessage) {
 	// For now, only worry about left paddle...
 	s.PaddleLeft.Center += i.MovementAxis * i.DurationSeconds * s.PaddleLeft.MaxSpeedPerSecond
 	s.PaddleLeft.Bound()
+}
+
+// Marshal creates a state message of this play state to send to clients
+func (s *State) Marshal() (message.State, error) {
+	msg, err := json.Marshal(s)
+
+	if err != nil {
+		return message.State{}, err
+	}
+
+	return message.State{
+		Data: string(msg),
+		Type: message.StatePlay,
+	}, nil
 }
