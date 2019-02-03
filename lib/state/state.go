@@ -15,4 +15,8 @@ type State interface {
 	// Marshal must marshal the current state as a JSON message and put it into
 	// a message.State object to send to clients.
 	Marshal() (message.State, error)
+
+	// ApplyInput applies the given input on the given side.  Note that we use the side
+	// explicitly separate here to enforce that we can't trust any message from the client.
+	ApplyInput(input message.Input, side message.PlayerSide)
 }

@@ -51,7 +51,7 @@ func (s *State) Step(d time.Duration) state.State {
 }
 
 // ApplyInput applies a given input to the state
-func (s *State) ApplyInput(i message.Input) {
+func (s *State) ApplyInput(i message.Input, side message.PlayerSide) {
 	metrics.AddSample(sampleKeyReceivedInputDuration, float32(i.DurationSeconds))
 
 	// TODO: More sanity checks for cheating, check for accumulated time to avoid spamming
@@ -62,9 +62,16 @@ func (s *State) ApplyInput(i message.Input) {
 		return
 	}
 
-	// For now, only worry about left paddle...
-	s.PaddleLeft.Center += i.MovementAxis * i.DurationSeconds * s.PaddleLeft.MaxSpeedPerSecond
-	s.PaddleLeft.Bound()
+	var paddle *Paddle
+
+	if side == message.PlayerSideLeft {
+		paddle = s.PaddleLeft
+	} else {
+		paddle = s.PaddleRight
+	}
+
+	paddle.Center += i.MovementAxis * i.DurationSeconds * s.PaddleLeft.MaxSpeedPerSecond
+	paddle.Bound()
 }
 
 // Marshal creates a state message of this play state to send to clients

@@ -6,6 +6,7 @@ import (
 
 	"github.com/Evertras/gopong/lib/client"
 	"github.com/Evertras/gopong/lib/state"
+	"github.com/Evertras/gopong/lib/state/message"
 	"github.com/Evertras/gopong/lib/state/play"
 	metrics "github.com/armon/go-metrics"
 )
@@ -86,13 +87,13 @@ func (i *Instance) Run() {
 func (i *Instance) processInputs() {
 	inputsLeft := i.clientLeft.FlushInputs()
 
-	for range inputsLeft {
-		//i.State.ApplyInput(i)
+	for _, input := range inputsLeft {
+		i.currentState.ApplyInput(input, message.PlayerSideLeft)
 	}
 
 	inputsRight := i.clientRight.FlushInputs()
 
-	for range inputsRight {
-		//i.State.ApplyInput(i)
+	for _, input := range inputsRight {
+		i.currentState.ApplyInput(input, message.PlayerSideRight)
 	}
 }
