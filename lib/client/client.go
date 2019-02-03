@@ -17,7 +17,7 @@ var metricKeyWsDataRead = []string{"ws", "data", "recv"}
 
 const inputFlushThreshold = 100
 
-// Client is a single connected client
+// Client is a single connected client that buffers received input
 type Client struct {
 	id             int
 	conn           *websocket.Conn
