@@ -43,8 +43,8 @@ func New(cfg Config, left *client.Client, right *client.Client) *Instance {
 func (i *Instance) Run() {
 	ticker := time.NewTicker(i.cfg.StepInterval)
 	defer ticker.Stop()
-	d := time.Now()
-	startTime := d
+	lastTime := time.Now()
+	startTime := lastTime
 
 	defer func() {
 		i.clientLeft.Close()
@@ -55,7 +55,7 @@ func (i *Instance) Run() {
 		select {
 		case <-ticker.C:
 			startTime = time.Now()
-			stepDelta := time.Since(d)
+			stepDelta := time.Since(lastTime)
 
 			i.processInputs()
 			i.currentState.Step(stepDelta)
@@ -77,7 +77,7 @@ func (i *Instance) Run() {
 				return
 			}
 
-			d = time.Now()
+			lastTime = time.Now()
 
 			metrics.MeasureSince(metricKeyGameLoopActive, startTime)
 		}
