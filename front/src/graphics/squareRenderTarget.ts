@@ -59,8 +59,8 @@ export class SquareRenderTarget implements IRenderTarget {
     /**
      *
      * @param s The text string to draw.
-     * @param x The x coordinate of the top left corner within [0,1]
-     * @param y The y coordinate of the top left corner within [0,1]
+     * @param x The x coordinate of the bottom left corner within [0,1]
+     * @param y The y coordinate of the bottom left corner within [0,1]
      */
     public text(s: string, x: number, y: number) {
         this.ctx.fillText(s, x * this.pixelScale, y * this.pixelScale);
