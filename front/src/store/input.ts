@@ -37,6 +37,7 @@ export enum Keys {
 
 export class InputStore {
     private buffer: InputStep[] = [];
+    private latest: InputStep;
     private index: number = 0;
     private lastTime: number = Date.now();
 
@@ -49,8 +50,20 @@ export class InputStore {
         this.input.add(Keys.Down, [KeyCode.S, KeyCode.DOWN]);
         this.input.add(Keys.ToggleClientPrediction, [KeyCode.P]);
         this.input.add(Keys.ToggleServerReconciliation, [KeyCode.R]);
+
+        this.latest = {
+            durationSeconds: 0,
+            index: -1,
+            movementAxis: 0,
+            toggleClientPredictionPressed: false,
+            toggleServerReconciliationPressed: false,
+        };
     }
 
+    /**
+     * Captures the current input as a discrete step with a duration and
+     * adds it to the buffer.
+     */
     public step(): InputStep {
         const now = Date.now();
         const durationSeconds = (now - this.lastTime) * 0.001;
@@ -76,11 +89,16 @@ export class InputStore {
 
         this.buffer.push(inputStep);
 
+        this.latest = inputStep;
+
         this.lastTime = now;
 
         return inputStep;
     }
 
+    /**
+     * Returns the input buffer.
+     */
     public getBuffer(): InputStep[] {
         return this.buffer;
     }
@@ -102,7 +120,17 @@ export class InputStore {
         this.buffer.splice(0, trim);
     }
 
+    /**
+     * Returns the current input buffer length.
+     */
     public inputBufferLength(): number {
         return this.buffer.length;
+    }
+
+    /**
+     * Returns the last step seen.
+     */
+    public getLatest(): InputStep {
+        return this.latest;
     }
 }

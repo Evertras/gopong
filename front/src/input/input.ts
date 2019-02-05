@@ -48,7 +48,7 @@ export class Input {
     }
 
     public step(): IInputIDToStateMap {
-        // This is actually pretty quick... http://jsben.ch/gtKdJ
+        // This is actually not bad for not needing a library: http://jsben.ch/gtKdJ
         const copied = JSON.parse(JSON.stringify(this.keyStates)) as IInputIDToStateMap;
 
         // We know this is fine, no prototypes to worry about

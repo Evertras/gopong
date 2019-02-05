@@ -69,13 +69,85 @@ describe('input store', () => {
                 store.step();
             }
 
-            expect(store.inputBufferLength()).to.equal(ticks);
-
             const buffer = store.getBuffer();
 
             for (let i = 0; i < ticks; ++i) {
                 expect(buffer[i].durationSeconds).to.be.approximately(1, 0.001);
             }
+        });
+
+        it('increments the index each time', () => {
+            const input = new Input();
+            const store = new InputStore(input);
+            const ticks = 10;
+
+            for (let i = 0; i < ticks; ++i) {
+                store.step();
+            }
+
+            const buffer = store.getBuffer();
+
+            let lastIndex = buffer[0].index;
+
+            for (let i = 1; i < ticks; ++i) {
+                expect(buffer[i].index).to.equal(lastIndex + 1);
+
+                lastIndex = buffer[i].index;
+            }
+        });
+    });
+
+    describe('deleteUntil', () => {
+        it('does not delete anything if a low index is provided', () => {
+            const input = new Input();
+            const store = new InputStore(input);
+            const ticks = 10;
+
+            for (let i = 0; i < ticks; ++i) {
+                store.step();
+            }
+
+            expect(store.inputBufferLength(), 'did not fill buffer').to.equal(ticks);
+
+            store.deleteUntil(-1);
+
+            expect(store.inputBufferLength(), 'deleted something incorrectly').to.equal(ticks);
+        });
+
+        it('deletes everything up to and including the given index', () => {
+            const input = new Input();
+            const store = new InputStore(input);
+            const ticks = 10;
+
+            for (let i = 0; i < ticks; ++i) {
+                store.step();
+            }
+
+            expect(store.inputBufferLength(), 'did not fill buffer').to.equal(ticks);
+
+            const buffer = store.getBuffer();
+
+            const deleteToIndex = buffer[1].index;
+
+            store.deleteUntil(deleteToIndex);
+
+            expect(store.inputBufferLength(), 'did not delete expected number of items').to.equal(ticks - 2);
+        });
+    });
+
+    describe('getLatest', () => {
+        it('returns the latest correctly', () => {
+            const input = new Input();
+            const store = new InputStore(input);
+            const ticks = 10;
+
+            for (let i = 0; i < ticks; ++i) {
+                store.step();
+            }
+
+            const buffer = store.getBuffer();
+
+            expect(buffer[buffer.length - 1]).to.deep.equal(store.getLatest());
         });
     });
 });

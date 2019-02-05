@@ -4,6 +4,7 @@ import { IConnection } from '../network/connection';
 import { InputStore } from '../store/input';
 import { Ball } from './ball';
 import {
+    IInputMessage,
     IStateMessage,
     IStatePlayMessage,
 } from './networkTypes';
@@ -13,17 +14,11 @@ export class Game {
     public paddleLeft: Paddle;
     public paddleRight: Paddle;
     public ball: Ball;
+    private clientSidePredictionEnabled: boolean = false;
+    private serverReconciliationEnabled: boolean = false;
 
     // Stores to share data
     private storeInput: InputStore;
-
-    private currentInputs = {
-        up: false,
-        down: false,
-
-        clientSidePredictionEnabled: false,
-        serverReconciliationEnabled: false,
-    };
 
     private updateInterval: number | undefined;
     private lastUpdateMs: number = 0;
@@ -36,7 +31,7 @@ export class Game {
     constructor(renderTarget: SquareRenderTarget, connection: IConnection, input: Input) {
         this.storeInput = new InputStore(input);
 
-        // Temporary
+        // TODO: apply actual config
         const paddleHeight = 0.2;
         const paddleMaxSpeedPerSecond = 0.1;
         const ballRadius = 0.02;
@@ -71,35 +66,15 @@ export class Game {
         this.paddleRight.applyServerUpdate(parsed.pR);
         this.ball.applyServerUpdate(parsed.b);
 
-        /*
-        if(this.currentInputs.serverReconciliationEnabled) {
-            for (let i = 0; i < this.inputBuffer.length; ++i) {
+        if (this.serverReconciliationEnabled) {
+            const buffer = this.storeInput.getBuffer();
+            for (const input of buffer) {
+                // TODO: Use on correct paddle
                 this.paddleLeft.applyMovementInput(
-                    this.inputBuffer[i].movementAxis,
-                    this.inputBuffer[i].durationSeconds);
+                    input.movementAxis,
+                    input.durationSeconds);
             }
         }
-        */
-    }
-
-    public inputUp(pressed: boolean) {
-        this.currentInputs.up = pressed;
-    }
-
-    public inputDown(pressed: boolean) {
-        this.currentInputs.down = pressed;
-    }
-
-    public inputToggleClientSidePrediction() {
-        this.currentInputs.clientSidePredictionEnabled = !this.currentInputs.clientSidePredictionEnabled;
-    }
-
-    public inputToggleServerReconciliation() {
-        this.currentInputs.serverReconciliationEnabled = !this.currentInputs.serverReconciliationEnabled;
-
-        this.currentInputs.clientSidePredictionEnabled =
-               this.currentInputs.clientSidePredictionEnabled
-            || this.currentInputs.serverReconciliationEnabled;
     }
 
     public start(fps: number) {
@@ -121,25 +96,32 @@ export class Game {
                 this.timeAccumulatedMilliseconds -= stepSizeMilliseconds;
             }
 
-            // const input = this.storeInput.getCurrentInput(frameElapsedMs * 0.001);
+            this.storeInput.step();
+
+            const input = this.storeInput.getLatest();
+
+            if (input.toggleClientPredictionPressed) {
+                this.clientSidePredictionEnabled = !this.clientSidePredictionEnabled;
+            }
+
+            if (input.toggleServerReconciliationPressed) {
+                this.serverReconciliationEnabled = !this.serverReconciliationEnabled;
+            }
 
             this.draw();
 
-            /*
-            const inputMessage: InputMessage = {
+            const inputMessage: IInputMessage = {
                 m: input.movementAxis,
                 n: input.index,
-                d: input.durationSeconds
+                d: input.durationSeconds,
             };
 
-            this.inputBuffer.push(input);
-
-            if (this.currentInputs.clientSidePredictionEnabled) {
+            if (this.clientSidePredictionEnabled) {
+                // TODO: apply to correct paddle
                 this.paddleLeft.applyMovementInput(input.movementAxis, input.durationSeconds);
             }
 
             this.connection.write(JSON.stringify(inputMessage));
-            */
 
         }, stepSizeMilliseconds);
     }
@@ -156,8 +138,8 @@ export class Game {
         const step = 0.05;
 
         const text = [
-            'Client Side Prediction (P): ' + (this.currentInputs.clientSidePredictionEnabled ? 'ON' : 'off'),
-            'Server Reconciliation (R): ' + (this.currentInputs.serverReconciliationEnabled ? 'ON' : 'off'),
+            'Client Side Prediction (P): ' + (this.clientSidePredictionEnabled ? 'ON' : 'off'),
+            'Server Reconciliation (R): ' + (this.serverReconciliationEnabled ? 'ON' : 'off'),
             'Unprocessed inputs: ' + this.storeInput.inputBufferLength(),
             'Latency: ' + this.connection.currentLatencyMs() + 'ms',
         ];
