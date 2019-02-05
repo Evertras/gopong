@@ -12,6 +12,9 @@ test: lib/static/build.go
 	npm test
 	go test -v ./lib/...
 
+lint:
+	npx tslint -p .
+
 bench:
 	go test -benchmem -bench . ./...
 
