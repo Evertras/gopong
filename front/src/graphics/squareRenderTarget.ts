@@ -15,6 +15,7 @@ export class SquareRenderTarget implements IRenderTarget {
     /**
      * Updates the size, keeping the dimensions square such that the entire target
      * will fit within the smaller of the two dimensions.
+     * 
      * @param width The width in pixels
      * @param height The height in pixels
      */
@@ -35,6 +36,7 @@ export class SquareRenderTarget implements IRenderTarget {
 
     /**
      * Draws a rect in [0,1] space.
+     * 
      * @param x The top left of the rectangle within [0,1]
      * @param y The top left of the rectangle within [0,1]
      * @param width The width of the rectangle within [0,1]
@@ -47,6 +49,7 @@ export class SquareRenderTarget implements IRenderTarget {
 
     /**
      * Draws a circle in [0,1] space.
+     * 
      * @param x The x coordinate of the center within [0,1]
      * @param y The y coordinate of the center within [0,1]
      * @param r The radius of the circle within [0,1]
@@ -57,6 +60,7 @@ export class SquareRenderTarget implements IRenderTarget {
     }
 
     /**
+     * Draws a given string of text.
      *
      * @param s The text string to draw.
      * @param x The x coordinate of the bottom left corner within [0,1]
