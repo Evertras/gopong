@@ -1,23 +1,24 @@
 import { Paddle, PaddleSide } from "./paddle";
 import { Ball } from "./ball";
-import { StateMessage, InputMessage, StatePlayMessage } from "./networkTypes";
-import { InputState } from "./input";
+import { StateMessage, StatePlayMessage } from "./networkTypes";
 import { SquareRenderTarget } from "../graphics/renderTarget";
 import { Connection } from "../network/connection";
+import { InputStore } from "../store/input"
 
 export class Game {
     public paddleLeft: Paddle;
     public paddleRight: Paddle;
     public ball: Ball;
 
-    private inputIndex: number = 0;
+    // Stores to share data
+    private storeInput : InputStore = new InputStore();
+
     private currentInputs = {
         up: false,
         down: false,
         clientSidePredictionEnabled: false,
         serverReconciliationEnabled: false,
     };
-    private inputBuffer: InputState[] = [];
 
     private updateInterval: number | undefined;
     private lastUpdateMs: number = 0;
@@ -63,16 +64,7 @@ export class Game {
         this.paddleRight.applyServerUpdate(parsed.pR);
         this.ball.applyServerUpdate(parsed.b);
 
-        let trim = 0;
-        while(
-            trim < this.inputBuffer.length
-            && this.inputBuffer[trim].index <= serverState.n
-        ) {
-            ++trim;
-        }
-
-        this.inputBuffer.splice(0, trim);
-
+        /*
         if(this.currentInputs.serverReconciliationEnabled) {
             for (let i = 0; i < this.inputBuffer.length; ++i) {
                 this.paddleLeft.applyMovementInput(
@@ -80,6 +72,7 @@ export class Game {
                     this.inputBuffer[i].durationSeconds);
             }
         }
+        */
     }
 
     public inputUp(pressed: boolean) {
@@ -121,10 +114,11 @@ export class Game {
                 this.timeAccumulatedMilliseconds -= stepSizeMilliseconds;
             }
 
-            const input = this.getCurrentInput(frameElapsedMs * 0.001);
+            //const input = this.storeInput.getCurrentInput(frameElapsedMs * 0.001);
 
             this.draw();
 
+            /*
             const inputMessage: InputMessage = {
                 m: input.movementAxis,
                 n: input.index,
@@ -138,26 +132,9 @@ export class Game {
             }
 
             this.connection.write(JSON.stringify(inputMessage));
+            */
 
         }, stepSizeMilliseconds);
-    }
-
-    private getCurrentInput(durationSeconds: number): InputState {
-        let axis = 0;
-
-        if (this.currentInputs.up) {
-            axis -= 1;
-        }
-
-        if (this.currentInputs.down) {
-            axis += 1;
-        }
-
-        return {
-            movementAxis: axis,
-            index: this.inputIndex++,
-            durationSeconds: durationSeconds
-        };
     }
 
     private draw() {
@@ -174,7 +151,7 @@ export class Game {
         const text = [
             "Client Side Prediction (P): " + (this.currentInputs.clientSidePredictionEnabled ? "ON" : "off"),
             "Server Reconciliation (R): " + (this.currentInputs.serverReconciliationEnabled ? "ON" : "off"),
-            "Unprocessed inputs: " + this.inputBuffer.length,
+            "Unprocessed inputs: " + this.storeInput.inputBufferLength(),
             "Latency: " + this.connection.currentLatencyMs() + "ms"
         ];
 

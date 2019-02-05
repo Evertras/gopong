@@ -9,6 +9,7 @@ clean:
 	rm -rf front/build
 
 test: generate
+	npm test
 	go test -v ./lib/...
 
 bench:

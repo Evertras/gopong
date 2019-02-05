@@ -34,29 +34,4 @@ window.addEventListener("load", function() {
     connection.setLatencyMs(500);
     connection.start();
     game.start(30);
-
-    const keyHandler = (evt: KeyboardEvent) => {
-        // Up/W
-        if (evt.keyCode == 38 || evt.keyCode == 87) {
-            game.inputUp(evt.type == "keydown");
-        }
-
-        // Down/S
-        if (evt.keyCode == 40 || evt.keyCode == 83) {
-            game.inputDown(evt.type == "keydown");
-        }
-
-        // P
-        if (evt.keyCode == 80 && evt.type == "keyup") {
-            game.inputToggleClientSidePrediction();
-        }
-
-        // R
-        if (evt.keyCode == 82 && evt.type == "keyup") {
-            game.inputToggleServerReconciliation();
-        }
-    };
-
-    document.body.onkeydown = keyHandler;
-    document.body.onkeyup = keyHandler;
 });

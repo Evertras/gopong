@@ -3,8 +3,9 @@ import { Drawable } from "./drawable";
 import { SquareRenderTarget } from "../graphics/renderTarget";
 
 export enum PaddleSide {
-    Left,
-    Right
+    // Being explicit about the numbers to match server values
+    Left = 0,
+    Right = 1
 }
 
 export class Paddle implements Drawable {
