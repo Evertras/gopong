@@ -48,7 +48,16 @@ export class Input {
     }
 
     public step(): IInputIDToStateMap {
-        return this.keyStates;
+        // This is actually pretty quick... http://jsben.ch/gtKdJ
+        const copied = JSON.parse(JSON.stringify(this.keyStates)) as IInputIDToStateMap;
+
+        // We know this is fine, no prototypes to worry about
+        // tslint:disable-next-line: forin
+        for (const id in this.keyStates) {
+            this.keyStates[id].pressed = false;
+        }
+
+        return copied;
     }
 
     public listenTo(doc: Document) {

@@ -5,6 +5,26 @@ import 'mocha';
 import { Input } from './input';
 import { KeyCode } from './keyCodes';
 
+const mockDown = (code: KeyCode) => {
+    const evtDown = new KeyboardEvent('keydown', {
+        code,
+    });
+
+    if (window.document.onkeydown) {
+        window.document.onkeydown(evtDown);
+    }
+};
+
+const mockUp = (code: KeyCode) => {
+    const evtUp = new KeyboardEvent('keyup', {
+        code,
+    });
+
+    if (window.document.onkeyup) {
+        window.document.onkeyup(evtUp);
+    }
+};
+
 describe('input', () => {
     describe('valid/invalid keystates', () => {
         it('returns a valid key state that was added', () => {
@@ -40,7 +60,9 @@ describe('input', () => {
             expect(window.document.onkeydown).to.not.be.undefined;
             expect(window.document.onkeyup).to.not.be.undefined;
         });
+    });
 
+    describe('keys', () => {
         const keyCode = KeyCode.W;
         const id = 17;
         let input = new Input();
@@ -56,25 +78,32 @@ describe('input', () => {
 
             expect(state.held, 'key incorrectly held').to.be.false;
 
-            const evtDown = new KeyboardEvent('keydown', {
-                code: keyCode,
-            });
-
-            if (window.document.onkeydown) {
-                window.document.onkeydown(evtDown);
-            }
+            mockDown(keyCode);
 
             expect(state.held, 'key not held').to.be.true;
 
-            const evtUp = new KeyboardEvent('keyup', {
-                code: keyCode,
-            });
-
-            if (window.document.onkeyup) {
-                window.document.onkeyup(evtUp);
-            }
+            mockUp(keyCode);
 
             expect(state.held, 'key incorrectly still held').to.be.false;
+        });
+
+        it('detects a key being pressed', () => {
+            const state = input.get(id);
+
+            expect(state.pressed, 'key incorrectly pressed').to.be.false;
+
+            mockDown(keyCode);
+
+            expect(state.pressed, 'key not pressed').to.be.true;
+        });
+
+        it('only detects a key press for one step', () => {
+            const state = input.get(id);
+
+            mockDown(keyCode);
+            expect(state.pressed, 'key not pressed').to.be.true;
+            input.step();
+            expect(state.pressed, 'key incorrectly still pressed').to.be.false;
         });
     });
 });
