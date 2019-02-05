@@ -1,3 +1,5 @@
+/* tslint:disable:no-unused-expression */
+
 import { expect } from 'chai';
 import 'mocha';
 import { Input } from './input';
@@ -31,9 +33,9 @@ describe('input', () => {
 
     describe('listens to document', () => {
         it('registers keydown and keyup', () => {
-            const input = new Input();
+            const i = new Input();
 
-            input.listenTo(window.document);
+            i.listenTo(window.document);
 
             expect(window.document.onkeydown).to.not.be.undefined;
             expect(window.document.onkeyup).to.not.be.undefined;
@@ -50,7 +52,7 @@ describe('input', () => {
         });
 
         it('detects a key being held and released', () => {
-            const state = input.get(id)
+            const state = input.get(id);
 
             expect(state.held, 'key incorrectly held').to.be.false;
 

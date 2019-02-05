@@ -1,14 +1,14 @@
-import { PaddleMessage } from "./networkTypes";
-import { Drawable } from "./drawable";
-import { SquareRenderTarget } from "../graphics/renderTarget";
+import { SquareRenderTarget } from '../graphics/renderTarget';
+import { IDrawable } from './drawable';
+import { IPaddleMessage } from './networkTypes';
 
 export enum PaddleSide {
     // Being explicit about the numbers to match server values
     Left = 0,
-    Right = 1
+    Right = 1,
 }
 
-export class Paddle implements Drawable {
+export class Paddle implements IDrawable {
     public center: number = 0.5;
     public height: number;
     public maxSpeedPerSecond: number;
@@ -22,7 +22,7 @@ export class Paddle implements Drawable {
         this.side = side;
     }
 
-    public applyServerUpdate(paddleState: PaddleMessage) {
+    public applyServerUpdate(paddleState: IPaddleMessage) {
         this.center = paddleState.c;
     }
 
@@ -45,8 +45,8 @@ export class Paddle implements Drawable {
         // Dealing with [0,1] coordinates
         const width = 0.03;
         const height = this.height;
-        const x = this.side === PaddleSide.Left ? 0 : 1-width;
-        const y = this.center - height*0.5;
+        const x = this.side === PaddleSide.Left ? 0 : 1 - width;
+        const y = this.center - height * 0.5;
 
         renderTarget.rect(x, y, width, height);
     }

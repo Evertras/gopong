@@ -1,9 +1,12 @@
-import { Paddle, PaddleSide } from "./paddle";
-import { Ball } from "./ball";
-import { StateMessage, StatePlayMessage } from "./networkTypes";
-import { SquareRenderTarget } from "../graphics/renderTarget";
-import { Connection } from "../network/connection";
-import { InputStore } from "../store/input"
+import { SquareRenderTarget } from '../graphics/renderTarget';
+import { IConnection } from '../network/connection';
+import { InputStore } from '../store/input';
+import { Ball } from './ball';
+import {
+    IStateMessage,
+    IStatePlayMessage,
+} from './networkTypes';
+import { Paddle, PaddleSide } from './paddle';
 
 export class Game {
     public paddleLeft: Paddle;
@@ -11,11 +14,12 @@ export class Game {
     public ball: Ball;
 
     // Stores to share data
-    private storeInput : InputStore = new InputStore();
+    private storeInput: InputStore = new InputStore();
 
     private currentInputs = {
         up: false,
         down: false,
+
         clientSidePredictionEnabled: false,
         serverReconciliationEnabled: false,
     };
@@ -26,9 +30,9 @@ export class Game {
 
     private renderTarget: SquareRenderTarget;
 
-    private connection: Connection;
+    private connection: IConnection;
 
-    constructor(renderTarget: SquareRenderTarget, connection: Connection) {
+    constructor(renderTarget: SquareRenderTarget, connection: IConnection) {
         // Temporary
         const paddleHeight = 0.2;
         const paddleMaxSpeedPerSecond = 0.1;
@@ -44,17 +48,17 @@ export class Game {
         this.connection.onData = (data: string) => {
             const parsed = JSON.parse(data);
 
-            const stateMessage = parsed as StateMessage;
+            const stateMessage = parsed as IStateMessage;
 
             if (stateMessage) {
                 this.applyServerUpdate(stateMessage);
             }
-        }
+        };
     }
 
-    public applyServerUpdate(serverState: StateMessage) {
+    public applyServerUpdate(serverState: IStateMessage) {
         // For now...
-        const parsed = JSON.parse(serverState.s) as StatePlayMessage;
+        const parsed = JSON.parse(serverState.s) as IStatePlayMessage;
 
         if (!parsed) {
             return;
@@ -99,7 +103,7 @@ export class Game {
         clearInterval(this.updateInterval);
         this.lastUpdateMs = Date.now();
 
-        const stepSizeMilliseconds = 1000.0/fps;
+        const stepSizeMilliseconds = 1000.0 / fps;
 
         this.updateInterval = setInterval(() => {
 
@@ -114,7 +118,7 @@ export class Game {
                 this.timeAccumulatedMilliseconds -= stepSizeMilliseconds;
             }
 
-            //const input = this.storeInput.getCurrentInput(frameElapsedMs * 0.001);
+            // const input = this.storeInput.getCurrentInput(frameElapsedMs * 0.001);
 
             this.draw();
 
@@ -149,14 +153,14 @@ export class Game {
         const step = 0.05;
 
         const text = [
-            "Client Side Prediction (P): " + (this.currentInputs.clientSidePredictionEnabled ? "ON" : "off"),
-            "Server Reconciliation (R): " + (this.currentInputs.serverReconciliationEnabled ? "ON" : "off"),
-            "Unprocessed inputs: " + this.storeInput.inputBufferLength(),
-            "Latency: " + this.connection.currentLatencyMs() + "ms"
+            'Client Side Prediction (P): ' + (this.currentInputs.clientSidePredictionEnabled ? 'ON' : 'off'),
+            'Server Reconciliation (R): ' + (this.currentInputs.serverReconciliationEnabled ? 'ON' : 'off'),
+            'Unprocessed inputs: ' + this.storeInput.inputBufferLength(),
+            'Latency: ' + this.connection.currentLatencyMs() + 'ms',
         ];
 
         for (let i = 0; i < text.length; ++i) {
-            this.renderTarget.text(text[i], left, top + step*i);
+            this.renderTarget.text(text[i], left, top + step * i);
         }
     }
 }

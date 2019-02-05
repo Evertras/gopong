@@ -24,7 +24,7 @@ export class SquareRenderTarget {
         this.ctx.canvas.width = this.pixelScale;
         this.ctx.canvas.height = this.pixelScale;
 
-        this.ctx.font = "30px Arial";
+        this.ctx.font = '30px Arial';
     }
 
     /**
@@ -47,7 +47,7 @@ export class SquareRenderTarget {
             x * this.pixelScale,
             y * this.pixelScale,
             width * this.pixelScale,
-            height * this.pixelScale
+            height * this.pixelScale,
         );
 
         this.ctx.fill();
@@ -65,7 +65,7 @@ export class SquareRenderTarget {
             y * this.pixelScale,
             r * this.pixelScale,
             0,
-            Math.PI*2
+            Math.PI * 2,
         );
 
         this.ctx.fill();

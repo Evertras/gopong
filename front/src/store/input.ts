@@ -2,7 +2,7 @@ export interface InputStep {
     /**
      * How long the input was applied for, in seconds
      */
-    durationSeconds: number
+    durationSeconds: number;
 
     /**
      * The amount to move up (negative) or down (positive) in the range [-1,1]
@@ -27,9 +27,9 @@ export interface InputStep {
 
 export class InputStore {
     private inputBuffer: InputStep[] = [];
-    //private index: number = 0;
-    //private lastTime: number = Date.now();
-    //private raw: InputRaw = new InputRaw();
+    // private index: number = 0;
+    // private lastTime: number = Date.now();
+    // private raw: InputRaw = new InputRaw();
 
     /*
     public step() : InputStep {
@@ -62,12 +62,12 @@ export class InputStore {
 
     /**
      * Deletes old input buffers up to and including a given index.
-     * 
+     *
      * @param index The input index to delete up to, inclusive
      */
     public deleteUntil(index: number) {
         let trim = 0;
-        while(
+        while (
             trim < this.inputBuffer.length
             && this.inputBuffer[trim].index <= index
         ) {
@@ -77,7 +77,7 @@ export class InputStore {
         this.inputBuffer.splice(0, trim);
     }
 
-    public inputBufferLength() : number {
+    public inputBufferLength(): number {
         return this.inputBuffer.length;
     }
 

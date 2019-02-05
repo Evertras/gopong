@@ -9,6 +9,7 @@ clean:
 	rm -rf front/build
 
 test: generate
+	npx tslint -p .
 	npm test
 	go test -v ./lib/...
 

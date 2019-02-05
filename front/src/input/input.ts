@@ -1,5 +1,5 @@
-import { KeyState } from "./keyState";
-import { KeyCode } from "./keyCodes";
+import { KeyCode } from './keyCodes';
+import { KeyState } from './keyState';
 
 /**
  * A unique numerical identifier for an input.  This should be defined
@@ -7,19 +7,19 @@ import { KeyCode } from "./keyCodes";
  */
 export type InputID = number;
 
-export type InputIDToStateMap = { [key:number]:KeyState; };
-type KeyCodeToStateMap = { [key:string]:KeyState; };
+export interface IInputIDToStateMap { [key: number]: KeyState; }
+interface IKeyCodeToStateMap { [key: string]: KeyState; }
 
 export class Input {
     // Maps key codes to key states
-    private keyMap: KeyCodeToStateMap = {};
+    private keyMap: IKeyCodeToStateMap = {};
 
     // Maps a unique InputID to a key state for that ID
-    private keyStates: InputIDToStateMap = {};
+    private keyStates: IInputIDToStateMap = {};
 
     /**
      * Adds an input to watch for.
-     * 
+     *
      * @param id The unique numerical identifier for the input
      * @param codes Which keycodes to watch for
      */
@@ -27,27 +27,27 @@ export class Input {
         const keyState = new KeyState();
         this.keyStates[id] = keyState;
 
-        for (let i = 0; i < codes.length; ++i) {
-            this.keyMap[codes[i]] = keyState;
+        for (const code of codes) {
+            this.keyMap[code] = keyState;
         }
     }
 
     /**
      * Gets the current state of a given input
-     * 
+     *
      * @param id The unique numerical identifier for the input
      */
     public get(id: InputID): KeyState {
         const keyState = this.keyStates[id];
 
         if (!keyState) {
-            throw new Error("key ID " + id + " not found");
+            throw new Error('key ID ' + id + ' not found');
         }
 
         return keyState;
     }
 
-    public step(): InputIDToStateMap {
+    public step(): IInputIDToStateMap {
         return this.keyStates;
     }
 
