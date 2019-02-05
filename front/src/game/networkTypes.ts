@@ -1,11 +1,11 @@
-export interface IPaddleMessage {
+export interface IMessagePaddle {
     /**
      * The center of the paddle from [0,1]
      */
     c: number;
 }
 
-export interface IBallMessage {
+export interface IMessageBall {
     /**
      * The center X coordinate of the ball from [0,1]
      */
@@ -17,7 +17,7 @@ export interface IBallMessage {
     y: number;
 }
 
-export interface IStateMessage {
+export interface IMessageState {
     /**
      * The inner state data of the game, which is itself a JSON serialized object that depends on
      * the type of state to determine its schema.
@@ -30,24 +30,24 @@ export interface IStateMessage {
     n: number;
 }
 
-export interface IStatePlayMessage {
+export interface IMessageStatePlay {
     /**
      * Left paddle
      */
-    pL: IPaddleMessage;
+    pL: IMessagePaddle;
 
     /**
      * Right paddle
      */
-    pR: IPaddleMessage;
+    pR: IMessagePaddle;
 
     /**
      * Ball
      */
-    b: IBallMessage;
+    b: IMessageBall;
 }
 
-export interface IInputMessage {
+export interface IMessageInput {
     /**
      * Movement axis from [-1,1]
      */

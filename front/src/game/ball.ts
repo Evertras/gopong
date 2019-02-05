@@ -1,6 +1,6 @@
 import { SquareRenderTarget } from '../graphics/renderTarget';
 import { IDrawable } from './drawable';
-import { IBallMessage } from './networkTypes';
+import { IMessageBall } from './networkTypes';
 
 export class Ball implements IDrawable {
     public x: number = 0.5;
@@ -11,7 +11,7 @@ export class Ball implements IDrawable {
         this.radius = radius;
     }
 
-    public applyServerUpdate(ballState: IBallMessage) {
+    public applyServerUpdate(ballState: IMessageBall) {
         this.x = ballState.x;
         this.y = ballState.y;
     }

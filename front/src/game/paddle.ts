@@ -1,6 +1,6 @@
 import { SquareRenderTarget } from '../graphics/renderTarget';
 import { IDrawable } from './drawable';
-import { IPaddleMessage } from './networkTypes';
+import { IMessagePaddle } from './networkTypes';
 
 export enum PaddleSide {
     // Being explicit about the numbers to match server values
@@ -22,7 +22,7 @@ export class Paddle implements IDrawable {
         this.side = side;
     }
 
-    public applyServerUpdate(paddleState: IPaddleMessage) {
+    public applyServerUpdate(paddleState: IMessagePaddle) {
         this.center = paddleState.c;
     }
 

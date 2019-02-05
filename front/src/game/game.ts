@@ -4,9 +4,9 @@ import { IConnection } from '../network/connection';
 import { InputStore } from '../store/input';
 import { Ball } from './ball';
 import {
-    IInputMessage,
-    IStateMessage,
-    IStatePlayMessage,
+    IMessageInput,
+    IMessageState,
+    IMessageStatePlay,
 } from './networkTypes';
 import { Paddle, PaddleSide } from './paddle';
 
@@ -46,7 +46,7 @@ export class Game {
         this.connection.onData = (data: string) => {
             const parsed = JSON.parse(data);
 
-            const stateMessage = parsed as IStateMessage;
+            const stateMessage = parsed as IMessageState;
 
             if (stateMessage) {
                 this.applyServerUpdate(stateMessage);
@@ -54,9 +54,9 @@ export class Game {
         };
     }
 
-    public applyServerUpdate(serverState: IStateMessage) {
+    public applyServerUpdate(serverState: IMessageState) {
         // For now...
-        const parsed = JSON.parse(serverState.s) as IStatePlayMessage;
+        const parsed = JSON.parse(serverState.s) as IMessageStatePlay;
 
         if (!parsed) {
             return;
@@ -110,7 +110,7 @@ export class Game {
 
             this.draw();
 
-            const inputMessage: IInputMessage = {
+            const inputMessage: IMessageInput = {
                 m: input.movementAxis,
                 n: input.index,
                 d: input.durationSeconds,
