@@ -4,7 +4,7 @@ import 'mocha';
 import 'sinon';
 import { SinonFakeTimers, useFakeTimers } from 'sinon';
 import { Input } from '../input/input';
-import { InputStore, Keys } from './input';
+import { Keys, StoreInput } from './input';
 
 describe('input store', () => {
     let clock: SinonFakeTimers;
@@ -22,7 +22,7 @@ describe('input store', () => {
             const input = new Input();
 
             // Should assign the appropriate keys
-            new InputStore(input);
+            new StoreInput(input);
 
             const watched = input.step();
 
@@ -43,7 +43,7 @@ describe('input store', () => {
     describe('step', () => {
         it('adds an input to the buffer for each call', () => {
             const input = new Input();
-            const store = new InputStore(input);
+            const store = new StoreInput(input);
 
             expect(store.inputBufferLength()).to.equal(0);
 
@@ -60,7 +60,7 @@ describe('input store', () => {
             clock.reset();
 
             const input = new Input();
-            const store = new InputStore(input);
+            const store = new StoreInput(input);
             const secondMs = 1000;
             const ticks = 10;
 
@@ -78,7 +78,7 @@ describe('input store', () => {
 
         it('increments the index each time', () => {
             const input = new Input();
-            const store = new InputStore(input);
+            const store = new StoreInput(input);
             const ticks = 10;
 
             for (let i = 0; i < ticks; ++i) {
@@ -100,7 +100,7 @@ describe('input store', () => {
     describe('deleteUntil', () => {
         it('does not delete anything if a low index is provided', () => {
             const input = new Input();
-            const store = new InputStore(input);
+            const store = new StoreInput(input);
             const ticks = 10;
 
             for (let i = 0; i < ticks; ++i) {
@@ -116,7 +116,7 @@ describe('input store', () => {
 
         it('deletes everything up to and including the given index', () => {
             const input = new Input();
-            const store = new InputStore(input);
+            const store = new StoreInput(input);
             const ticks = 10;
 
             for (let i = 0; i < ticks; ++i) {
@@ -138,7 +138,7 @@ describe('input store', () => {
     describe('getLatest', () => {
         it('returns the latest correctly', () => {
             const input = new Input();
-            const store = new InputStore(input);
+            const store = new StoreInput(input);
             const ticks = 10;
 
             for (let i = 0; i < ticks; ++i) {

@@ -1,5 +1,5 @@
-import { SquareRenderTarget } from '../graphics/renderTarget';
+import { IRenderTarget } from '../graphics/renderTarget';
 
 export interface IDrawable {
-    draw(renderTarget: SquareRenderTarget): void;
+    draw(renderTarget: IRenderTarget): void;
 }

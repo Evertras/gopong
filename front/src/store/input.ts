@@ -35,7 +35,7 @@ export enum Keys {
     ToggleServerReconciliation,
 }
 
-export class InputStore {
+export class StoreInput {
     private buffer: InputStep[] = [];
     private latest: InputStep;
     private index: number = 0;

@@ -1,46 +1,36 @@
-import { SquareRenderTarget } from '../graphics/renderTarget';
+import { IRenderTarget } from '../graphics/renderTarget';
 import { Input } from '../input/input';
 import { IConnection } from '../network/connection';
-import { InputStore } from '../store/input';
-import { Ball } from './ball';
-import {
-    IMessageInput,
-    IMessageState,
-    IMessageStatePlay,
-} from './networkTypes';
-import { Paddle, PaddleSide } from './paddle';
+import { StoreConfig } from '../store/config';
+import { StoreInput } from '../store/input';
+import { IMessageInput, IMessageState } from './networkTypes';
+import { StatePlay } from './states/play/play';
+import { IState } from './states/state';
 
+/**
+ * Controls the game loop and passes information on to underlying states.
+ */
 export class Game {
-    public paddleLeft: Paddle;
-    public paddleRight: Paddle;
-    public ball: Ball;
-    private clientSidePredictionEnabled: boolean = false;
-    private serverReconciliationEnabled: boolean = false;
-
     // Stores to share data
-    private storeInput: InputStore;
+    private storeInput: StoreInput;
+    private storeConfig: StoreConfig = new StoreConfig();
+
+    private currentState: IState;
 
     private updateInterval: number | undefined;
     private lastUpdateMs: number = 0;
     private timeAccumulatedMilliseconds: number = 0;
 
-    private renderTarget: SquareRenderTarget;
+    private renderTarget: IRenderTarget;
 
     private connection: IConnection;
 
-    constructor(renderTarget: SquareRenderTarget, connection: IConnection, input: Input) {
-        this.storeInput = new InputStore(input);
-
-        // TODO: apply actual config
-        const paddleHeight = 0.2;
-        const paddleMaxSpeedPerSecond = 0.1;
-        const ballRadius = 0.02;
-
-        this.paddleLeft = new Paddle(paddleHeight, paddleMaxSpeedPerSecond, PaddleSide.Left, true);
-        this.paddleRight = new Paddle(paddleHeight, paddleMaxSpeedPerSecond, PaddleSide.Right, false);
-        this.ball = new Ball(ballRadius);
+    constructor(renderTarget: IRenderTarget, connection: IConnection, input: Input) {
+        this.storeInput = new StoreInput(input);
 
         this.renderTarget = renderTarget;
+
+        this.currentState = new StatePlay(this.storeConfig);
 
         this.connection = connection;
         this.connection.onData = (data: string) => {
@@ -49,32 +39,17 @@ export class Game {
             const stateMessage = parsed as IMessageState;
 
             if (stateMessage) {
-                this.applyServerUpdate(stateMessage);
+                this.storeInput.deleteUntil(stateMessage.n);
+                this.currentState.applyServerUpdate(stateMessage.s);
+
+                if (this.storeConfig.serverReconciliationEnabled) {
+                    const buffer = this.storeInput.getBuffer();
+                    for (const i of buffer) {
+                        this.currentState.applyInput(i);
+                    }
+                }
             }
         };
-    }
-
-    public applyServerUpdate(serverState: IMessageState) {
-        // For now...
-        const parsed = JSON.parse(serverState.s) as IMessageStatePlay;
-
-        if (!parsed) {
-            return;
-        }
-
-        this.paddleLeft.applyServerUpdate(parsed.pL);
-        this.paddleRight.applyServerUpdate(parsed.pR);
-        this.ball.applyServerUpdate(parsed.b);
-
-        if (this.serverReconciliationEnabled) {
-            const buffer = this.storeInput.getBuffer();
-            for (const input of buffer) {
-                // TODO: Use on correct paddle
-                this.paddleLeft.applyMovementInput(
-                    input.movementAxis,
-                    input.durationSeconds);
-            }
-        }
     }
 
     public start(fps: number) {
@@ -101,11 +76,19 @@ export class Game {
             const input = this.storeInput.getLatest();
 
             if (input.toggleClientPredictionPressed) {
-                this.clientSidePredictionEnabled = !this.clientSidePredictionEnabled;
+                this.storeConfig.clientSidePredictionEnabled = !this.storeConfig.clientSidePredictionEnabled;
+
+                if (!this.storeConfig.clientSidePredictionEnabled) {
+                    this.storeConfig.serverReconciliationEnabled = false;
+                }
             }
 
             if (input.toggleServerReconciliationPressed) {
-                this.serverReconciliationEnabled = !this.serverReconciliationEnabled;
+                this.storeConfig.serverReconciliationEnabled = !this.storeConfig.serverReconciliationEnabled;
+
+                if (this.storeConfig.serverReconciliationEnabled) {
+                    this.storeConfig.clientSidePredictionEnabled = true;
+                }
             }
 
             this.draw();
@@ -116,9 +99,8 @@ export class Game {
                 d: input.durationSeconds,
             };
 
-            if (this.clientSidePredictionEnabled) {
-                // TODO: apply to correct paddle
-                this.paddleLeft.applyMovementInput(input.movementAxis, input.durationSeconds);
+            if (this.storeConfig.clientSidePredictionEnabled) {
+                this.currentState.applyInput(input);
             }
 
             this.connection.write(JSON.stringify(inputMessage));
@@ -128,9 +110,8 @@ export class Game {
 
     private draw() {
         this.renderTarget.begin();
-        this.paddleLeft.draw(this.renderTarget);
-        this.paddleRight.draw(this.renderTarget);
-        this.ball.draw(this.renderTarget);
+
+        this.currentState.draw(this.renderTarget);
 
         // Some info/debug text
         const left = 0.3;
@@ -138,8 +119,8 @@ export class Game {
         const step = 0.05;
 
         const text = [
-            'Client Side Prediction (P): ' + (this.clientSidePredictionEnabled ? 'ON' : 'off'),
-            'Server Reconciliation (R): ' + (this.serverReconciliationEnabled ? 'ON' : 'off'),
+            'Client Side Prediction (P): ' + (this.storeConfig.clientSidePredictionEnabled ? 'ON' : 'off'),
+            'Server Reconciliation (R): ' + (this.storeConfig.serverReconciliationEnabled ? 'ON' : 'off'),
             'Unprocessed inputs: ' + this.storeInput.inputBufferLength(),
             'Latency: ' + this.connection.currentLatencyMs() + 'ms',
         ];

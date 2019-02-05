@@ -1,6 +1,6 @@
-import { SquareRenderTarget } from '../graphics/renderTarget';
-import { IDrawable } from './drawable';
-import { IMessageBall } from './networkTypes';
+import { IRenderTarget } from '../../graphics/renderTarget';
+import { IDrawable } from '../drawable';
+import { IMessageBall } from '../networkTypes';
 
 export class Ball implements IDrawable {
     public x: number = 0.5;
@@ -16,7 +16,7 @@ export class Ball implements IDrawable {
         this.y = ballState.y;
     }
 
-    public draw(renderTarget: SquareRenderTarget) {
+    public draw(renderTarget: IRenderTarget) {
         renderTarget.circle(this.x, this.y, this.radius);
     }
 }

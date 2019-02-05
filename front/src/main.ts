@@ -1,5 +1,5 @@
 import { Game } from './game/game';
-import { SquareRenderTarget } from './graphics/renderTarget';
+import { SquareRenderTarget } from './graphics/squareRenderTarget';
 import { Input } from './input/input';
 import { LaggingConnection } from './network/laggingConnection';
 

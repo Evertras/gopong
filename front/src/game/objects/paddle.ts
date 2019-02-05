@@ -1,6 +1,6 @@
-import { SquareRenderTarget } from '../graphics/renderTarget';
-import { IDrawable } from './drawable';
-import { IMessagePaddle } from './networkTypes';
+import { IRenderTarget } from '../../graphics/renderTarget';
+import { IDrawable } from '../drawable';
+import { IMessagePaddle } from '../networkTypes';
 
 export enum PaddleSide {
     // Being explicit about the numbers to match server values
@@ -41,7 +41,7 @@ export class Paddle implements IDrawable {
         }
     }
 
-    public draw(renderTarget: SquareRenderTarget) {
+    public draw(renderTarget: IRenderTarget) {
         // Dealing with [0,1] coordinates
         const width = 0.03;
         const height = this.height;

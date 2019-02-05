@@ -47,6 +47,9 @@ export interface IMessageStatePlay {
     b: IMessageBall;
 }
 
+/**
+ * Input messages to send to the server
+ */
 export interface IMessageInput {
     /**
      * Movement axis from [-1,1]
