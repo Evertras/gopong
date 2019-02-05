@@ -2,14 +2,13 @@ BINARY_NAME=gopong
 
 all: test build
 
-build: generate
+build: lib/static/build.go
 	go build -o $(BINARY_NAME) -v ./cmd/gopong/main.go
 
 clean:
-	rm -rf front/build
+	rm -f lib/static/build.go
 
-test: generate
-	npx tslint -p .
+test: lib/static/build.go
 	npm test
 	go test -v ./lib/...
 
@@ -19,6 +18,9 @@ bench:
 run-dev:
 	go run -race ./cmd/gopong/main.go -d -t 3
 
-generate:
+generate: clean lib/static/build.go
+
+lib/static/build.go:
+	npx tslint -p .
 	npx webpack
 	go generate ./lib/static/
