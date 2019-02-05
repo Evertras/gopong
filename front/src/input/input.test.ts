@@ -57,8 +57,8 @@ describe('input', () => {
 
             i.listenTo(window.document);
 
-            expect(window.document.onkeydown).to.not.be.undefined;
-            expect(window.document.onkeyup).to.not.be.undefined;
+            expect(window.document.onkeydown, 'onkeydown missing').to.exist;
+            expect(window.document.onkeyup, 'onkeyup missing').to.exist;
         });
     });
 
