@@ -6,6 +6,8 @@
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.5",
     "chai": "^4.2.0",
+    "jsdom": "^13.2.0",
+    "jsdom-global": "^3.0.2",
     "mocha": "^5.2.0",
     "ts-loader": "^5.3.3",
     "ts-node": "^8.0.2",
@@ -15,7 +17,7 @@
     "webpack-cli": "^3.2.1"
   },
   "scripts": {
-    "test": "mocha -r ts-node/register front/src/**/*.test.ts"
+    "test": "mocha -r ts-node/register -r jsdom-global/register front/src/**/*.test.ts"
   },
   "repository": {
     "type": "git",
