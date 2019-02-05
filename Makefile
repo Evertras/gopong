@@ -21,6 +21,5 @@ run-dev:
 generate: clean lib/static/build.go
 
 lib/static/build.go:
-	npx tslint -p .
 	npx webpack
 	go generate ./lib/static/

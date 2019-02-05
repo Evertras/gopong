@@ -1,4 +1,5 @@
 import { SquareRenderTarget } from '../graphics/renderTarget';
+import { Input } from '../input/input';
 import { IConnection } from '../network/connection';
 import { InputStore } from '../store/input';
 import { Ball } from './ball';
@@ -14,7 +15,7 @@ export class Game {
     public ball: Ball;
 
     // Stores to share data
-    private storeInput: InputStore = new InputStore();
+    private storeInput: InputStore;
 
     private currentInputs = {
         up: false,
@@ -32,7 +33,9 @@ export class Game {
 
     private connection: IConnection;
 
-    constructor(renderTarget: SquareRenderTarget, connection: IConnection) {
+    constructor(renderTarget: SquareRenderTarget, connection: IConnection, input: Input) {
+        this.storeInput = new InputStore(input);
+
         // Temporary
         const paddleHeight = 0.2;
         const paddleMaxSpeedPerSecond = 0.1;

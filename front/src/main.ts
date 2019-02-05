@@ -1,5 +1,6 @@
 import { Game } from './game/game';
 import { SquareRenderTarget } from './graphics/renderTarget';
+import { Input } from './input/input';
 import { LaggingConnection } from './network/laggingConnection';
 
 function getContext(): CanvasRenderingContext2D {
@@ -29,7 +30,11 @@ window.addEventListener('load', () => {
 
     const connection = new LaggingConnection('ws://localhost:8000/join');
 
-    const game = new Game(target, connection);
+    const input = new Input();
+
+    input.listenTo(window.document);
+
+    const game = new Game(target, connection, input);
 
     connection.setLatencyMs(500);
     connection.start();
