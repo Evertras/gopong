@@ -53,7 +53,7 @@ export class InputStore {
 
     public step(): InputStep {
         const now = Date.now();
-        const duration = this.lastTime - now;
+        const durationSeconds = (now - this.lastTime) * 0.001;
         const inputs = this.input.step();
 
         let movement = 0;
@@ -67,7 +67,7 @@ export class InputStore {
         }
 
         const inputStep: InputStep = {
-            durationSeconds: duration,
+            durationSeconds,
             index: this.index++,
             movementAxis: movement,
             toggleClientPredictionPressed: inputs[Keys.ToggleClientPrediction].pressed,
@@ -76,7 +76,13 @@ export class InputStore {
 
         this.buffer.push(inputStep);
 
+        this.lastTime = now;
+
         return inputStep;
+    }
+
+    public getBuffer(): InputStep[] {
+        return this.buffer;
     }
 
     /**
