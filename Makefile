@@ -9,11 +9,9 @@ clean:
 	rm -f lib/static/build.go
 
 test: lib/static/build.go
+	npx tslint -p .
 	npm test
 	go test -v ./lib/...
-
-lint:
-	npx tslint -p .
 
 bench:
 	go test -benchmem -bench . ./...
