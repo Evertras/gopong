@@ -55,7 +55,7 @@ func (i *Instance) Run() {
 			stepDelta := time.Since(lastTime)
 
 			i.processInputs()
-			i.currentState.Step(stepDelta)
+			i.currentState = i.currentState.Step(stepDelta)
 
 			stateMessage, err := i.currentState.Marshal()
 

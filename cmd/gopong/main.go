@@ -74,5 +74,4 @@ func initMetrics() {
 	if err != nil {
 		log.Fatalf("Unable to create global metrics: %v", err)
 	}
-
 }
