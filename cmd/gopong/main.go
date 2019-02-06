@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/Evertras/gopong/lib/server"
-	"github.com/Evertras/gopong/lib/state/play"
+	"github.com/Evertras/gopong/lib/store"
 	metrics "github.com/armon/go-metrics"
 	"github.com/spf13/pflag"
 )
@@ -31,13 +31,13 @@ func getConfig() server.Config {
 
 	pflag.Parse()
 
+	// Use mostly defaults
+	gameCfg := store.New()
+
+	gameCfg.StepInterval = time.Second / time.Duration(*tickRate)
+
 	cfg := server.Config{
-		TickRate: time.Second / time.Duration(*tickRate),
-		GameCfg: play.Config{
-			BallRadius:              0.02,
-			PaddleHeight:            0.2,
-			MaxPaddleSpeedPerSecond: 0.1,
-		},
+		GameCfg:                   gameCfg,
 		ReadStaticFilesPerRequest: *devMode,
 	}
 

@@ -6,6 +6,9 @@ type StateType int
 const (
 	// StatePlay is the actual game itself
 	StatePlay StateType = iota
+
+	// StateStarting is the initial countdown to start the game
+	StateStarting
 )
 
 // State contains information about the current game state to be sent to clients

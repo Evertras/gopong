@@ -6,7 +6,7 @@ import (
 
 	"github.com/Evertras/gopong/lib/state"
 	"github.com/Evertras/gopong/lib/state/message"
-	metrics "github.com/armon/go-metrics"
+	"github.com/Evertras/gopong/lib/store"
 )
 
 // State is a snapshot of the game state as a whole
@@ -17,11 +17,8 @@ type State struct {
 	Ball *Ball `json:"b"`
 }
 
-var sampleKeyReceivedInputDuration = []string{"game", "input", "duration", "seconds"}
-var counterInputInvalid = []string{"game", "input", "invalid"}
-
 // New creates a fresh game state ready to play
-func New(cfg Config) *State {
+func New(cfg *store.Config) *State {
 	return &State{
 		PaddleLeft: &Paddle{
 			Center:            0.5,
@@ -52,16 +49,6 @@ func (s *State) Step(d time.Duration) state.State {
 
 // ApplyInput applies a given input to the state
 func (s *State) ApplyInput(i message.Input, side message.PlayerSide) {
-	metrics.AddSample(sampleKeyReceivedInputDuration, float32(i.DurationSeconds))
-
-	// TODO: More sanity checks for cheating, check for accumulated time to avoid spamming
-	// input, etc.
-
-	if i.MovementAxis > 1 || i.MovementAxis < -1 || i.DurationSeconds > 0.1 {
-		metrics.IncrCounter(counterInputInvalid, 1)
-		return
-	}
-
 	var paddle *Paddle
 
 	if side == message.PlayerSideLeft {

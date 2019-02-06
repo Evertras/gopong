@@ -7,20 +7,17 @@ import (
 	"log"
 	"net/http"
 	"sync"
-	"time"
 
 	"github.com/Evertras/gopong/lib/client"
 	"github.com/Evertras/gopong/lib/state/play"
 	"github.com/Evertras/gopong/lib/static"
+	"github.com/Evertras/gopong/lib/store"
 )
 
 // Config contains all configuration to run the server
 type Config struct {
-	// TickRate is how long between each update tick
-	TickRate time.Duration
-
 	// GameCfg is the game configuration, such as paddle height, etc.
-	GameCfg play.Config
+	GameCfg *store.Config
 
 	// ReadStaticFilesPerRequest determines if the server will read from disk on each request
 	// or use the precompiled static files.  Useful for development, should not

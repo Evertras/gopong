@@ -36,12 +36,8 @@ func join(s *Server) func(http.ResponseWriter, *http.Request) {
 			s.waitingClient = c
 		} else {
 			log.Println("Game starting")
-			cfg := instance.Config{
-				Play:         s.cfg.GameCfg,
-				StepInterval: s.cfg.TickRate,
-			}
 
-			i := instance.New(cfg, s.waitingClient, c)
+			i := instance.New(s.cfg.GameCfg, s.waitingClient, c)
 
 			s.waitingClient = nil
 
