@@ -10,6 +10,27 @@ the executable via `go generate ./lib/static` creating a `build.go` file in the 
 directory.  When run with the `-d` flag, files are served directly from disk to allow for an easier
 development workflow.
 
+Note that this entire project is **complete overkill** for Pong.  Even this documentation is overkill.
+The point is to have a robust example of a multiplayer game that uses both Typescript and Go and
+meets the following self-imposed requirements:
+
+* Easy to develop/maintain
+  * Code follows good practices and is extensible for new features
+  * Tests are relatively painless to add and maintain to enable TDD where appropriate
+  * Tests exist where reasonable so changes can be made confidently
+  * A development mode flag and webpack's watch mode make front end development frictionless; automatic rebuild for every save
+* Easy to build
+  * As few global installs as possible (no npm install -g!)
+  * CI should be essentially configless outside of stock Go and NodeJS installs
+  * Everything should just work out of the box on any machine after cloning the repo
+* Easy to distribute
+  * Everything is self-contained into a single binary
+    * Extremely lightweight containerization is trivial due to zero runtime dependencies, Node isn't required
+    * Packaging a single executable binary is the simplest use case for any other package system if desired
+* Easy to monitor
+  * Emits metrics in a standard fashion that existing tools can read (statsd)
+  * Adding metrics is easy, to encourage more monitoring
+
 ## Development prerequisites
 
 ### Minimum requirements
@@ -53,8 +74,9 @@ UDP ports in the docker compose to work.
 
 ### TLDR
 
-The simplest version is to simply run `make` to do a full build. Click the build badge at the top
-for Travis CI information since Travis CI will do exactly that.
+```bash
+make
+```
 
 ### Details
 
@@ -82,6 +104,11 @@ See [tslint.json](tslint.json) for Typescript linter settings.
 Running `npx tslint -p . --fix` will fix most Typescript linting errors.  This script has also
 been added as `npm run-script lint-fix`.  Most editors will have a plugin of some sort that
 will run the linter for you as well, and potentially even fix errors on save.
+
+### Travis CI
+
+The build badge at the top of this README will take you to the Travis CI page for this project.
+Travis CI simply runs `make` which will run all tests to ensure everything is correct.
 
 ## Test tools
 
@@ -133,13 +160,13 @@ The ball currently follows a simple linear path at a constant speed as configure
 
 ## Networking
 
-GoPong's server is authoritative.  The only thing sent from the client to the server is input which
-is validated on the server for safety.  State information is sent to clients every update tick on
+GoPong's server is authoritative.  The only thing sent from a connected client to the server is input,
+which is validated on the server for safety.  State information is sent to clients every update tick on
 the server.
 
-Inputs sent have an incrementing index, and the server will tell each individual client what the last
-index seen from them was when sending a state update.  This allows the client to replay unacknowledged
-inputs for client side prediction and server reconciliation.
+Inputs sent have an incrementing index set by the client.  The server will tell each individual client
+what the last index seen from them was when sending a state update.  This allows the client to replay
+unacknowledged inputs for client side prediction and server reconciliation.
 
 For testing purposes, client side prediction and server reconciliation can be toggled on/off on the front
 end.  The back end doesn't care what the front end does in this regard.
