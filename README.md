@@ -6,12 +6,13 @@ A simple game of multiplayer browser Pong in Typescript with a Go server backing
 
 ## Build tools
 
-This project uses [dep](https://github.com/golang/dep) to handle its dependencies.
+Click the build badge at the top for Travis CI information.
 
-Note: the `vendor` folder is checked in intentionally, but in a 'real' project this should
-probably be handled better by the build system.  For this, it's fine.
+This project uses [dep](https://github.com/golang/dep) to handle its dependencies. Note that the
+`vendor` folder is checked in intentionally, but in a 'real' project this should probably be
+handled better by the build system.  For this, it's fine.
 
-This project uses webpack with the stock typescript loaders and a slightly custom tslint pass.
+This project uses webpack with the stock typescript loader and a slightly tweaked tslint config.
 
 Relevant front end build configuration:
 
@@ -25,18 +26,28 @@ Node 8.x was used for development.  It may work on earlier versions, but it's un
 Good ol' `make` is used for build script consolidation since both Go and Typescript are present.
 See [the Makefile](Makefile) for available commands and what they do.
 
+## Test tools
+
+To run all tests, run `make test`.  See [the Makefile](Makefile) for more information.
+
+Go just uses the stock Go testing libraries included with Go.  Run `go test -v ./...` to run all Go tests.
+
+Typescript uses Mocha, Chai, and Sinon.  Running `npm test` will run all Typescript tests.
+
 ## Entry points
 
-The entry point for the back end server is [cmd/gopong/main.go].
+Where to go to get started in the code.
 
-The entry point for the front end is [front/src/main.ts].
+The development entry point for the back end server is [cmd/gopong/main.go].
 
-## Running development mode
+The development entry point for the front end is [front/src/main.ts].
+
+## Running in development mode
 
 Running `make run-dev` will generate the front end and start the back end server.  The content files will be served
 off the disk, so updating the front end will be served without having to restart the server.
 
-Once running, the game is available at http://localhost:8000 and will connect automatically once loaded.
+Once running, the game is available at [http://localhost:8000](http://localhost:8000) and will connect automatically once loaded.
 
 ## Game System Information
 
@@ -140,9 +151,11 @@ For an example with another state:
 
 ## Metrics
 
-The Go server emits statsd metrics.  For development, a TICK stack is available via Docker Compose
-in the [tick](tick) directory.  Note that Telegraf is commented out for now because Windows... instead
-you'll have to run an actual Telegraf executable locally using the config in [the etc directory](tick/etc/telegraf.conf).
+The Go server emits statsd metrics.  For development, a TICK stack is
+available via Docker Compose in the [tick](tick) directory.  Note that
+Telegraf is commented out for now because Windows... instead you'll
+have to run an actual Telegraf executable locally using the config in
+[the etc directory](tick/etc/telegraf.conf).
 
 ```bash
 cd ./tick/
@@ -157,4 +170,5 @@ telegraf.exe --config etc/telegraf.conf
 telegraf --config etc/telegraf.conf
 ```
 
-After running the Gopong server for more than a few seconds, you can then visit http://localhost:8888 to see metrics.
+After running the Gopong server for more than a few seconds, you can then
+visit [Chronograf](http://localhost:8888) at http://localhost:8888 to see metrics.
