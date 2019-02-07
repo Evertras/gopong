@@ -77,6 +77,7 @@ func (s *Server) Listen(addr string) error {
 
 		mux.HandleFunc("/", fileReaderFactory("./front/index.html", "text/html"))
 		mux.HandleFunc("/game.js", fileReaderFactory("./front/game.js", "script/javascript"))
+		mux.HandleFunc("/game.js.map", fileReaderFactory("./front/game.js.map", "script/javascript"))
 		mux.HandleFunc("/style.css", fileReaderFactory("./front/style.css", "text/css"))
 	} else {
 		mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {

@@ -1,7 +1,6 @@
 package play
 
 import (
-	"encoding/json"
 	"time"
 
 	"github.com/Evertras/gopong/lib/state"
@@ -63,14 +62,8 @@ func (s *State) ApplyInput(i message.Input, side message.PlayerSide) {
 
 // Marshal creates a state message of this play state to send to clients
 func (s *State) Marshal() (message.State, error) {
-	msg, err := json.Marshal(s)
-
-	if err != nil {
-		return message.State{}, err
-	}
-
 	return message.State{
-		Data: string(msg),
+		Data: s,
 		Type: message.StatePlay,
 	}, nil
 }

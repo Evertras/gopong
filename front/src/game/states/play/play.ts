@@ -1,10 +1,10 @@
 import { IRenderTarget } from '../../../graphics/renderTarget';
 import { StoreConfig } from '../../../store/config';
 import { InputStep } from '../../../store/input';
-import { IMessageStatePlay } from '../../networkTypes';
 import { Ball } from '../../objects/ball';
 import { Paddle, PaddleSide } from '../../objects/paddle';
 import { IState } from '../state';
+import { IMessageStatePlay } from './networkTypes';
 
 /**
  * The main state of the game: actually playing!
@@ -40,12 +40,8 @@ export class StatePlay implements IState {
         this.ball.draw(renderTarget);
     }
 
-    public applyServerUpdate(msg: string): void {
-        const parsed = JSON.parse(msg) as IMessageStatePlay;
-
-        if (!parsed) {
-            return;
-        }
+    public applyServerUpdate(msg: any): void {
+        const parsed = msg as IMessageStatePlay;
 
         this.paddleLeft.applyServerUpdate(parsed.pL);
         this.paddleRight.applyServerUpdate(parsed.pR);
@@ -58,7 +54,7 @@ export class StatePlay implements IState {
             inputStep.durationSeconds);
     }
 
-    public step(_: number): IState {
-        return this;
+    public step(_: number) {
+        // TODO: Entity Interpolation
     }
 }

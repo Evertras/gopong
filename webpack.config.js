@@ -2,7 +2,8 @@ const path = require('path');
 
 module.exports = {
     entry: './front/src/main.ts',
-    mode: 'production',
+    mode: 'development',
+    devtool: 'source-map',
     module: {
         rules: [
             {

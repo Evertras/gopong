@@ -90,7 +90,7 @@ func (i *Instance) processInputs() {
 
 		if input.MovementAxis > 1 || input.MovementAxis < -1 || input.DurationSeconds > 0.1 {
 			metrics.IncrCounter(metricKeyCounterInputInvalid, 1)
-			return
+			break
 		}
 
 		metrics.AddSample(metricKeyReceivedInputDuration, float32(input.DurationSeconds))
@@ -106,7 +106,7 @@ func (i *Instance) processInputs() {
 
 		if input.MovementAxis > 1 || input.MovementAxis < -1 || input.DurationSeconds > 0.1 {
 			metrics.IncrCounter(metricKeyCounterInputInvalid, 1)
-			return
+			break
 		}
 
 		metrics.AddSample(metricKeyReceivedInputDuration, float32(input.DurationSeconds))

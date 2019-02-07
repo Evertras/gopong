@@ -26,3 +26,4 @@ front/build
 
 # Build artifact for Javascript
 front/game.js
+front/game.js.map

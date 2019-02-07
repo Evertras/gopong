@@ -3,18 +3,19 @@ import { InputStep } from '../../store/input';
 
 export interface IState {
     /**
-     * Steps forward a frame, returning the state the game should now be in (usually itself).
+     * Steps forward a frame
      *
-     * @param durationSeconds How long to step forward, in fractional seconds
+     * @param durationMilliseconds How long to step forward, in milliseconds
      */
-    step(durationSeconds: number): IState;
+    step(durationMilliseconds: number): void;
 
     /**
-     * Applies an update supplied by the server for this state.
+     * Applies an update supplied by the server for this state.  The state should know
+     * how to deserialize its own state message.
      *
      * @param msg The JSON encoded state sent from the server
      */
-    applyServerUpdate(msg: string): void;
+    applyServerUpdate(msg: any): void;
 
     /**
      * Apply input to the state.  Used for client side prediction and server reconciliation.

@@ -4,7 +4,7 @@ import { IConnection } from '../network/connection';
 import { StoreConfig } from '../store/config';
 import { StoreInput } from '../store/input';
 import { IMessageInput, IMessageState } from './networkTypes';
-import { StatePlay } from './states/play/play';
+import { StateStarting } from './states/starting/starting';
 import { IState } from './states/state';
 
 /**
@@ -19,8 +19,6 @@ export class Game {
 
     private updateInterval: number | undefined;
     private lastUpdateMs: number = 0;
-    private timeAccumulatedMilliseconds: number = 0;
-
     private renderTarget: IRenderTarget;
 
     private connection: IConnection;
@@ -30,7 +28,7 @@ export class Game {
 
         this.renderTarget = renderTarget;
 
-        this.currentState = new StatePlay(this.storeConfig);
+        this.currentState = new StateStarting(3000);
 
         this.connection = connection;
         this.connection.onData = (data: string) => {
@@ -59,53 +57,58 @@ export class Game {
         const stepSizeMilliseconds = 1000.0 / fps;
 
         this.updateInterval = setInterval(() => {
-
-            const nowMs = Date.now();
-            const frameElapsedMs = nowMs - this.lastUpdateMs;
-
-            this.timeAccumulatedMilliseconds += frameElapsedMs;
-
-            this.lastUpdateMs = nowMs;
-
-            while (this.timeAccumulatedMilliseconds > 0) {
-                this.timeAccumulatedMilliseconds -= stepSizeMilliseconds;
-            }
-
-            this.storeInput.step();
-
-            const input = this.storeInput.getLatest();
-
-            if (input.toggleClientPredictionPressed) {
-                this.storeConfig.clientSidePredictionEnabled = !this.storeConfig.clientSidePredictionEnabled;
-
-                if (!this.storeConfig.clientSidePredictionEnabled) {
-                    this.storeConfig.serverReconciliationEnabled = false;
-                }
-            }
-
-            if (input.toggleServerReconciliationPressed) {
-                this.storeConfig.serverReconciliationEnabled = !this.storeConfig.serverReconciliationEnabled;
-
-                if (this.storeConfig.serverReconciliationEnabled) {
-                    this.storeConfig.clientSidePredictionEnabled = true;
-                }
-            }
-
-            this.draw();
-
-            const inputMessage: IMessageInput = {
-                m: input.movementAxis,
-                n: input.index,
-                d: input.durationSeconds,
-            };
-
-            if (this.storeConfig.clientSidePredictionEnabled) {
-                this.currentState.applyInput(input);
-            }
-
-            this.connection.write(JSON.stringify(inputMessage));
-
+            this.gameLoopStep();
         }, stepSizeMilliseconds);
+    }
+
+    private gameLoopStep() {
+        // Figure out how long this iteration actually is, since setInterval is only best effort
+        const nowMs = Date.now();
+        const frameElapsedMs = nowMs - this.lastUpdateMs;
+        this.lastUpdateMs = nowMs;
+
+        // Basic game loop at a high level
+        this.processInput();
+        this.update(frameElapsedMs);
+        this.draw();
+    }
+
+    private processInput() {
+        this.storeInput.step();
+
+        const input = this.storeInput.getLatest();
+
+        if (input.toggleClientPredictionPressed) {
+            this.storeConfig.clientSidePredictionEnabled = !this.storeConfig.clientSidePredictionEnabled;
+
+            if (!this.storeConfig.clientSidePredictionEnabled) {
+                this.storeConfig.serverReconciliationEnabled = false;
+            }
+        }
+
+        if (input.toggleServerReconciliationPressed) {
+            this.storeConfig.serverReconciliationEnabled = !this.storeConfig.serverReconciliationEnabled;
+
+            if (this.storeConfig.serverReconciliationEnabled) {
+                this.storeConfig.clientSidePredictionEnabled = true;
+            }
+        }
+
+        const inputMessage: IMessageInput = {
+            m: input.movementAxis,
+            n: input.index,
+            d: input.durationSeconds,
+        };
+
+        this.connection.write(JSON.stringify(inputMessage));
+    }
+
+    private update(deltaMs: number) {
+        this.currentState.step(deltaMs * 0.001);
+
+        if (this.storeConfig.clientSidePredictionEnabled) {
+            this.currentState.applyInput(this.storeInput.getLatest());
+        }
     }
 
     private draw() {

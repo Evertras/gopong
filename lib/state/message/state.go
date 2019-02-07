@@ -13,8 +13,8 @@ const (
 
 // State contains information about the current game state to be sent to clients
 type State struct {
-	// Data is the JSON encoded state information
-	Data string `json:"s"`
+	// Data contains the state data
+	Data interface{} `json:"s"`
 
 	// Type is the current state type
 	Type StateType `json:"t"`
