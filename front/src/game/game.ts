@@ -1,10 +1,9 @@
 import { IRenderTarget } from '../graphics/renderTarget';
-import { Input } from '../input/input';
 import { IConnection } from '../network/connection';
 import { StoreConfig } from '../store/config';
 import { StoreInput } from '../store/input';
-import { IMessageInput, IMessageState } from './networkTypes';
-import { StateStarting } from './states/starting/starting';
+import { IMessageInput, IMessageState, StateType } from './networkTypes';
+import { IStateFactory } from './states/factory';
 import { IState } from './states/state';
 
 /**
@@ -13,9 +12,13 @@ import { IState } from './states/state';
 export class Game {
     // Stores to share data
     private storeInput: StoreInput;
-    private storeConfig: StoreConfig = new StoreConfig();
+    private storeConfig: StoreConfig;
 
-    private currentState: IState;
+    // Handles creation of states
+    private stateFactory: IStateFactory;
+
+    private currentState: IState | null = null;
+    private currentStateType: StateType | null = null;
 
     private updateInterval: number | undefined;
     private lastUpdateMs: number = 0;
@@ -23,29 +26,52 @@ export class Game {
 
     private connection: IConnection;
 
-    constructor(renderTarget: IRenderTarget, connection: IConnection, input: Input) {
-        this.storeInput = new StoreInput(input);
-
+    constructor(
+        stateFactory: IStateFactory,
+        renderTarget: IRenderTarget,
+        connection: IConnection,
+        storeInput: StoreInput,
+        storeConfig: StoreConfig,
+    ) {
+        this.storeInput = storeInput;
+        this.storeConfig = storeConfig;
         this.renderTarget = renderTarget;
-
-        this.currentState = new StateStarting(3000);
-
+        this.stateFactory = stateFactory;
         this.connection = connection;
+
         this.connection.onData = (data: string) => {
             const parsed = JSON.parse(data);
 
             const stateMessage = parsed as IMessageState;
 
-            if (stateMessage) {
-                this.storeInput.deleteUntil(stateMessage.n);
-                this.currentState.applyServerUpdate(stateMessage.s);
+            if (!stateMessage) {
+                return;
+            }
 
-                if (this.storeConfig.serverReconciliationEnabled) {
-                    const buffer = this.storeInput.getBuffer();
-                    for (const i of buffer) {
-                        this.currentState.applyInput(i);
-                    }
-                }
+            this.storeInput.deleteUntil(stateMessage.n);
+
+            // Do we need to change to a new state?
+            if (this.currentStateType !== stateMessage.t) {
+                this.currentStateType = stateMessage.t;
+                this.currentState = this.stateFactory.create(stateMessage.t);
+            }
+
+            // If we don't have any state, nothing more to do
+            if (!this.currentState) {
+                return;
+            }
+
+            this.currentState.applyServerUpdate(stateMessage.s);
+
+            // If we don't want server reconciliation, nothing more to do
+            if (!this.storeConfig.serverReconciliationEnabled) {
+                return;
+            }
+
+            // Apply server reconciliation
+            const buffer = this.storeInput.getBuffer();
+            for (const i of buffer) {
+                this.currentState.applyInput(i);
             }
         };
     }
@@ -59,6 +85,10 @@ export class Game {
         this.updateInterval = setInterval(() => {
             this.gameLoopStep();
         }, stepSizeMilliseconds);
+    }
+
+    public stop() {
+        clearInterval(this.updateInterval);
     }
 
     private gameLoopStep() {
@@ -104,6 +134,10 @@ export class Game {
     }
 
     private update(deltaMs: number) {
+        if (!this.currentState) {
+            return;
+        }
+
         this.currentState.step(deltaMs * 0.001);
 
         if (this.storeConfig.clientSidePredictionEnabled) {
@@ -114,7 +148,9 @@ export class Game {
     private draw() {
         this.renderTarget.begin();
 
-        this.currentState.draw(this.renderTarget);
+        if (this.currentState) {
+            this.currentState.draw(this.renderTarget);
+        }
 
         // Some info/debug text
         const left = 0.3;

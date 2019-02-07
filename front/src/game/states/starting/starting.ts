@@ -1,23 +1,21 @@
 import { IRenderTarget } from '../../../graphics/renderTarget';
 import { InputStep } from '../../../store/input';
 import { IState } from '../state';
-
-export interface IMessageStateStarting {
-    /**
-     * How much time is remaining, in milliseconds
-     */
-    r: number;
-}
+import { IMessageStateStarting } from './networkTypes';
 
 export class StateStarting implements IState {
-    private remainingMilliseconds: number;
-
-    constructor(initialMilliseconds: number) {
-        this.remainingMilliseconds = initialMilliseconds;
-    }
+    private remainingMilliseconds: number | null = null;
 
     public step(durationMilliseconds: number) {
+        if (!this.remainingMilliseconds) {
+            return;
+        }
+
         this.remainingMilliseconds -= durationMilliseconds * 1000;
+
+        if (this.remainingMilliseconds < 0) {
+            this.remainingMilliseconds = 0;
+        }
     }
 
     public applyServerUpdate(msg: any): void {
@@ -31,7 +29,8 @@ export class StateStarting implements IState {
     }
 
     public draw(renderTarget: IRenderTarget): void {
-        renderTarget.text((this.remainingMilliseconds * 0.001).toFixed(1), 0.1, 0.9);
+        if (this.remainingMilliseconds) {
+            renderTarget.text((this.remainingMilliseconds * 0.001).toFixed(1), 0.1, 0.9);
+        }
     }
-
 }

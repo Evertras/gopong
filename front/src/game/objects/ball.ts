@@ -1,6 +1,5 @@
 import { IRenderTarget } from '../../graphics/renderTarget';
 import { IDrawable } from '../drawable';
-import { IMessageBall } from '../networkTypes';
 
 export class Ball implements IDrawable {
     public x: number = 0.5;
@@ -9,11 +8,6 @@ export class Ball implements IDrawable {
 
     constructor(radius: number) {
         this.radius = radius;
-    }
-
-    public applyServerUpdate(ballState: IMessageBall) {
-        this.x = ballState.x;
-        this.y = ballState.y;
     }
 
     public draw(renderTarget: IRenderTarget) {

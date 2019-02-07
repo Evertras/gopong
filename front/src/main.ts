@@ -1,7 +1,10 @@
 import { Game } from './game/game';
+import { StateFactory } from './game/states/factory';
 import { SquareRenderTarget } from './graphics/squareRenderTarget';
 import { Input } from './input/input';
 import { LaggingConnection } from './network/laggingConnection';
+import { StoreConfig } from './store/config';
+import { StoreInput } from './store/input';
 
 function getContext(): CanvasRenderingContext2D {
     const canvas = document.getElementById('playArea') as HTMLCanvasElement;
@@ -28,15 +31,25 @@ window.addEventListener('load', () => {
         target.updateSize(window.innerWidth, window.innerHeight);
     });
 
+    // Dependencies
     const connection = new LaggingConnection('ws://localhost:8000/join');
-
+    const storeConfig = new StoreConfig();
+    const stateFactory = new StateFactory(storeConfig);
     const input = new Input();
-
     input.listenTo(window.document);
+    const storeInput = new StoreInput(input);
 
-    const game = new Game(target, connection, input);
+    const game = new Game(
+        stateFactory,
+        target,
+        connection,
+        storeInput,
+        storeConfig,
+    );
 
+    // Add some fake lag
     connection.setLatencyMs(500);
     connection.start();
+
     game.start(30);
 });

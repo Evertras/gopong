@@ -1,3 +1,10 @@
+/**
+ * An ID for a state.  Explicitly set to match the server's definitions, do not edit!
+ */
+export enum StateType {
+    StateTypePlay = 0,
+    StateTypeStarting = 1,
+}
 
 export interface IMessageState {
     /**
@@ -7,9 +14,14 @@ export interface IMessageState {
     s: any;
 
     /**
-     * The last input index received by this client for this state
+     * The last input index received by this client.
      */
     n: number;
+
+    /**
+     * The state this message is defining.
+     */
+    t: StateType;
 }
 
 /**

@@ -1,6 +1,5 @@
 import { IRenderTarget } from '../../graphics/renderTarget';
 import { IDrawable } from '../drawable';
-import { IMessagePaddle } from '../networkTypes';
 
 export enum PaddleSide {
     // Being explicit about the numbers to match server values
@@ -20,10 +19,6 @@ export class Paddle implements IDrawable {
         this.maxSpeedPerSecond = maxSpeedPerSecond;
         this.isPlayer = isPlayer;
         this.side = side;
-    }
-
-    public applyServerUpdate(paddleState: IMessagePaddle) {
-        this.center = paddleState.c;
     }
 
     public applyMovementInput(direction: number, durationSeconds: number) {

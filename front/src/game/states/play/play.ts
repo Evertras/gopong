@@ -10,9 +10,9 @@ import { IMessageStatePlay } from './networkTypes';
  * The main state of the game: actually playing!
  */
 export class StatePlay implements IState {
-    public paddleLeft: Paddle;
-    public paddleRight: Paddle;
-    public ball: Ball;
+    private paddleLeft: Paddle;
+    private paddleRight: Paddle;
+    private ball: Ball;
 
     private storeConfig: StoreConfig;
 
@@ -43,9 +43,11 @@ export class StatePlay implements IState {
     public applyServerUpdate(msg: any): void {
         const parsed = msg as IMessageStatePlay;
 
-        this.paddleLeft.applyServerUpdate(parsed.pL);
-        this.paddleRight.applyServerUpdate(parsed.pR);
-        this.ball.applyServerUpdate(parsed.b);
+        this.paddleLeft.center = parsed.pL.c;
+        this.paddleRight.center = parsed.pR.c;
+
+        this.ball.x = parsed.b.x;
+        this.ball.y = parsed.b.y;
     }
 
     public applyInput(inputStep: InputStep) {
