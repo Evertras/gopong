@@ -16,16 +16,16 @@ meets the following self-imposed requirements:
 
 * Easy to develop/maintain
   * Code follows good practices and is extensible for new features
-  * Tests are relatively painless to add and maintain to enable TDD where appropriate
+  * Tests are relatively painless to add and maintain to enable/encourage TDD where appropriate
   * Tests exist where reasonable so changes can be made confidently
-  * A development mode flag and webpack's watch mode make front end development frictionless; automatic rebuild for every save
+  * A development mode flag and webpack's watch mode make front end development frictionless - automatic rebuild for every save and a simple refresh in the browser to reload with the updated code
 * Easy to build
   * As few global installs as possible (no npm install -g!)
   * CI should be essentially configless outside of stock Go and NodeJS installs
   * Everything should just work out of the box on any machine after cloning the repo
 * Easy to distribute
   * Everything is self-contained into a single binary
-    * Extremely lightweight containerization is trivial due to zero runtime dependencies, Node isn't required
+    * Extremely lightweight containerization is trivial due to zero runtime dependencies; NodeJS runtime isn't required
     * Packaging a single executable binary is the simplest use case for any other package system if desired
 * Easy to monitor
   * Emits metrics in a standard fashion that existing tools can read (statsd)
@@ -197,6 +197,8 @@ All messages sent via WebSocket will be encoded in JSON for simplicity.  **Note:
 performance/optimization this is likely better served with a binary protocol to drastically
 cut down on network traffic.  This is just simpler for now.
 
+The only messages a client can send to the server is input.  The server is completely authoritative.
+
 The first message sent back to the client immediately describes the game they are joining.
 
 ```json
@@ -259,6 +261,21 @@ For an example with another state:
         // The time remaining in milliseconds
         "r": 381
     }
+}
+```
+
+The client's input messages sent to the server are in the following schema:
+
+```javascript
+{
+    // The movement axis in the range of [-1,1]
+    "m": 1.0,
+
+    // The duration of the input, in seconds
+    "d": 0.03,
+
+    // The input index
+    "n": 5814
 }
 ```
 
