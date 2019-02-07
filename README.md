@@ -26,6 +26,8 @@ Node 8.x was used for development.  It may work on earlier versions, but it's un
 Good ol' `make` is used for build script consolidation since both Go and Typescript are present.
 See [the Makefile](Makefile) for available commands and what they do.
 
+If you need `make` for windows, [you can get it here](http://gnuwin32.sourceforge.net/packages/make.htm).
+
 ## Test tools
 
 To run all tests, run `make test`.  See [the Makefile](Makefile) for more information.
