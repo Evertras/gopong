@@ -5,9 +5,3 @@ go:
 
 node_js:
 - "8.12"
-
-install:
-- "npm install"
-
-script:
-- "make test build"

@@ -22,7 +22,8 @@
     "webpack-cli": "^3.2.1"
   },
   "scripts": {
-    "test": "mocha -r ts-node/register -r jsdom-global/register front/src/**/*.test.ts"
+    "test": "mocha -r ts-node/register -r jsdom-global/register front/src/**/*.test.ts",
+    "lint-fix": "tslint -p . --fix"
   },
   "repository": {
     "type": "git",
