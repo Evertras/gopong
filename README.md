@@ -27,6 +27,7 @@ Good ol' `make` is used for build script consolidation since both Go and Typescr
 See [the Makefile](Makefile) for available commands and what they do.
 
 If you need `make` for windows, [you can get it here](http://gnuwin32.sourceforge.net/packages/make.htm).
+You can also just run the commands [from the Makefile](Makefile) yourself manually.
 
 ## Test tools
 
