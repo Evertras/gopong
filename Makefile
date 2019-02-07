@@ -16,7 +16,7 @@ test: lib/static/build.go
 bench:
 	go test -benchmem -bench . ./...
 
-run-dev:
+run-dev: generate
 	go run -race ./cmd/gopong/main.go -d -t 3
 
 generate: clean lib/static/build.go

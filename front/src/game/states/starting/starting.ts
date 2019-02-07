@@ -29,7 +29,7 @@ export class StateStarting implements IState {
     }
 
     public draw(renderTarget: IRenderTarget): void {
-        if (this.remainingMilliseconds) {
+        if (this.remainingMilliseconds !== null) {
             renderTarget.text((this.remainingMilliseconds * 0.001).toFixed(1), 0.1, 0.9);
         }
     }
