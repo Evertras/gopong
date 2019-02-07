@@ -2,23 +2,23 @@
 
 [![Build Status](https://travis-ci.org/Evertras/gopong.svg?branch=master)](https://travis-ci.org/Evertras/gopong)
 
-A simple game of multiplayer Pong in HTML with a Go server backing it.
+A simple game of multiplayer browser Pong in Typescript with a Go server backing it.
 
 ## Build tools
 
 This project uses [dep](https://github.com/golang/dep) to handle its dependencies.
 
 Note: the `vendor` folder is checked in intentionally, but in a 'real' project this should
-be handled better by the build system.  For this, it's fine.
+probably be handled better by the build system.  For this, it's fine.
 
 This project uses webpack with the stock typescript loaders and a slightly custom tslint pass.
 
 Relevant front end build configuration:
 
-* [package.json]
-* [tsconfig.json]
-* [tslint.json]
-* [webpack.config.js]
+* [package.json](package.json)
+* [tsconfig.json](tsconfig.json)
+* [tslint.json](tslint.json)
+* [webpack.config.js](webpack.config.js)
 
 Node 8.x was used for development.  It may work on earlier versions, but it's untested.
 
@@ -35,6 +35,8 @@ The entry point for the front end is [front/src/main.ts].
 
 Running `make run-dev` will generate the front end and start the back end server.  The content files will be served
 off the disk, so updating the front end will be served without having to restart the server.
+
+Once running, the game is available at http://localhost:8000 and will connect automatically once loaded.
 
 ## Game System Information
 
@@ -54,6 +56,11 @@ a configurable speed that defaults to 0.5/sec.
 The ball currently follows a simple linear path at a constant speed as configured on the server.
 
 ## Networking information
+
+The Go server implements a naive lobby that simply waits for two clients to connect to start a game.
+When either client disconnects, the game is over and will no longer run.  Currently there is no limit
+to the total number of games that may be played; that's obviously a bad idea for a production game,
+but for now it's a TODO to improve the lobby..
 
 ### Client Connection
 
@@ -130,3 +137,24 @@ For an example with another state:
     }
 }
 ```
+
+## Metrics
+
+The Go server emits statsd metrics.  For development, a TICK stack is available via Docker Compose
+in the [tick](tick) directory.  Note that Telegraf is commented out for now because Windows... instead
+you'll have to run an actual Telegraf executable locally using the config in [the etc directory](tick/etc/telegraf.conf).
+
+```bash
+cd ./tick/
+
+# This will start the ICK part of TICK
+docker-compose up -d
+
+# In Windows
+telegraf.exe --config etc/telegraf.conf
+
+# In Linux
+telegraf --config etc/telegraf.conf
+```
+
+After running the Gopong server for more than a few seconds, you can then visit http://localhost:8888 to see metrics.
