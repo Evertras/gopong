@@ -14,16 +14,21 @@ export class Game {
     private storeInput: StoreInput;
     private storeConfig: StoreConfig;
 
-    // Handles creation of states
+    // Handles creation of states for transitions dictated by server
     private stateFactory: IStateFactory;
 
+    // Current state that we can blindly send server updates and input to
     private currentState: IState | null = null;
     private currentStateType: StateType | null = null;
 
+    // Timing data for frames
     private updateInterval: number | undefined;
     private lastUpdateMs: number = 0;
+
+    // What we draw to
     private renderTarget: IRenderTarget;
 
+    // Connection to the server
     private connection: IConnection;
 
     constructor(
@@ -152,7 +157,7 @@ export class Game {
             this.currentState.draw(this.renderTarget);
         }
 
-        // Some info/debug text
+        // Some info/debug text regardless of whether we have a state or not yet
         const left = 0.3;
         const top = 0.05;
         const step = 0.05;
@@ -162,6 +167,7 @@ export class Game {
             'Server Reconciliation (R): ' + (this.storeConfig.serverReconciliationEnabled ? 'ON' : 'off'),
             'Unprocessed inputs: ' + this.storeInput.inputBufferLength(),
             'Latency: ' + this.connection.currentLatencyMs() + 'ms',
+            'State: ' + this.currentStateType,
         ];
 
         for (let i = 0; i < text.length; ++i) {

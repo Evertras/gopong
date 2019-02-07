@@ -48,7 +48,7 @@ window.addEventListener('load', () => {
     );
 
     // Add some fake lag
-    connection.setLatencyMs(500);
+    connection.setLatencyMs(50);
     connection.start();
 
     game.start(30);
