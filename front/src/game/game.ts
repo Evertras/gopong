@@ -46,7 +46,6 @@ export class Game {
 
         this.connection.onData = (data: string) => {
             const parsed = JSON.parse(data);
-            console.log(parsed);
 
             // Is this a config message?
             if (parsed.config) {
