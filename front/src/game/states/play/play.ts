@@ -14,10 +14,17 @@ export class StatePlay implements IState {
     private paddleRight: Paddle;
     private ball: Ball;
 
+    // Reference to the active paddle depending on which player this client is
+    private paddleActive: Paddle;
+
     private storeConfig: StoreConfig;
 
     constructor(storeConfig: StoreConfig) {
         this.storeConfig = storeConfig;
+
+        if (isNaN(this.storeConfig.paddleMaxSpeedPerSecond)) {
+            throw new Error('max speed is not number');
+        }
 
         this.paddleLeft = new Paddle(
             this.storeConfig.paddleHeight,
@@ -30,6 +37,12 @@ export class StatePlay implements IState {
             this.storeConfig.paddleMaxSpeedPerSecond,
             PaddleSide.Right,
             false);
+
+        if (this.storeConfig.side === PaddleSide.Left) {
+            this.paddleActive = this.paddleLeft;
+        } else {
+            this.paddleActive = this.paddleRight;
+        }
 
         this.ball = new Ball(this.storeConfig.ballRadius);
     }
@@ -51,7 +64,7 @@ export class StatePlay implements IState {
     }
 
     public applyInput(inputStep: InputStep) {
-        this.paddleLeft.applyMovementInput(
+        this.paddleActive.applyMovementInput(
             inputStep.movementAxis,
             inputStep.durationSeconds);
     }

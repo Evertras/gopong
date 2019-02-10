@@ -17,7 +17,7 @@ type Config struct {
 func New() *Config {
 	// Some defaults
 	return &Config{
-		PaddleHeight:            0.05,
+		PaddleHeight:            0.20,
 		BallRadius:              0.01,
 		MaxPaddleSpeedPerSecond: 0.05,
 	}

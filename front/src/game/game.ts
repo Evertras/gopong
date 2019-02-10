@@ -88,7 +88,7 @@ export class Game {
         clearInterval(this.updateInterval);
         this.lastUpdateMs = Date.now();
 
-        const stepSizeMilliseconds = 1000.0 / fps;
+        const stepSizeMilliseconds = 1000 / fps;
 
         this.updateInterval = setInterval(() => {
             this.gameLoopStep();

@@ -4,7 +4,7 @@ package message
 type ConfigInner struct {
 	PaddleHeight            float64    `json:"paddleHeight"`
 	BallRadius              float64    `json:"ballRadius"`
-	MaxPaddleSpeedPerSecond float64    `json:"maxPaddleSpeedPerSecond"`
+	MaxPaddleSpeedPerSecond float64    `json:"paddleMaxSpeedPerSecond"`
 	PaddleSide              PlayerSide `json:"side"`
 }
 
