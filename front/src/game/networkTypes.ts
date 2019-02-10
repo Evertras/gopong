@@ -1,3 +1,5 @@
+import { PaddleSide } from './objects/paddle';
+
 /**
  * An ID for a state.  Explicitly set to match the server's definitions, do not edit!
  */
@@ -42,4 +44,34 @@ export interface IMessageInput {
      * How long the input lasted, in seconds
      */
     d: number;
+}
+
+/**
+ * Config sent by the server to define game configuration
+ */
+export interface IMessageConfig {
+    /**
+     * Wrapper for easier identification of messages
+     */
+    config: {
+        /**
+         * How tall the paddles are
+         */
+        paddleHeight: number;
+
+        /**
+         * The radius of the ball
+         */
+        ballRadius: number;
+
+        /**
+         * The maximum speed a paddle can go
+         */
+        paddleMaxSpeedPerSecond: number;
+
+        /**
+         * Which side this client is assigned to
+         */
+        side: PaddleSide;
+    };
 }

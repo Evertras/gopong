@@ -203,11 +203,9 @@ The first message sent back to the client immediately describes the game they ar
 
 ```json
 {
-    "config": {
-        "paddleHeight": 0.2,
-        "paddleSpeedPerSecond": 0.5,
-        "ballRadius": 0.1
-    }
+    "paddleHeight": 0.2,
+    "paddleSpeedPerSecond": 0.5,
+    "ballRadius": 0.1
 }
 ```
 

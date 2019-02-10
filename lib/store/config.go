@@ -5,12 +5,12 @@ import "time"
 // Config contains all persistent settings for a game's lifetime
 type Config struct {
 	// Things that will be sent to the client
-	PaddleHeight            float64 `json:"paddleHeight"`
-	BallRadius              float64 `json:"ballRadius"`
-	MaxPaddleSpeedPerSecond float64 `json:"maxPaddleSpeedPerSecond"`
+	PaddleHeight            float64
+	BallRadius              float64
+	MaxPaddleSpeedPerSecond float64
 
 	// Things for internal use
-	StepInterval time.Duration `json:"-"`
+	StepInterval time.Duration
 }
 
 // New returns a new config store with some default values set

@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/Evertras/gopong/lib/client"
+	"github.com/Evertras/gopong/lib/message"
 	"github.com/Evertras/gopong/lib/state"
-	"github.com/Evertras/gopong/lib/state/message"
 	"github.com/Evertras/gopong/lib/state/starting"
 	"github.com/Evertras/gopong/lib/store"
 	metrics "github.com/armon/go-metrics"
@@ -47,6 +47,16 @@ func (i *Instance) Run() {
 		i.clientLeft.Close()
 		i.clientRight.Close()
 	}()
+
+	if err := i.clientLeft.WriteConfig(i.cfg, message.PlayerSideLeft); err != nil {
+		log.Println("Error writing config to left client", err)
+		return
+	}
+
+	if err := i.clientRight.WriteConfig(i.cfg, message.PlayerSideRight); err != nil {
+		log.Println("Error writing config to right client", err)
+		return
+	}
 
 	for {
 		select {

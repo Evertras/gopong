@@ -6,7 +6,8 @@ import (
 	"log"
 	"sync"
 
-	"github.com/Evertras/gopong/lib/state/message"
+	"github.com/Evertras/gopong/lib/message"
+	"github.com/Evertras/gopong/lib/store"
 	metrics "github.com/armon/go-metrics"
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
@@ -99,6 +100,16 @@ func (c *Client) FlushInputs() []message.Input {
 	return inputs
 }
 
+func (c *Client) write(msg []byte) error {
+	if err := c.conn.WriteMessage(websocket.TextMessage, msg); err != nil {
+		return errors.Wrap(err, "error writing state")
+	}
+
+	metrics.IncrCounter(metricKeyWsDataWrite, float32(len(msg)))
+
+	return nil
+}
+
 // WriteState writes a state message to the client.  Note that the last input index
 // is filled in automatically by WriteState.
 func (c *Client) WriteState(m message.State) error {
@@ -109,13 +120,27 @@ func (c *Client) WriteState(m message.State) error {
 		return errors.Wrap(err, "error marshaling state message")
 	}
 
-	if err = c.conn.WriteMessage(websocket.TextMessage, msg); err != nil {
-		return errors.Wrap(err, "error writing message")
+	return c.write(msg)
+}
+
+// WriteConfig writes a config message to the client
+func (c *Client) WriteConfig(cfg *store.Config, side message.PlayerSide) error {
+	cfgMsg := message.Config{
+		Config: message.ConfigInner{
+			BallRadius:              cfg.BallRadius,
+			MaxPaddleSpeedPerSecond: cfg.MaxPaddleSpeedPerSecond,
+			PaddleHeight:            cfg.PaddleHeight,
+			PaddleSide:              side,
+		},
 	}
 
-	metrics.IncrCounter(metricKeyWsDataWrite, float32(len(msg)))
+	data, err := json.Marshal(cfgMsg)
 
-	return nil
+	if err != nil {
+		return errors.Wrap(err, "error writing config")
+	}
+
+	return c.write(data)
 }
 
 // Done returns a channel that will close once the client disconnects

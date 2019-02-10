@@ -9,7 +9,8 @@ import { MockConnection } from '../network/mockConnection';
 import { StoreConfig } from '../store/config';
 import { StoreInput } from '../store/input';
 import { Game } from './game';
-import { IMessageState, StateType } from './networkTypes';
+import { IMessageConfig, IMessageState, StateType } from './networkTypes';
+import { PaddleSide } from './objects/paddle';
 import { MockState, MockStateFactory } from './states/mockFactory';
 
 chai.use(sinonChai);
@@ -74,12 +75,47 @@ describe('game', () => {
             // Our game should have supplied onData
             expect(mockConnection.onData).to.exist;
         });
+
+        it('applies config data when received', () => {
+            // To test for clobbering...
+            storeConfig.clientSidePredictionEnabled = true;
+            storeConfig.serverReconciliationEnabled = false;
+
+            const clientSidePrediction = true;
+            const serverReconciliation = false;
+
+            const fakeConfig: IMessageConfig = {
+                config: {
+                    ballRadius: 0.5,
+                    paddleHeight: 0.4,
+                    paddleMaxSpeedPerSecond: 4,
+                    side: PaddleSide.Right,
+                },
+            };
+
+            // Shouldn't create a state based off of this...
+            mockStateFactory.create.throws('tried to incorrectly create state');
+
+            mockConnection.mockReceive(fakeConfig);
+
+            expect(storeConfig.ballRadius, 'ball radius not applied').to.equal(fakeConfig.config.ballRadius);
+            expect(storeConfig.paddleHeight, 'paddle height not applied').to.equal(fakeConfig.config.paddleHeight);
+            expect(storeConfig.paddleMaxSpeedPerSecond, 'paddle max speed not applied')
+                .to.equal(fakeConfig.config.paddleMaxSpeedPerSecond);
+            expect(storeConfig.side, 'side not set').to.equal(fakeConfig.config.side);
+
+            // Just to make sure we didn't clobber anything...
+            expect(storeConfig.clientSidePredictionEnabled, 'clobbered').to.equal(clientSidePrediction);
+            expect(storeConfig.serverReconciliationEnabled, 'clobbered').to.equal(serverReconciliation);
+        });
     });
 
     describe('state', () => {
-        it('does not create a state on its own', () => {
-            game.start(fps);
-            expect(mockStateFactory.create).to.have.not.been.called;
+        describe('isolated', () => {
+            it('does not create a state on its own', () => {
+                game.start(fps);
+                expect(mockStateFactory.create).to.have.not.been.called;
+            });
         });
 
         describe('with state message from server', () => {

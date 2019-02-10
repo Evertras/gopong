@@ -3,7 +3,7 @@ package state
 import (
 	"time"
 
-	"github.com/Evertras/gopong/lib/state/message"
+	"github.com/Evertras/gopong/lib/message"
 )
 
 // State is a singular state of the game that can be advanced

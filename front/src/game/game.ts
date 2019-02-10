@@ -2,7 +2,7 @@ import { IRenderTarget } from '../graphics/renderTarget';
 import { IConnection } from '../network/connection';
 import { StoreConfig } from '../store/config';
 import { StoreInput } from '../store/input';
-import { IMessageInput, IMessageState, StateType } from './networkTypes';
+import { IMessageConfig, IMessageInput, IMessageState, StateType } from './networkTypes';
 import { IStateFactory } from './states/factory';
 import { IState } from './states/state';
 
@@ -46,12 +46,16 @@ export class Game {
 
         this.connection.onData = (data: string) => {
             const parsed = JSON.parse(data);
+            console.log(parsed);
 
-            const stateMessage = parsed as IMessageState;
+            // Is this a config message?
+            if (parsed.config) {
+                this.storeConfig.updateFromMessage(parsed as IMessageConfig);
 
-            if (!stateMessage) {
                 return;
             }
+
+            const stateMessage = parsed as IMessageState;
 
             this.storeInput.deleteUntil(stateMessage.n);
 

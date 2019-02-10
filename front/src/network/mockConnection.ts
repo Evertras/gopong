@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { IMessageState } from '../game/networkTypes';
+import { IMessageConfig, IMessageState } from '../game/networkTypes';
 import { DataCallback, IConnection } from './connection';
 
 /**
@@ -15,7 +15,7 @@ export class MockConnection implements IConnection {
      *
      * @param msg The state message to mock being written by the server.
      */
-    public mockReceive(msg: IMessageState) {
+    public mockReceive(msg: IMessageState | IMessageConfig) {
         if (this.onData) {
             this.onData(JSON.stringify(msg));
         } else {

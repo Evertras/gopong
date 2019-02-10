@@ -3,8 +3,8 @@ package play
 import (
 	"time"
 
+	"github.com/Evertras/gopong/lib/message"
 	"github.com/Evertras/gopong/lib/state"
-	"github.com/Evertras/gopong/lib/state/message"
 	"github.com/Evertras/gopong/lib/store"
 )
 
