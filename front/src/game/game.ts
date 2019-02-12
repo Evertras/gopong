@@ -1,8 +1,8 @@
 import { IRenderTarget } from '../graphics/renderTarget';
 import { IConnection } from '../network/connection';
+import { IMessageConfig, IMessageInput, IMessageState, ServerState } from '../network/messageTypes';
 import { StoreConfig } from '../store/config';
 import { StoreInput } from '../store/input';
-import { IMessageConfig, IMessageInput, IMessageState, StateType } from './networkTypes';
 import { IStateFactory } from './states/factory';
 import { IState } from './states/state';
 
@@ -19,7 +19,7 @@ export class Game {
 
     // Current state that we can blindly send server updates and input to
     private currentState: IState | null = null;
-    private currentStateType: StateType | null = null;
+    private currentStateType: ServerState | null = null;
 
     // Timing data for frames
     private updateInterval: number | undefined;

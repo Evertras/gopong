@@ -1,20 +1,15 @@
 import { IRenderTarget } from '../../graphics/renderTarget';
+import { ServerPaddleSide } from '../../network/messageTypes';
 import { IDrawable } from '../drawable';
-
-export enum PaddleSide {
-    // Being explicit about the numbers to match server values
-    Left = 0,
-    Right = 1,
-}
 
 export class Paddle implements IDrawable {
     public center: number = 0.5;
     public height: number;
     public maxSpeedPerSecond: number;
     public isPlayer: boolean;
-    public side: PaddleSide;
+    public side: ServerPaddleSide;
 
-    constructor(height: number, maxSpeedPerSecond: number, side: PaddleSide, isPlayer: boolean) {
+    constructor(height: number, maxSpeedPerSecond: number, side: ServerPaddleSide, isPlayer: boolean) {
         this.height = height;
         this.maxSpeedPerSecond = maxSpeedPerSecond;
         this.isPlayer = isPlayer;
@@ -40,7 +35,7 @@ export class Paddle implements IDrawable {
         // Dealing with [0,1] coordinates
         const width = 0.03;
         const height = this.height;
-        const x = this.side === PaddleSide.Left ? 0 : 1 - width;
+        const x = this.side === ServerPaddleSide.Left ? 0 : 1 - width;
         const y = this.center - height * 0.5;
 
         renderTarget.rect(x, y, width, height);

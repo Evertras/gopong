@@ -1,5 +1,4 @@
-import { IMessageConfig } from '../game/networkTypes';
-import { PaddleSide } from '../game/objects/paddle';
+import { IMessageConfig, ServerPaddleSide } from '../network/messageTypes';
 
 export class StoreConfig {
     public clientSidePredictionEnabled: boolean = false;
@@ -7,7 +6,7 @@ export class StoreConfig {
     public paddleHeight: number = 0.2;
     public paddleMaxSpeedPerSecond: number = 0.1;
     public ballRadius: number  = 0.02;
-    public side: PaddleSide = PaddleSide.Left;
+    public side: ServerPaddleSide = ServerPaddleSide.Left;
 
     public updateFromMessage(msg: IMessageConfig) {
         this.ballRadius = msg.config.ballRadius;

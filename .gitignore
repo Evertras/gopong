@@ -14,6 +14,9 @@ gopong
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# Can be created by dep when an issue happens while updating, we definitely don't want this
+.vendor-new
+
 # Output of generate
 lib/static/build.go
 

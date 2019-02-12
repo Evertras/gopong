@@ -1,11 +1,11 @@
+import { ServerState } from '../../network/messageTypes';
 import { StoreConfig } from '../../store/config';
-import { StateType } from '../networkTypes';
 import { StatePlay } from './play/play';
 import { StateStarting } from './starting/starting';
 import { IState } from './state';
 
 export interface IStateFactory {
-    create(state: StateType): IState;
+    create(state: ServerState): IState;
 }
 
 export class StateFactory implements IStateFactory {
@@ -15,12 +15,12 @@ export class StateFactory implements IStateFactory {
         this.storeConfig = storeConfig;
     }
 
-    public create(state: StateType): IState {
+    public create(state: ServerState): IState {
         switch (state) {
-            case StateType.StateTypePlay:
+            case ServerState.Play:
                 return new StatePlay(this.storeConfig);
 
-            case StateType.StateTypeStarting:
+            case ServerState.Starting:
                 return new StateStarting();
         }
 

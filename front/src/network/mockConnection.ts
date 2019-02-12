@@ -1,6 +1,6 @@
 import sinon from 'sinon';
-import { IMessageConfig, IMessageState } from '../game/networkTypes';
 import { DataCallback, IConnection } from './connection';
+import { IMessageConfig, IMessageState } from './messageTypes';
 
 /**
  * A mock connection, useful for easy testing.

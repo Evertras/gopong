@@ -3,7 +3,46 @@ package play
 import (
 	"encoding/json"
 	"testing"
+	"time"
 )
+
+func TestStateBallBouncesOffPaddles(t *testing.T) {
+	state := &State{
+		PaddleLeft: &Paddle{
+			Center: 0,
+			Height: 0.01,
+		},
+		PaddleRight: &Paddle{
+			Center: 0,
+			Height: 0.01,
+		},
+		Ball: &Ball{
+			PosX: 0.5,
+			PosY: 0.5,
+			VelX: 1.1,
+			VelY: 0.01,
+		},
+	}
+
+	// Just for sanity...
+	if state.Ball.VelX < 0 {
+		t.Fatal("Expected ball to be moving to the right for this test, test setup fail")
+	}
+
+	// Should bounce off right paddle
+	state.Step(time.Second)
+
+	if state.Ball.VelX > 0 {
+		t.Fatalf("Expected ball to be moving left now: %+v", state.Ball)
+	}
+
+	// Should bounce off left paddle
+	state.Step(time.Second)
+
+	if state.Ball.VelX < 0 {
+		t.Fatalf("Expected ball to be moving right now: %+v", state.Ball)
+	}
+}
 
 func TestStateMarshalsToJson(t *testing.T) {
 	state := &State{

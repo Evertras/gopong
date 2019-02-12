@@ -44,3 +44,7 @@
 [[constraint]]
   branch = "master"
   name = "github.com/pkg/errors"
+
+[[constraint]]
+  name = "github.com/Evertras/go-ts-type-generator"
+  version = "1.3.2"

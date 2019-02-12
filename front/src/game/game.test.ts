@@ -5,12 +5,11 @@ import sinon from 'sinon';
 import sinonChai = require('sinon-chai');
 import { MockRenderTarget } from '../graphics/mockRenderTarget';
 import { Input } from '../input/input';
+import { IMessageConfig, IMessageState, ServerPaddleSide, ServerState } from '../network/messageTypes';
 import { MockConnection } from '../network/mockConnection';
 import { StoreConfig } from '../store/config';
 import { StoreInput } from '../store/input';
 import { Game } from './game';
-import { IMessageConfig, IMessageState, StateType } from './networkTypes';
-import { PaddleSide } from './objects/paddle';
 import { MockState, MockStateFactory } from './states/mockFactory';
 
 chai.use(sinonChai);
@@ -89,7 +88,7 @@ describe('game', () => {
                     ballRadius: 0.5,
                     paddleHeight: 0.4,
                     paddleMaxSpeedPerSecond: 4,
-                    side: PaddleSide.Right,
+                    side: ServerPaddleSide.Right,
                 },
             };
 
@@ -119,7 +118,7 @@ describe('game', () => {
         });
 
         describe('with state message from server', () => {
-            const stateType = StateType.StateTypeStarting;
+            const stateType = ServerState.Starting;
 
             beforeEach(() => {
                 const stateMsg: IMessageState = {

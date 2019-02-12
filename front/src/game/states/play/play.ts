@@ -1,8 +1,9 @@
 import { IRenderTarget } from '../../../graphics/renderTarget';
+import { ServerPaddleSide } from '../../../network/messageTypes';
 import { StoreConfig } from '../../../store/config';
 import { InputStep } from '../../../store/input';
 import { Ball } from '../../objects/ball';
-import { Paddle, PaddleSide } from '../../objects/paddle';
+import { Paddle } from '../../objects/paddle';
 import { IState } from '../state';
 import { IMessageStatePlay } from './networkTypes';
 
@@ -29,16 +30,16 @@ export class StatePlay implements IState {
         this.paddleLeft = new Paddle(
             this.storeConfig.paddleHeight,
             this.storeConfig.paddleMaxSpeedPerSecond,
-            PaddleSide.Left,
+            ServerPaddleSide.Left,
             true);
 
         this.paddleRight = new Paddle(
             this.storeConfig.paddleHeight,
             this.storeConfig.paddleMaxSpeedPerSecond,
-            PaddleSide.Right,
+            ServerPaddleSide.Right,
             false);
 
-        if (this.storeConfig.side === PaddleSide.Left) {
+        if (this.storeConfig.side === ServerPaddleSide.Left) {
             this.paddleActive = this.paddleLeft;
         } else {
             this.paddleActive = this.paddleRight;
