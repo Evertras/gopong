@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -36,8 +35,6 @@ func getConfig() server.Config {
 	gameCfg := store.New()
 
 	gameCfg.StepInterval = time.Second / time.Duration(*tickRate)
-
-	fmt.Printf("%+v", gameCfg)
 
 	cfg := server.Config{
 		GameCfg:                   gameCfg,
