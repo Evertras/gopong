@@ -29,12 +29,14 @@ export class StatePlay implements IState {
 
         this.paddleLeft = new Paddle(
             this.storeConfig.paddleHeight,
+            this.storeConfig.paddleWidth,
             this.storeConfig.paddleMaxSpeedPerSecond,
             ServerPaddleSide.Left,
             true);
 
         this.paddleRight = new Paddle(
             this.storeConfig.paddleHeight,
+            this.storeConfig.paddleWidth,
             this.storeConfig.paddleMaxSpeedPerSecond,
             ServerPaddleSide.Right,
             false);

@@ -18,14 +18,14 @@ var metricKeyReceivedInputDuration = []string{"game", "input", "duration", "seco
 
 // Instance is a game instance that controls the game state machine
 type Instance struct {
-	cfg          *store.Config
+	cfg          store.Config
 	currentState state.State
 	clientLeft   *client.Client
 	clientRight  *client.Client
 }
 
 // New returns a new instance that is ready to start, but isn't started yet
-func New(cfg *store.Config, left *client.Client, right *client.Client) *Instance {
+func New(cfg store.Config, left *client.Client, right *client.Client) *Instance {
 	i := &Instance{
 		cfg:          cfg,
 		currentState: starting.New(cfg, time.Second*3),

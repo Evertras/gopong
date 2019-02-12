@@ -13,11 +13,11 @@ import (
 type State struct {
 	RemainingMilliseconds int `json:"r" tsdesc:"The time remaining before starting, in milliseconds"`
 
-	cfg *store.Config
+	cfg store.Config
 }
 
 // New creates a new starting state that will wait for the specified amount of time before advancing
-func New(cfg *store.Config, duration time.Duration) *State {
+func New(cfg store.Config, duration time.Duration) *State {
 	return &State{
 		RemainingMilliseconds: int(duration.Seconds() * 1000),
 		cfg:                   cfg,

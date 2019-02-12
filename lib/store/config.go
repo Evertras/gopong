@@ -15,11 +15,14 @@ type Config struct {
 }
 
 // New returns a new config store with some default values set
-func New() *Config {
+func New() Config {
 	// Some defaults
-	return &Config{
+	return Config{
 		PaddleHeight:            0.20,
+		PaddleWidth:             0.03,
 		BallRadius:              0.01,
 		MaxPaddleSpeedPerSecond: 0.05,
+
+		StepInterval: time.Millisecond * 100,
 	}
 }

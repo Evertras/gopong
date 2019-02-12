@@ -124,13 +124,9 @@ func (c *Client) WriteState(m message.State) error {
 }
 
 // WriteConfig writes a config message to the client
-func (c *Client) WriteConfig(cfg *store.Config, side message.PlayerSide) error {
+func (c *Client) WriteConfig(cfg store.Config, side message.PlayerSide) error {
 	cfgMsg := message.ClientConfig{
-		Config: store.Config{
-			BallRadius:              cfg.BallRadius,
-			MaxPaddleSpeedPerSecond: cfg.MaxPaddleSpeedPerSecond,
-			PaddleHeight:            cfg.PaddleHeight,
-		},
+		Config:     cfg,
 		PaddleSide: side,
 	}
 

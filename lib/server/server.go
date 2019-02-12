@@ -17,7 +17,7 @@ import (
 // Config contains all configuration to run the server
 type Config struct {
 	// GameCfg is the game configuration, such as paddle height, etc.
-	GameCfg *store.Config
+	GameCfg store.Config
 
 	// ReadStaticFilesPerRequest determines if the server will read from disk on each request
 	// or use the precompiled static files.  Useful for development, should not

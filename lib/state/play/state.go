@@ -17,7 +17,7 @@ type State struct {
 }
 
 // New creates a fresh game state ready to play
-func New(cfg *store.Config) *State {
+func New(cfg store.Config) *State {
 	return &State{
 		PaddleLeft: Paddle{
 			Center:            0.5,

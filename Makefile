@@ -22,20 +22,20 @@ build: lib/static/build.go
 bench:
 	go test -benchmem -bench . ./...
 
-run-dev: generate
+run-dev: front/game.js lib/static/build.go
 	go run -race ./cmd/gopong/main.go -d -t 3
 
-generate: clean front/src/game.js lib/static/build.go
+generate: clean front/game.js lib/static/build.go
 
 # Actual files that must be generated
-front/src/game.js: \
+front/game.js: \
 		node_modules \
 		front/src/network/messageTypes.ts \
 		front/src/game/states/play/messageTypes.ts \
 		front/src/game/states/starting/messageTypes.ts
 	npx webpack
 
-lib/static/build.go: front/src/game.js
+lib/static/build.go: front/game.js
 	go generate ./lib/static/
 
 front/src/network/messageTypes.ts:

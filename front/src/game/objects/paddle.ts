@@ -5,12 +5,14 @@ import { IDrawable } from '../drawable';
 export class Paddle implements IDrawable {
     public center: number = 0.5;
     public height: number;
+    public width: number;
     public maxSpeedPerSecond: number;
     public isPlayer: boolean;
     public side: ServerPaddleSide;
 
-    constructor(height: number, maxSpeedPerSecond: number, side: ServerPaddleSide, isPlayer: boolean) {
+    constructor(height: number, width: number, maxSpeedPerSecond: number, side: ServerPaddleSide, isPlayer: boolean) {
         this.height = height;
+        this.width = width;
         this.maxSpeedPerSecond = maxSpeedPerSecond;
         this.isPlayer = isPlayer;
         this.side = side;
@@ -33,11 +35,9 @@ export class Paddle implements IDrawable {
 
     public draw(renderTarget: IRenderTarget) {
         // Dealing with [0,1] coordinates
-        const width = 0.03;
-        const height = this.height;
-        const x = this.side === ServerPaddleSide.Left ? 0 : 1 - width;
-        const y = this.center - height * 0.5;
+        const x = this.side === ServerPaddleSide.Left ? 0 : 1 - this.width;
+        const y = this.center - this.height * 0.5;
 
-        renderTarget.rect(x, y, width, height);
+        renderTarget.rect(x, y, this.width, this.height);
     }
 }
