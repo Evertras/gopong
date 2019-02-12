@@ -10,26 +10,26 @@ import (
 
 // State is a snapshot of the game state as a whole
 type State struct {
-	PaddleLeft  *Paddle `json:"pL"`
-	PaddleRight *Paddle `json:"pR"`
+	PaddleLeft  Paddle `json:"pL" tsdesc:"The left paddle"`
+	PaddleRight Paddle `json:"pR" tsdesc:"The right paddle"`
 
-	Ball *Ball `json:"b"`
+	Ball Ball `json:"b" tsdesc:"The ball"`
 }
 
 // New creates a fresh game state ready to play
 func New(cfg *store.Config) *State {
 	return &State{
-		PaddleLeft: &Paddle{
+		PaddleLeft: Paddle{
 			Center:            0.5,
 			Height:            cfg.PaddleHeight,
 			MaxSpeedPerSecond: cfg.MaxPaddleSpeedPerSecond,
 		},
-		PaddleRight: &Paddle{
+		PaddleRight: Paddle{
 			Center:            0.5,
 			Height:            cfg.PaddleHeight,
 			MaxSpeedPerSecond: cfg.MaxPaddleSpeedPerSecond,
 		},
-		Ball: &Ball{
+		Ball: Ball{
 			PosX:   0.5,
 			PosY:   0.5,
 			VelX:   0.05,
@@ -41,7 +41,7 @@ func New(cfg *store.Config) *State {
 
 // Step will update the game state for the given duration
 func (s *State) Step(d time.Duration) state.State {
-	s.Ball.Step(d, s.PaddleLeft, s.PaddleRight)
+	s.Ball.Step(d, &s.PaddleLeft, &s.PaddleRight)
 
 	return s
 }
@@ -51,9 +51,9 @@ func (s *State) ApplyInput(i message.Input, side message.PlayerSide) {
 	var paddle *Paddle
 
 	if side == message.PlayerSideLeft {
-		paddle = s.PaddleLeft
+		paddle = &s.PaddleLeft
 	} else {
-		paddle = s.PaddleRight
+		paddle = &s.PaddleRight
 	}
 
 	paddle.Center += i.MovementAxis * i.DurationSeconds * s.PaddleLeft.MaxSpeedPerSecond

@@ -20,6 +20,8 @@ gopong
 # Output of generate
 lib/static/build.go
 front/src/network/messageTypes.ts
+front/src/game/states/play/messageTypes.ts
+front/src/game/states/starting/messageTypes.ts
 
 # TICK sandbox volume
 tick/data

@@ -5,7 +5,7 @@ import { InputStep } from '../../../store/input';
 import { Ball } from '../../objects/ball';
 import { Paddle } from '../../objects/paddle';
 import { IState } from '../state';
-import { IMessageStatePlay } from './networkTypes';
+import { IMessagePlayState } from './messageTypes';
 
 /**
  * The main state of the game: actually playing!
@@ -55,7 +55,7 @@ export class StatePlay implements IState {
     }
 
     public applyServerUpdate(msg: any): void {
-        const parsed = msg as IMessageStatePlay;
+        const parsed = msg as IMessagePlayState;
 
         this.paddleLeft.center = parsed.pL.c;
         this.paddleRight.center = parsed.pR.c;

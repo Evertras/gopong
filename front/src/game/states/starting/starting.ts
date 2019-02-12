@@ -1,7 +1,7 @@
 import { IRenderTarget } from '../../../graphics/renderTarget';
 import { InputStep } from '../../../store/input';
 import { IState } from '../state';
-import { IMessageStateStarting } from './networkTypes';
+import { IMessageStartingState } from './messageTypes';
 
 export class StateStarting implements IState {
     private remainingMilliseconds: number | null = null;
@@ -19,7 +19,7 @@ export class StateStarting implements IState {
     }
 
     public applyServerUpdate(msg: any): void {
-        const parsed = msg as IMessageStateStarting;
+        const parsed = msg as IMessageStartingState;
 
         this.remainingMilliseconds = parsed.r;
     }

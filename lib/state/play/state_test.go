@@ -8,15 +8,15 @@ import (
 
 func TestStateBallBouncesOffPaddles(t *testing.T) {
 	state := &State{
-		PaddleLeft: &Paddle{
+		PaddleLeft: Paddle{
 			Center: 0,
 			Height: 0.01,
 		},
-		PaddleRight: &Paddle{
+		PaddleRight: Paddle{
 			Center: 0,
 			Height: 0.01,
 		},
-		Ball: &Ball{
+		Ball: Ball{
 			PosX: 0.5,
 			PosY: 0.5,
 			VelX: 1.1,
@@ -46,15 +46,15 @@ func TestStateBallBouncesOffPaddles(t *testing.T) {
 
 func TestStateMarshalsToJson(t *testing.T) {
 	state := &State{
-		PaddleLeft: &Paddle{
+		PaddleLeft: Paddle{
 			Center: 0.5,
 			Height: 0.4,
 		},
-		PaddleRight: &Paddle{
+		PaddleRight: Paddle{
 			Center: 0.6,
 			Height: 0.7,
 		},
-		Ball: &Ball{
+		Ball: Ball{
 			PosX:   0.5,
 			PosY:   0.6,
 			VelX:   -0.1,
@@ -92,15 +92,15 @@ func TestStateMarshalsToJson(t *testing.T) {
 
 func BenchmarkStateMarshalJson(b *testing.B) {
 	state := &State{
-		PaddleLeft: &Paddle{
+		PaddleLeft: Paddle{
 			Center: 0.5,
 			Height: 0.4,
 		},
-		PaddleRight: &Paddle{
+		PaddleRight: Paddle{
 			Center: 0.6,
 			Height: 0.7,
 		},
-		Ball: &Ball{
+		Ball: Ball{
 			PosX:   0.5,
 			PosY:   0.6,
 			VelX:   -0.1,

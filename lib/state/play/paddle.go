@@ -2,7 +2,7 @@ package play
 
 // Paddle describes the current state of a paddle
 type Paddle struct {
-	Center            float64 `json:"c"`
+	Center            float64 `json:"c" tsdesc:"The center of the paddle in [0,1] coordinates"`
 	Height            float64 `json:"-"`
 	MaxSpeedPerSecond float64 `json:"-"`
 }

@@ -11,7 +11,7 @@ import (
 
 // State represents the Starting state where a countdown occurs
 type State struct {
-	RemainingMilliseconds int `json:"r"`
+	RemainingMilliseconds int `json:"r" tsdesc:"The time remaining before starting, in milliseconds"`
 
 	cfg *store.Config
 }

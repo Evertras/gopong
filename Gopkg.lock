@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  digest = "1:20ff7063c9cc9b80afe416713349c5e1b143b2de6bad63435b54c4214c2725cd"
+  digest = "1:2c5ee369e5b0b6c5e9423095135748972b9a8f191d765aa1f8e3a51a349cf612"
   name = "github.com/Evertras/go-ts-type-generator"
   packages = ["typegen"]
   pruneopts = "UT"
-  revision = "9b3a90f619a913e5afa888ae192c78a4cad326ce"
-  version = "v1.3.2"
+  revision = "94a1937458c562af1f6688a675f94a70f1d89b57"
+  version = "v1.3.3"
 
 [[projects]]
   branch = "master"

@@ -4,9 +4,13 @@ all: clean test build
 
 clean:
 	rm -f lib/static/build.go
+	rm -f front/src/game.js
+	rm -f front/src/game.js.map
 	rm -f front/src/network/messageTypes.ts
+	rm -f front/src/game/states/play/messageTypes.ts
+	rm -f front/src/game/states/starting/messageTypes.ts
 
-test: node_modules front/src/network/messageTypes.ts lib/static/build.go
+test: node_modules lib/static/build.go
 	npx tslint -p .
 	npm test
 	go test -v ./lib/...
@@ -20,15 +24,26 @@ bench:
 run-dev: generate
 	go run -race ./cmd/gopong/main.go -d -t 3
 
-generate: clean front/src/network/messageTypes.ts lib/static/build.go
+generate: clean front/src/game.js lib/static/build.go
 
-# Actual files/directories that must exist
-lib/static/build.go: front/src/network/messageTypes.ts
+# Actual files that must be generated
+front/src/game.js: \
+		front/src/network/messageTypes.ts \
+		front/src/game/states/play/messageTypes.ts \
+		front/src/game/states/starting/messageTypes.ts
 	npx webpack
+
+lib/static/build.go: front/src/game.js
 	go generate ./lib/static/
 
 front/src/network/messageTypes.ts:
 	go generate ./lib/message/
+
+front/src/game/states/play/messageTypes.ts:
+	go generate ./lib/state/play/
+
+front/src/game/states/starting/messageTypes.ts:
+	go generate ./lib/state/starting/
 
 node_modules:
 	npm install

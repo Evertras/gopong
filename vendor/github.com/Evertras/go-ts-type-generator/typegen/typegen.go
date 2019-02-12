@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"strings"
 	"text/template"
+	"unicode"
 )
 
 // Config contains optional settings to dictate behavior/output
@@ -119,6 +120,11 @@ func (g *Generator) generateSingle(out io.Writer, t reflect.Type) error {
 		fieldName := field.Tag.Get("json")
 		canBeUndefined := false
 		canBeNull := false
+
+		// Check if it's exported, ignore if not
+		if unicode.IsLower(rune(field.Name[0])) {
+			continue
+		}
 
 		// Skip if it's explicitly set to -
 		if fieldName == "-" {
