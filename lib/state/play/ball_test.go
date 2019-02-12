@@ -7,12 +7,12 @@ import (
 )
 
 func TestBallStepMovesBall(t *testing.T) {
-	pLeft := &Paddle{
+	pLeft := Paddle{
 		Center: 0.5,
 		Height: 0.1,
 	}
 
-	pRight := &Paddle{
+	pRight := Paddle{
 		Center: 0.5,
 		Height: 0.1,
 	}
@@ -47,12 +47,12 @@ func TestBallStepMovesBall(t *testing.T) {
 }
 
 func TestBallStepBouncesBallOffFloor(t *testing.T) {
-	pLeft := &Paddle{
+	pLeft := Paddle{
 		Center: 0.5,
 		Height: 0.1,
 	}
 
-	pRight := &Paddle{
+	pRight := Paddle{
 		Center: 0.5,
 		Height: 0.1,
 	}
@@ -90,12 +90,12 @@ func TestBallStepBouncesBallOffFloor(t *testing.T) {
 
 // There's a lot of redundant code here, but refactor later...
 func TestBallStepBouncesBallOffCeiling(t *testing.T) {
-	pLeft := &Paddle{
+	pLeft := Paddle{
 		Center: 0.5,
 		Height: 0.1,
 	}
 
-	pRight := &Paddle{
+	pRight := Paddle{
 		Center: 0.5,
 		Height: 0.1,
 	}
@@ -128,5 +128,203 @@ func TestBallStepBouncesBallOffCeiling(t *testing.T) {
 
 	if b.VelX != speedX {
 		t.Fatalf("X velocity should not be modified but is now %v", b.VelX)
+	}
+}
+
+func TestBallBouncesOffPaddles(t *testing.T) {
+	// Some constants to play with
+	paddleHeight := 0.1
+	paddleWidth := 0.1
+	paddleCenter := 0.5
+	ballRadius := 0.05
+
+	gap := 0.01
+
+	paddleLeft := Paddle{
+		Center: paddleCenter,
+		Height: paddleHeight,
+		Width:  paddleWidth,
+	}
+
+	paddleRight := Paddle{
+		Center: paddleCenter,
+		Height: paddleHeight,
+		Width:  paddleWidth,
+	}
+
+	tests := []struct {
+		Name     string
+		Input    Ball
+		Expected Ball
+	}{
+		{
+			Name: "Ball bounces off right paddle",
+			Input: Ball{
+				Radius: ballRadius,
+				PosX:   1 - (paddleWidth + gap + ballRadius),
+				PosY:   paddleCenter,
+				VelX:   gap * 2,
+				VelY:   0,
+			},
+			Expected: Ball{
+				Radius: ballRadius,
+				PosX:   1 - (paddleWidth + ballRadius),
+				PosY:   paddleCenter,
+				VelX:   -gap * 2,
+				VelY:   0,
+			},
+		},
+		{
+			Name: "Ball bounces off left paddle",
+			Input: Ball{
+				Radius: ballRadius,
+				PosX:   paddleWidth + gap + ballRadius,
+				PosY:   paddleCenter,
+				VelX:   -gap * 2,
+				VelY:   0,
+			},
+			Expected: Ball{
+				Radius: ballRadius,
+				PosX:   paddleWidth + ballRadius,
+				PosY:   paddleCenter,
+				VelX:   gap * 2,
+				VelY:   0,
+			},
+		},
+		{
+			Name: "Ball misses right paddle when above",
+			Input: Ball{
+				Radius: ballRadius,
+				PosX:   1 - (paddleWidth + gap + ballRadius),
+				PosY:   paddleCenter - (paddleHeight*0.5 + gap + ballRadius),
+				VelX:   gap * 2,
+				VelY:   0,
+			},
+			Expected: Ball{
+				Radius: ballRadius,
+				PosX:   1 - (paddleWidth + gap + ballRadius) + gap*2,
+				PosY:   paddleCenter - (paddleHeight*0.5 + gap + ballRadius),
+				VelX:   gap * 2,
+				VelY:   0,
+			},
+		},
+		{
+			Name: "Ball misses right paddle when below",
+			Input: Ball{
+				Radius: ballRadius,
+				PosX:   1 - (paddleWidth + gap + ballRadius),
+				PosY:   paddleCenter + paddleHeight*0.5 + gap + ballRadius,
+				VelX:   gap * 2,
+				VelY:   0,
+			},
+			Expected: Ball{
+				Radius: ballRadius,
+				PosX:   1 - (paddleWidth + gap + ballRadius) + gap*2,
+				PosY:   paddleCenter + paddleHeight*0.5 + gap + ballRadius,
+				VelX:   gap * 2,
+				VelY:   0,
+			},
+		},
+		{
+			Name: "Ball misses left paddle when above",
+			Input: Ball{
+				Radius: ballRadius,
+				PosX:   paddleWidth + gap + ballRadius,
+				PosY:   paddleCenter - (paddleHeight*0.5 + gap + ballRadius),
+				VelX:   -gap * 2,
+				VelY:   0,
+			},
+			Expected: Ball{
+				Radius: ballRadius,
+				PosX:   paddleWidth + gap + ballRadius - gap*2,
+				PosY:   paddleCenter - (paddleHeight*0.5 + gap + ballRadius),
+				VelX:   -gap * 2,
+				VelY:   0,
+			},
+		},
+		{
+			Name: "Ball misses left paddle when below",
+			Input: Ball{
+				Radius: ballRadius,
+				PosX:   paddleWidth + gap + ballRadius,
+				PosY:   paddleCenter + paddleHeight*0.5 + gap + ballRadius,
+				VelX:   -gap * 2,
+				VelY:   0,
+			},
+			Expected: Ball{
+				Radius: ballRadius,
+				PosX:   paddleWidth + gap + ballRadius - gap*2,
+				PosY:   paddleCenter + paddleHeight*0.5 + gap + ballRadius,
+				VelX:   -gap * 2,
+				VelY:   0,
+			},
+		},
+	}
+
+	for _, test := range tests {
+		test.Input.Step(time.Second, paddleLeft, paddleRight)
+
+		if !approximatelyEqual(test.Input, test.Expected) {
+			t.Errorf(`%q failed.
+Expected %+v
+     Got %+v
+`, test.Name, test.Expected, test.Input)
+		}
+	}
+}
+
+func approximatelyEqual(b1 Ball, b2 Ball) bool {
+	if math.Abs(b1.Radius-b2.Radius) > epsilon {
+		return false
+	}
+
+	if math.Abs(b1.PosX-b2.PosX) > epsilon {
+		return false
+	}
+
+	if math.Abs(b1.PosY-b2.PosY) > epsilon {
+		return false
+	}
+
+	if math.Abs(b1.VelX-b2.VelX) > epsilon {
+		return false
+	}
+
+	if math.Abs(b1.VelY-b2.VelY) > epsilon {
+		return false
+	}
+
+	return true
+}
+
+func BenchmarkBallStep(b *testing.B) {
+	// Some constants to play with
+	paddleHeight := 0.1
+	paddleWidth := 0.1
+	paddleCenter := 0.5
+	ballRadius := 0.05
+
+	paddleLeft := Paddle{
+		Center: paddleCenter,
+		Height: paddleHeight,
+		Width:  paddleWidth,
+	}
+
+	paddleRight := Paddle{
+		Center: paddleCenter,
+		Height: paddleHeight,
+		Width:  paddleWidth,
+	}
+
+	ball := Ball{
+		PosX:   0.5,
+		PosY:   0.5,
+		VelX:   0.44,
+		VelY:   -0.3,
+		Radius: ballRadius,
+	}
+
+	for i := 0; i < b.N; i++ {
+		ball.Step(time.Second, paddleLeft, paddleRight)
 	}
 }

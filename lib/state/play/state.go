@@ -22,11 +22,13 @@ func New(cfg store.Config) *State {
 		PaddleLeft: Paddle{
 			Center:            0.5,
 			Height:            cfg.PaddleHeight,
+			Width:             cfg.PaddleWidth,
 			MaxSpeedPerSecond: cfg.MaxPaddleSpeedPerSecond,
 		},
 		PaddleRight: Paddle{
 			Center:            0.5,
 			Height:            cfg.PaddleHeight,
+			Width:             cfg.PaddleWidth,
 			MaxSpeedPerSecond: cfg.MaxPaddleSpeedPerSecond,
 		},
 		Ball: Ball{
@@ -41,7 +43,7 @@ func New(cfg store.Config) *State {
 
 // Step will update the game state for the given duration
 func (s *State) Step(d time.Duration) state.State {
-	s.Ball.Step(d, &s.PaddleLeft, &s.PaddleRight)
+	s.Ball.Step(d, s.PaddleLeft, s.PaddleRight)
 
 	return s
 }

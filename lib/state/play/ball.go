@@ -1,6 +1,9 @@
 package play
 
-import "time"
+import (
+	"math"
+	"time"
+)
 
 // Ball represents the ball with a position, size, and velocity
 type Ball struct {
@@ -14,7 +17,7 @@ type Ball struct {
 }
 
 // Step moves the ball, bouncing off the ceiling, floor, and paddles
-func (b *Ball) Step(d time.Duration, pLeft *Paddle, pRight *Paddle) {
+func (b *Ball) Step(d time.Duration, pLeft Paddle, pRight Paddle) {
 	seconds := float64(d.Seconds())
 
 	moveX := seconds * b.VelX
@@ -31,7 +34,25 @@ func (b *Ball) Step(d time.Duration, pLeft *Paddle, pRight *Paddle) {
 		b.VelY = -b.VelY
 	}
 
-	// For now, bounce off X walls and ignore paddles
+	// Check for paddle collisions... check right if we're moving right,
+	// and check left if we're moving left
+	if b.VelX > 0 {
+		if 1-(newX+b.Radius) < pRight.Width {
+			if math.Abs(newY-pRight.Center) < pRight.Height*0.5+b.Radius {
+				newX = 1 - (b.Radius + pRight.Width)
+				b.VelX = -b.VelX
+			}
+		}
+	} else {
+		if newX-b.Radius < pLeft.Width {
+			if math.Abs(newY-pLeft.Center) < pLeft.Height*0.5+b.Radius {
+				newX = b.Radius + pLeft.Width
+				b.VelX = -b.VelX
+			}
+		}
+	}
+
+	// Check for regular side wall collisions... for now just bounce off
 	if newX-b.Radius < 0 {
 		newX = b.Radius
 		b.VelX = -b.VelX
