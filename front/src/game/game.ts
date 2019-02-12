@@ -1,6 +1,6 @@
 import { IRenderTarget } from '../graphics/renderTarget';
 import { IConnection } from '../network/connection';
-import { IMessageConfig, IMessageInput, IMessageState, ServerState } from '../network/messageTypes';
+import { IMessageClientConfig, IMessageInput, IMessageState, ServerState } from '../network/messageTypes';
 import { StoreConfig } from '../store/config';
 import { StoreInput } from '../store/input';
 import { IStateFactory } from './states/factory';
@@ -48,8 +48,8 @@ export class Game {
             const parsed = JSON.parse(data);
 
             // Is this a config message?
-            if (parsed.config) {
-                this.storeConfig.updateFromMessage(parsed as IMessageConfig);
+            if (parsed.gameConfig) {
+                this.storeConfig.updateFromMessage(parsed as IMessageClientConfig);
 
                 return;
             }

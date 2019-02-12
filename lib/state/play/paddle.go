@@ -4,6 +4,7 @@ package play
 type Paddle struct {
 	Center            float64 `json:"c" tsdesc:"The center of the paddle in [0,1] coordinates"`
 	Height            float64 `json:"-"`
+	Width             float64 `json:"-"`
 	MaxSpeedPerSecond float64 `json:"-"`
 }
 

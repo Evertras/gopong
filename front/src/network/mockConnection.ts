@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { DataCallback, IConnection } from './connection';
-import { IMessageConfig, IMessageState } from './messageTypes';
+import { IMessageClientConfig, IMessageState } from './messageTypes';
 
 /**
  * A mock connection, useful for easy testing.
@@ -15,7 +15,7 @@ export class MockConnection implements IConnection {
      *
      * @param msg The state message to mock being written by the server.
      */
-    public mockReceive(msg: IMessageState | IMessageConfig) {
+    public mockReceive(msg: IMessageState | IMessageClientConfig) {
         if (this.onData) {
             this.onData(JSON.stringify(msg));
         } else {

@@ -1,15 +1,10 @@
 package message
 
-// ConfigInner holds the actual config data
-type ConfigInner struct {
-	PaddleHeight            float64    `json:"paddleHeight"`
-	BallRadius              float64    `json:"ballRadius"`
-	MaxPaddleSpeedPerSecond float64    `json:"paddleMaxSpeedPerSecond"`
-	PaddleSide              PlayerSide `json:"side" tstype:"ServerPaddleSide"`
-}
+import "github.com/Evertras/gopong/lib/store"
 
-// Config is a message sent to the client to define the game's config.
+// ClientConfig is a message sent to the client to define the game's config.
 // It's wrapped in an inner structure to avoid JSON key collisions in the root.
-type Config struct {
-	Config ConfigInner `json:"config"`
+type ClientConfig struct {
+	Config     store.Config `json:"gameConfig" tsdesc:"The general configuration of the game"`
+	PaddleSide PlayerSide   `json:"playerSide" tstype:"ServerPaddleSide" tsdesc:"Which side the receiving client is on"`
 }

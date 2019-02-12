@@ -40,7 +40,7 @@ export enum ServerState {
 
 	err = generator.GenerateTypes(
 		outfile,
-		message.Config{},
+		message.ClientConfig{},
 		message.Input{},
 		message.State{},
 	)

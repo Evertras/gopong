@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import sinonChai = require('sinon-chai');
 import { MockRenderTarget } from '../graphics/mockRenderTarget';
 import { Input } from '../input/input';
-import { IMessageConfig, IMessageState, ServerPaddleSide, ServerState } from '../network/messageTypes';
+import { IMessageClientConfig, IMessageState, ServerPaddleSide, ServerState } from '../network/messageTypes';
 import { MockConnection } from '../network/mockConnection';
 import { StoreConfig } from '../store/config';
 import { StoreInput } from '../store/input';
@@ -83,13 +83,14 @@ describe('game', () => {
             const clientSidePrediction = true;
             const serverReconciliation = false;
 
-            const fakeConfig: IMessageConfig = {
-                config: {
+            const fakeConfig: IMessageClientConfig = {
+                gameConfig: {
                     ballRadius: 0.5,
                     paddleHeight: 0.4,
+                    paddleWidth: 0.1,
                     paddleMaxSpeedPerSecond: 4,
-                    side: ServerPaddleSide.Right,
                 },
+                playerSide: ServerPaddleSide.Right,
             };
 
             // Shouldn't create a state based off of this...
@@ -97,11 +98,11 @@ describe('game', () => {
 
             mockConnection.mockReceive(fakeConfig);
 
-            expect(storeConfig.ballRadius, 'ball radius not applied').to.equal(fakeConfig.config.ballRadius);
-            expect(storeConfig.paddleHeight, 'paddle height not applied').to.equal(fakeConfig.config.paddleHeight);
+            expect(storeConfig.ballRadius, 'ball radius not applied').to.equal(fakeConfig.gameConfig.ballRadius);
+            expect(storeConfig.paddleHeight, 'paddle height not applied').to.equal(fakeConfig.gameConfig.paddleHeight);
             expect(storeConfig.paddleMaxSpeedPerSecond, 'paddle max speed not applied')
-                .to.equal(fakeConfig.config.paddleMaxSpeedPerSecond);
-            expect(storeConfig.side, 'side not set').to.equal(fakeConfig.config.side);
+                .to.equal(fakeConfig.gameConfig.paddleMaxSpeedPerSecond);
+            expect(storeConfig.side, 'side not set').to.equal(fakeConfig.playerSide);
 
             // Just to make sure we didn't clobber anything...
             expect(storeConfig.clientSidePredictionEnabled, 'clobbered').to.equal(clientSidePrediction);
