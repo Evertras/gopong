@@ -19,6 +19,7 @@ gopong
 
 # Output of generate
 lib/static/build.go
+front/src/network/messageTypes.ts
 
 # TICK sandbox volume
 tick/data

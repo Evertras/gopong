@@ -4,6 +4,7 @@ all: clean test build
 
 clean:
 	rm -f lib/static/build.go
+	rm -f front/src/network/messageTypes.ts
 
 test: node_modules lib/static/build.go
 	npx tslint -p .
@@ -22,9 +23,12 @@ run-dev: generate
 generate: clean lib/static/build.go
 
 # Actual files/directories that must exist
-lib/static/build.go:
+lib/static/build.go: front/src/network/messageTypes.ts
 	npx webpack
 	go generate ./lib/static/
+
+front/src/network/messageTypes.ts:
+	go generate ./lib/message/
 
 node_modules:
 	npm install
