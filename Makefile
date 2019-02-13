@@ -17,7 +17,7 @@ test: node_modules lib/static/build.go
 	go test -v ./lib/...
 
 build: lib/static/build.go
-	go build -o $(BINARY_NAME) -v ./cmd/gopong/main.go
+	CG_ENABLED=0 go build -o $(BINARY_NAME) -v ./cmd/gopong/main.go
 
 bench:
 	go test -benchmem -bench . ./lib/...
@@ -25,7 +25,13 @@ bench:
 run-dev: front/game.js lib/static/build.go
 	go run -race ./cmd/gopong/main.go -d -t 3
 
-generate: clean front/game.js lib/static/build.go
+generate: front/game.js lib/static/build.go
+
+docker: clean generate
+	docker build --rm -t evertras/gopong .
+
+# These are not files, so always run them when asked to
+.PHONY: all clean test build bench run-dev generate
 
 # Actual files that must be generated
 front/game.js: \
