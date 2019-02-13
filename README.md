@@ -110,6 +110,12 @@ will run the linter for you as well, and potentially even fix errors on save.
 The build badge at the top of this README will take you to the Travis CI page for this project.
 Travis CI simply runs `make` which will run all tests to ensure everything is correct.
 
+### Docker
+
+`make docker` will create a Docker image named `evertras/gopong`.  This image is based off `scratch`,
+making it very tiny (<10 mb) but without access to a shell to exec into while running.  See [Dockerfile](Dockerfile)
+for details.
+
 ## Test tools
 
 To run all tests, run `make test`.  See [the Makefile](Makefile) for more information.
