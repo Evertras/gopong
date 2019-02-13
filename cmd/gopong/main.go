@@ -22,7 +22,7 @@ func main() {
 
 	log.Println("Starting")
 
-	log.Fatal(s.Listen("localhost:8000"))
+	log.Fatal(s.Listen("0.0.0.0:8000"))
 }
 
 func getConfig() server.Config {
