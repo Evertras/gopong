@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+
+  gopong:
+    image: evertras/gopong:latest
+    ports:
+      - "8000:8000"
+    command: --statsd telegraf:8125 --prometheus :9001
+    networks:
+      - gopong
+
+  telegraf:
+    image: telegraf:1.4.0
+    volumes:
+      - ./etc/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    networks:
+      - gopong
+
+  influxdb:
+    image: influxdb:1.3.5
+    networks:
+      - gopong
+
+  chronograf:
+    image: chronograf:1.3.8
+    environment:
+      INFLUXDB_URL: http://influxdb:8086
+      KAPACITOR_URL: http://kapacitor:9092
+    ports:
+      - "8888:8888"
+    networks:
+      - gopong
+
+  kapacitor:
+    image: kapacitor:1.3.3
+    environment:
+      KAPACITOR_HOSTNAME: kapacitor
+      KAPACITOR_INFLUXDB_0_URLS_0: http://influxdb:8086
+    networks:
+      - gopong
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./etc/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    command: "--config.file=/etc/prometheus/prometheus.yml"
+    networks:
+      - gopong
+
+networks:
+  gopong:

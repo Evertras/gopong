@@ -29,7 +29,7 @@ meets the following self-imposed requirements:
     * Extremely lightweight containerization is trivial due to zero runtime dependencies; NodeJS runtime isn't required
     * Packaging a single executable binary is the simplest use case for any other package system if desired
 * Easy to monitor
-  * Emits metrics in a standard fashion that existing tools can read (statsd, prometheus)
+  * Emits metrics in a standard fashion that existing tools can read (statsd, prometheus, etc.)
   * Adding metrics is easy, to encourage more monitoring
 
 ## Development prerequisites
@@ -60,8 +60,7 @@ If you want to take advantage of the Makefile, you'll need `make` installed on y
 This isn't strictly necessary for development as all commands from the Makefile can be run
 manually, but it does make things easier.
 
-If you need `make` for Linux because you're running a hipster distro for some reason, see
-your distribution's resources to find what package you need to install.
+If you need `make` for Linux because you're running a hipster distro, RTFM for your distro.
 
 If you need `make` for Windows, [you can get it here](http://gnuwin32.sourceforge.net/packages/make.htm).
 
@@ -86,6 +85,8 @@ The following flags can be provided at runtime:
 |------|-------|-------------|
 | `--dev` | `-d` | When asked to serve a file, read the latest from disk instead of using baked-in.  Useful for development. |
 | `--tick <rate-per-second>` | `-t <rate-per-second>` | How many ticks per second to run at for server side updates.  For example: `-t 10` will run at 10 Hz |
+| `--statsd` | (none) | Send statsd metrics to the given endpoint.  For example: "--statsd localhost:8125" |
+| `--prometheus` | (none) | Listen for Prometheus scrapes on the given address.  For example: "--prometheus :9090" |
 
 ```bash
 # Run in development mode at 20 Hz
@@ -95,13 +96,16 @@ The following flags can be provided at runtime:
 ### Running with Docker
 
 ```bash
-# Build the docker image if you want... optional since evertras/gopong is pushed to DockerHub
+# Build the docker image; unnecessary if you didn't make any changes, image is available on Docker Hub
 make docker
 
 # Run on host's port 8080 with a tick rate of 10
 docker run --rm -d -p 8080:8000 evertras/gopong -t 10
 ```
 
+### Running a full infrastructure stack with Docker Compose
+
+See [Metrics](docs/Metrics.md) for more information.
 
 ## Running in development mode
 
@@ -116,4 +120,3 @@ served whenever a typescript file is edited.
 
 Once running, the game is available at [http://localhost:8000](http://localhost:8000) and will
 connect automatically once loaded.
-

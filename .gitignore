@@ -20,9 +20,6 @@ gopong
 # Output of generate
 lib/static/build.go
 
-# TICK sandbox volume
-tick/data
-
 # Javascript stuff
 node_modules/
 front/build
