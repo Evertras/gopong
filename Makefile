@@ -22,7 +22,7 @@ build: lib/static/build.go
 	CG_ENABLED=0 go build -o $(BINARY_NAME) -v ./cmd/gopong/main.go
 
 bench:
-	go test -benchmem -bench . ./lib/...
+	go test -v -benchmem -bench . ./lib/...
 
 run-dev: front/game.js lib/static/build.go
 	go run -race ./cmd/gopong/main.go -d -t 3
