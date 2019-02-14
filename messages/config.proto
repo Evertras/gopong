@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package gopongmsg;
+
+message Config {
+    enum PaddleSide {
+        SIDE_LEFT = 0;
+        SIDE_RIGHT = 1;
+    }
+}

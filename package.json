@@ -11,6 +11,7 @@
     "jsdom": "^13.2.0",
     "jsdom-global": "^3.0.2",
     "mocha": "^5.2.0",
+    "protobufjs": "~6.8.8",
     "sinon": "^7.2.3",
     "sinon-chai": "^3.3.0",
     "ts-loader": "^5.3.3",
