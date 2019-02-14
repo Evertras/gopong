@@ -7,13 +7,13 @@ import (
 
 // Ball represents the ball with a position, size, and velocity
 type Ball struct {
-	PosX float64 `json:"x" tsdesc:"The center X coordinate of the ball in [0,1] coordinates"`
-	PosY float64 `json:"y" tsdesc:"The center Y coordinate of the ball in [0,1] coordinates"`
+	PosX float64
+	PosY float64
 
-	VelX float64 `json:"-"`
-	VelY float64 `json:"-"`
+	VelX float64
+	VelY float64
 
-	Radius float64 `json:"-"`
+	Radius float64
 }
 
 // Step moves the ball, bouncing off the ceiling, floor, and paddles

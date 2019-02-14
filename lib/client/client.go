@@ -2,7 +2,6 @@ package client
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 	"sync"
 
@@ -116,22 +115,32 @@ func (c *Client) write(msg []byte) error {
 	return nil
 }
 
+func (c *Client) Write(msg gopongmsg.Server) error {
+	data, err := proto.Marshal(&msg)
+
+	if err != nil {
+		return errors.Wrap(err, "failed to marshal to protobuf")
+	}
+
+	return c.write(data)
+}
+
 // WriteState writes a state message to the client.  Note that the last input index
 // is filled in automatically by WriteState.
 func (c *Client) WriteState(m gopongmsg.Server_State) error {
 	m.LastInputIndex = c.GetLastInputIndex()
-	msg, err := json.Marshal(m)
-
-	if err != nil {
-		return errors.Wrap(err, "error marshaling state message")
+	msg := gopongmsg.Server{
+		Msg: &gopongmsg.Server_State_{
+			State: &m,
+		},
 	}
 
-	return c.write(msg)
+	return c.Write(msg)
 }
 
 // WriteConfig writes a config message to the client
 func (c *Client) WriteConfig(cfg store.Config, side gopongmsg.Server_Config_PaddleSide) error {
-	cfgMsg := gopongmsg.Server{
+	msg := gopongmsg.Server{
 		Msg: &gopongmsg.Server_Config_{
 			Config: &gopongmsg.Server_Config{
 				BallRadius:              float32(cfg.BallRadius),
@@ -142,13 +151,7 @@ func (c *Client) WriteConfig(cfg store.Config, side gopongmsg.Server_Config_Padd
 		},
 	}
 
-	data, err := json.Marshal(cfgMsg)
-
-	if err != nil {
-		return errors.Wrap(err, "error writing config")
-	}
-
-	return c.write(data)
+	return c.Write(msg)
 }
 
 // Done returns a channel that will close once the client disconnects
