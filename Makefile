@@ -38,20 +38,11 @@ proto: messages/gomessage messages/tsmessage
 .PHONY: all clean test build bench run-dev generate proto
 
 # Actual files that must be generated
-front/game.js: \
-		node_modules \
-		front/src/game/states/play/messageTypes.ts \
-		front/src/game/states/starting/messageTypes.ts
+front/game.js: node_modules proto
 	npx webpack
 
 lib/static/build.go: front/game.js
 	go generate ./lib/static/
-
-front/src/game/states/play/messageTypes.ts:
-	go generate ./lib/state/play/
-
-front/src/game/states/starting/messageTypes.ts:
-	go generate ./lib/state/starting/
 
 node_modules:
 	npm install
