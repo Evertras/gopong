@@ -7,24 +7,26 @@ This stack includes the following:
 * A full TICK stack (Telegraf, InfluxDB, Chronograf, Kapacitor) for statsd metrics
 * Prometheus configured to watch itself, Traefik, and Gopong
 
-## Starting the stack
+## Controlling the stack
 
 ```bash
 # If you're not already here
 cd compose
 
-# Add -d to run detached, or without -d to get logs of everything; Ctrl+C to shut it down
+# To run and see all the logs for all services (Ctrl+C to kill everything)
 docker-compose up
+
+# Or to run detached...
+docker-compose up -d
 ```
 
-## Bringing down the stack
-
-If started with `-d`...
+If started with `-d`, you can shut the stack down as follows:
 
 ```bash
 # If you're not already here
 cd compose
 
+# Brings down the stack
 docker-compose down
 ```
 
