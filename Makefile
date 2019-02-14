@@ -1,6 +1,6 @@
 BINARY_NAME=gopong
 
-all: clean test build
+all: clean proto test build
 
 clean:
 	rm -f gopong
@@ -25,7 +25,7 @@ bench:
 run-dev: front/game.js lib/static/build.go
 	go run -race ./cmd/gopong/main.go -d -t 3
 
-generate: front/game.js lib/static/build.go proto
+generate: front/game.js lib/static/build.go
 
 docker: clean generate
 	docker build --rm -t evertras/gopong .
