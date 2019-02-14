@@ -32,7 +32,7 @@ window.addEventListener('load', () => {
     });
 
     // Dependencies
-    const connection = new LaggingConnection('ws://localhost:8000/join');
+    const connection = new LaggingConnection('ws://' + location.host + '/join');
     const storeConfig = new StoreConfig();
     const stateFactory = new StateFactory(storeConfig);
     const input = new Input();
