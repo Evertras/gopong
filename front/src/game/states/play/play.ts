@@ -55,20 +55,24 @@ export class StatePlay implements IState {
         this.ball.draw(renderTarget);
     }
 
-    public applyServerUpdate(msg: any): void {
-        const parsed = msg as gopongmsg.Server.State.IPlay;
+    public applyServerUpdate(msg: gopongmsg.Server.IState): void {
+        const play = msg.play;
 
-        if (parsed.paddleLeft && parsed.paddleLeft.center) {
-            this.paddleLeft.center = parsed.paddleLeft.center;
+        if (!play) {
+            throw new Error('Tried to apply an update to Play state that isn\'t Play');
         }
 
-        if (parsed.paddleRight && parsed.paddleRight.center) {
-            this.paddleRight.center = parsed.paddleRight.center;
+        if (play.paddleLeft && play.paddleLeft.center) {
+            this.paddleLeft.center = play.paddleLeft.center;
         }
 
-        if (parsed.ball) {
-            this.ball.x = parsed.ball.centerX || this.ball.x;
-            this.ball.y = parsed.ball.centerY || this.ball.y;
+        if (play.paddleRight && play.paddleRight.center) {
+            this.paddleRight.center = play.paddleRight.center;
+        }
+
+        if (play.ball) {
+            this.ball.x = play.ball.centerX || this.ball.x;
+            this.ball.y = play.ball.centerY || this.ball.y;
         }
     }
 

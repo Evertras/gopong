@@ -36,6 +36,7 @@ export class LaggingConnection implements IConnection {
 
     public start() {
         this.ws = new WebSocket(this.endpoint);
+        this.ws.binaryType = 'arraybuffer';
 
         this.ws.onopen = () => {
             console.log('OPEN');
@@ -50,7 +51,10 @@ export class LaggingConnection implements IConnection {
         this.ws.onmessage = (evt: any) => {
             setTimeout(() => {
                 if (this.onData) {
-                    this.onData(gopongmsg.Server.decode(evt.data));
+                    const array = new Uint8Array(evt.data);
+                    const decoded = gopongmsg.Server.decode(array);
+
+                    this.onData(decoded);
                 }
             }, this.latencyMs);
         };

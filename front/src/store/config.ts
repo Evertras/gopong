@@ -26,6 +26,8 @@ export class StoreConfig {
             this.paddleMaxSpeedPerSecond = msg.maxPaddleSpeedPerSecond || 0.1;
         }
 
+        console.log(msg.side);
+
         if (msg.side) {
             this.side = msg.side;
         }

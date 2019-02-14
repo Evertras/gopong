@@ -18,11 +18,15 @@ export class StateStarting implements IState {
         }
     }
 
-    public applyServerUpdate(msg: any): void {
-        const parsed = msg as gopongmsg.Server.State.IStart;
+    public applyServerUpdate(msg: gopongmsg.Server.IState): void {
+        const start = msg.start;
 
-        if (parsed.secondsRemaining) {
-            this.remainingSeconds = parsed.secondsRemaining;
+        if (!start) {
+            throw new Error('Tried to apply server update to Start state without data');
+        }
+
+        if (start.secondsRemaining) {
+            this.remainingSeconds = start.secondsRemaining;
         }
     }
 

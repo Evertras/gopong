@@ -895,6 +895,7 @@ $root.gopongmsg = (function() {
                         return "side: enum value expected";
                     case 0:
                     case 1:
+                    case 2:
                         break;
                     }
                 if (message.paddleHeight != null && message.hasOwnProperty("paddleHeight"))
@@ -925,13 +926,17 @@ $root.gopongmsg = (function() {
                     return object;
                 var message = new $root.gopongmsg.Server.Config();
                 switch (object.side) {
-                case "SIDE_LEFT":
+                case "SIDE_NULL":
                 case 0:
                     message.side = 0;
                     break;
-                case "SIDE_RIGHT":
+                case "SIDE_LEFT":
                 case 1:
                     message.side = 1;
+                    break;
+                case "SIDE_RIGHT":
+                case 2:
+                    message.side = 2;
                     break;
                 }
                 if (object.paddleHeight != null)
@@ -959,7 +964,7 @@ $root.gopongmsg = (function() {
                     options = {};
                 var object = {};
                 if (options.defaults) {
-                    object.side = options.enums === String ? "SIDE_LEFT" : 0;
+                    object.side = options.enums === String ? "SIDE_NULL" : 0;
                     object.paddleHeight = 0;
                     object.paddleWidth = 0;
                     object.ballRadius = 0;
@@ -993,13 +998,15 @@ $root.gopongmsg = (function() {
              * PaddleSide enum.
              * @name gopongmsg.Server.Config.PaddleSide
              * @enum {string}
-             * @property {number} SIDE_LEFT=0 SIDE_LEFT value
-             * @property {number} SIDE_RIGHT=1 SIDE_RIGHT value
+             * @property {number} SIDE_NULL=0 SIDE_NULL value
+             * @property {number} SIDE_LEFT=1 SIDE_LEFT value
+             * @property {number} SIDE_RIGHT=2 SIDE_RIGHT value
              */
             Config.PaddleSide = (function() {
                 var valuesById = {}, values = Object.create(valuesById);
-                values[valuesById[0] = "SIDE_LEFT"] = 0;
-                values[valuesById[1] = "SIDE_RIGHT"] = 1;
+                values[valuesById[0] = "SIDE_NULL"] = 0;
+                values[valuesById[1] = "SIDE_LEFT"] = 1;
+                values[valuesById[2] = "SIDE_RIGHT"] = 2;
                 return values;
             })();
 
@@ -1199,6 +1206,7 @@ $root.gopongmsg = (function() {
                         return "type: enum value expected";
                     case 0:
                     case 1:
+                    case 2:
                         break;
                     }
                 if (message.lastInputIndex != null && message.hasOwnProperty("lastInputIndex"))
@@ -1238,13 +1246,17 @@ $root.gopongmsg = (function() {
                     return object;
                 var message = new $root.gopongmsg.Server.State();
                 switch (object.type) {
-                case "STATE_PLAY":
+                case "STATE_NULL":
                 case 0:
                     message.type = 0;
                     break;
-                case "STATE_START":
+                case "STATE_PLAY":
                 case 1:
                     message.type = 1;
+                    break;
+                case "STATE_START":
+                case 2:
+                    message.type = 2;
                     break;
                 }
                 if (object.lastInputIndex != null)
@@ -1276,7 +1288,7 @@ $root.gopongmsg = (function() {
                     options = {};
                 var object = {};
                 if (options.defaults) {
-                    object.type = options.enums === String ? "STATE_PLAY" : 0;
+                    object.type = options.enums === String ? "STATE_NULL" : 0;
                     object.lastInputIndex = 0;
                 }
                 if (message.type != null && message.hasOwnProperty("type"))
@@ -1311,13 +1323,15 @@ $root.gopongmsg = (function() {
              * Type enum.
              * @name gopongmsg.Server.State.Type
              * @enum {string}
-             * @property {number} STATE_PLAY=0 STATE_PLAY value
-             * @property {number} STATE_START=1 STATE_START value
+             * @property {number} STATE_NULL=0 STATE_NULL value
+             * @property {number} STATE_PLAY=1 STATE_PLAY value
+             * @property {number} STATE_START=2 STATE_START value
              */
             State.Type = (function() {
                 var valuesById = {}, values = Object.create(valuesById);
-                values[valuesById[0] = "STATE_PLAY"] = 0;
-                values[valuesById[1] = "STATE_START"] = 1;
+                values[valuesById[0] = "STATE_NULL"] = 0;
+                values[valuesById[1] = "STATE_PLAY"] = 1;
+                values[valuesById[2] = "STATE_START"] = 2;
                 return values;
             })();
 

@@ -419,8 +419,9 @@ export namespace gopongmsg {
 
             /** PaddleSide enum. */
             enum PaddleSide {
-                SIDE_LEFT = 0,
-                SIDE_RIGHT = 1
+                SIDE_NULL = 0,
+                SIDE_LEFT = 1,
+                SIDE_RIGHT = 2
             }
         }
 
@@ -539,8 +540,9 @@ export namespace gopongmsg {
 
             /** Type enum. */
             enum Type {
-                STATE_PLAY = 0,
-                STATE_START = 1
+                STATE_NULL = 0,
+                STATE_PLAY = 1,
+                STATE_START = 2
             }
 
             /** Properties of a Play. */

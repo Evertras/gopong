@@ -106,7 +106,7 @@ func (c *Client) FlushInputs() []gopongmsg.Client_Input {
 }
 
 func (c *Client) write(msg []byte) error {
-	if err := c.conn.WriteMessage(websocket.TextMessage, msg); err != nil {
+	if err := c.conn.WriteMessage(websocket.BinaryMessage, msg); err != nil {
 		return errors.Wrap(err, "error writing state")
 	}
 
@@ -147,6 +147,7 @@ func (c *Client) WriteConfig(cfg store.Config, side gopongmsg.Server_Config_Padd
 				MaxPaddleSpeedPerSecond: float32(cfg.MaxPaddleSpeedPerSecond),
 				PaddleHeight:            float32(cfg.PaddleHeight),
 				PaddleWidth:             float32(cfg.PaddleWidth),
+				Side:                    side,
 			},
 		},
 	}
