@@ -1,27 +1,29 @@
+import { gopongmsg } from '../../../../../messages/tsmessage/messages';
 import { IRenderTarget } from '../../../graphics/renderTarget';
 import { InputStep } from '../../../store/input';
 import { IState } from '../state';
-import { IMessageStartingState } from './messageTypes';
 
 export class StateStarting implements IState {
-    private remainingMilliseconds: number | null = null;
+    private remainingSeconds: number | null = null;
 
     public step(durationMilliseconds: number) {
-        if (!this.remainingMilliseconds) {
+        if (!this.remainingSeconds) {
             return;
         }
 
-        this.remainingMilliseconds -= durationMilliseconds * 1000;
+        this.remainingSeconds -= durationMilliseconds * 0.001;
 
-        if (this.remainingMilliseconds < 0) {
-            this.remainingMilliseconds = 0;
+        if (this.remainingSeconds < 0) {
+            this.remainingSeconds = 0;
         }
     }
 
     public applyServerUpdate(msg: any): void {
-        const parsed = msg as IMessageStartingState;
+        const parsed = msg as gopongmsg.Server.State.IStart;
 
-        this.remainingMilliseconds = parsed.r;
+        if (parsed.secondsRemaining) {
+            this.remainingSeconds = parsed.secondsRemaining;
+        }
     }
 
     public applyInput(_: InputStep): void {
@@ -29,8 +31,8 @@ export class StateStarting implements IState {
     }
 
     public draw(renderTarget: IRenderTarget): void {
-        if (this.remainingMilliseconds !== null) {
-            renderTarget.text((this.remainingMilliseconds * 0.001).toFixed(1), 0.1, 0.9);
+        if (this.remainingSeconds !== null) {
+            renderTarget.text(this.remainingSeconds.toFixed(1), 0.1, 0.9);
         }
     }
 }

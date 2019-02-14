@@ -1,11 +1,11 @@
-import { ServerState } from '../../network/messageTypes';
+import { gopongmsg } from '../../../../messages/tsmessage/messages';
 import { StoreConfig } from '../../store/config';
 import { StatePlay } from './play/play';
 import { StateStarting } from './starting/starting';
 import { IState } from './state';
 
 export interface IStateFactory {
-    create(state: ServerState): IState;
+    create(state: gopongmsg.Server.State.Type): IState;
 }
 
 export class StateFactory implements IStateFactory {
@@ -15,12 +15,12 @@ export class StateFactory implements IStateFactory {
         this.storeConfig = storeConfig;
     }
 
-    public create(state: ServerState): IState {
+    public create(state: gopongmsg.Server.State.Type): IState {
         switch (state) {
-            case ServerState.Play:
+            case gopongmsg.Server.State.Type.STATE_PLAY:
                 return new StatePlay(this.storeConfig);
 
-            case ServerState.Starting:
+            case gopongmsg.Server.State.Type.STATE_START:
                 return new StateStarting();
         }
 

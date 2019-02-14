@@ -1,3 +1,4 @@
+import { gopongmsg } from '../../../../messages/tsmessage/messages';
 import { IRenderTarget } from '../../graphics/renderTarget';
 import { InputStep } from '../../store/input';
 
@@ -11,11 +12,11 @@ export interface IState {
 
     /**
      * Applies an update supplied by the server for this state.  The state should know
-     * how to deserialize its own state message.
+     * how to find its own state message.
      *
-     * @param msg The JSON encoded state sent from the server
+     * @param msg The state message received by the server.
      */
-    applyServerUpdate(msg: any): void;
+    applyServerUpdate(msg: gopongmsg.Server.IState): void;
 
     /**
      * Apply input to the state.  Used for client side prediction and server reconciliation.

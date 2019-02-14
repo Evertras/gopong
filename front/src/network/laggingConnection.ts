@@ -1,3 +1,4 @@
+import { gopongmsg } from '../../../messages/tsmessage/messages';
 import { DataCallback, IConnection } from './connection';
 
 /**
@@ -49,7 +50,7 @@ export class LaggingConnection implements IConnection {
         this.ws.onmessage = (evt: any) => {
             setTimeout(() => {
                 if (this.onData) {
-                    this.onData(evt.data);
+                    this.onData(gopongmsg.Server.decode(evt.data));
                 }
             }, this.latencyMs);
         };
