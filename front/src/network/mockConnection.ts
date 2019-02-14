@@ -1,6 +1,6 @@
 import sinon from 'sinon';
+import { gopongmsg } from '../../../messages/tsmessage/messages';
 import { DataCallback, IConnection } from './connection';
-import { IMessageClientConfig, IMessageState } from './messageTypes';
 
 /**
  * A mock connection, useful for easy testing.
@@ -15,9 +15,9 @@ export class MockConnection implements IConnection {
      *
      * @param msg The state message to mock being written by the server.
      */
-    public mockReceive(msg: IMessageState | IMessageClientConfig) {
+    public mockReceive(msg: gopongmsg.Server) {
         if (this.onData) {
-            this.onData(JSON.stringify(msg));
+            this.onData(msg);
         } else {
             throw new Error('onData not set');
         }

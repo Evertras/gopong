@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package gopongmsg;
-
-message Input {
-    float movement_axis = 1;
-    float duration_seconds = 2;
-    uint32 input_index = 3;
-}

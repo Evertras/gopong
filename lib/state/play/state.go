@@ -1,19 +1,20 @@
 package play
 
 import (
+	"errors"
 	"time"
 
-	"github.com/Evertras/gopong/lib/message"
 	"github.com/Evertras/gopong/lib/state"
 	"github.com/Evertras/gopong/lib/store"
+	gopongmsg "github.com/Evertras/gopong/messages/gomessage"
 )
 
 // State is a snapshot of the game state as a whole
 type State struct {
-	PaddleLeft  Paddle `json:"pL" tsdesc:"The left paddle"`
-	PaddleRight Paddle `json:"pR" tsdesc:"The right paddle"`
+	PaddleLeft  Paddle
+	PaddleRight Paddle
 
-	Ball Ball `json:"b" tsdesc:"The ball"`
+	Ball Ball
 }
 
 // New creates a fresh game state ready to play
@@ -49,23 +50,40 @@ func (s *State) Step(d time.Duration) state.State {
 }
 
 // ApplyInput applies a given input to the state
-func (s *State) ApplyInput(i message.Input, side message.PlayerSide) {
+func (s *State) ApplyInput(i gopongmsg.Client_Input, side gopongmsg.Server_Config_PaddleSide) {
 	var paddle *Paddle
 
-	if side == message.PlayerSideLeft {
+	if side == gopongmsg.Server_Config_SIDE_LEFT {
 		paddle = &s.PaddleLeft
 	} else {
 		paddle = &s.PaddleRight
 	}
 
-	paddle.Center += i.MovementAxis * i.DurationSeconds * s.PaddleLeft.MaxSpeedPerSecond
+	paddle.Center += float64(i.MovementAxis*i.DurationSeconds) * s.PaddleLeft.MaxSpeedPerSecond
 	paddle.Bound()
 }
 
 // Marshal creates a state message of this play state to send to clients
-func (s *State) Marshal() (message.State, error) {
-	return message.State{
-		Data: s,
-		Type: message.StatePlay,
-	}, nil
+func (s *State) Marshal(msg *gopongmsg.Server_State) error {
+	if msg == nil {
+		return errors.New("Received nil message in play Marshal")
+	}
+
+	msg.Type = gopongmsg.Server_State_STATE_PLAY
+	msg.State = &gopongmsg.Server_State_Play_{
+		Play: &gopongmsg.Server_State_Play{
+			PaddleLeft: &gopongmsg.Server_State_Play_Paddle{
+				Center: float32(s.PaddleLeft.Center),
+			},
+			PaddleRight: &gopongmsg.Server_State_Play_Paddle{
+				Center: float32(s.PaddleRight.Center),
+			},
+			Ball: &gopongmsg.Server_State_Play_Ball{
+				CenterX: float32(s.Ball.PosX),
+				CenterY: float32(s.Ball.PosY),
+			},
+		},
+	}
+
+	return nil
 }

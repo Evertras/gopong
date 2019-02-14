@@ -1,11 +1,10 @@
+import { gopongmsg } from '../../../../../messages/tsmessage/messages';
 import { IRenderTarget } from '../../../graphics/renderTarget';
-import { ServerPaddleSide } from '../../../network/messageTypes';
 import { StoreConfig } from '../../../store/config';
 import { InputStep } from '../../../store/input';
 import { Ball } from '../../objects/ball';
 import { Paddle } from '../../objects/paddle';
 import { IState } from '../state';
-import { IMessagePlayState } from './messageTypes';
 
 /**
  * The main state of the game: actually playing!
@@ -31,17 +30,17 @@ export class StatePlay implements IState {
             this.storeConfig.paddleHeight,
             this.storeConfig.paddleWidth,
             this.storeConfig.paddleMaxSpeedPerSecond,
-            ServerPaddleSide.Left,
+            gopongmsg.Server.Config.PaddleSide.SIDE_LEFT,
             true);
 
         this.paddleRight = new Paddle(
             this.storeConfig.paddleHeight,
             this.storeConfig.paddleWidth,
             this.storeConfig.paddleMaxSpeedPerSecond,
-            ServerPaddleSide.Right,
+            gopongmsg.Server.Config.PaddleSide.SIDE_RIGHT,
             false);
 
-        if (this.storeConfig.side === ServerPaddleSide.Left) {
+        if (this.storeConfig.side === gopongmsg.Server.Config.PaddleSide.SIDE_LEFT) {
             this.paddleActive = this.paddleLeft;
         } else {
             this.paddleActive = this.paddleRight;
@@ -56,14 +55,25 @@ export class StatePlay implements IState {
         this.ball.draw(renderTarget);
     }
 
-    public applyServerUpdate(msg: any): void {
-        const parsed = msg as IMessagePlayState;
+    public applyServerUpdate(msg: gopongmsg.Server.IState): void {
+        const play = msg.play;
 
-        this.paddleLeft.center = parsed.pL.c;
-        this.paddleRight.center = parsed.pR.c;
+        if (!play) {
+            throw new Error('Tried to apply an update to Play state that isn\'t Play');
+        }
 
-        this.ball.x = parsed.b.x;
-        this.ball.y = parsed.b.y;
+        if (play.paddleLeft && play.paddleLeft.center) {
+            this.paddleLeft.center = play.paddleLeft.center;
+        }
+
+        if (play.paddleRight && play.paddleRight.center) {
+            this.paddleRight.center = play.paddleRight.center;
+        }
+
+        if (play.ball) {
+            this.ball.x = play.ball.centerX || this.ball.x;
+            this.ball.y = play.ball.centerY || this.ball.y;
+        }
     }
 
     public applyInput(inputStep: InputStep) {

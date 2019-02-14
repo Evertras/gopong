@@ -1,5 +1,5 @@
+import { gopongmsg } from '../../../../messages/tsmessage/messages';
 import { IRenderTarget } from '../../graphics/renderTarget';
-import { ServerPaddleSide } from '../../network/messageTypes';
 import { IDrawable } from '../drawable';
 
 export class Paddle implements IDrawable {
@@ -8,9 +8,15 @@ export class Paddle implements IDrawable {
     public width: number;
     public maxSpeedPerSecond: number;
     public isPlayer: boolean;
-    public side: ServerPaddleSide;
+    public side: gopongmsg.Server.Config.PaddleSide;
 
-    constructor(height: number, width: number, maxSpeedPerSecond: number, side: ServerPaddleSide, isPlayer: boolean) {
+    constructor(
+        height: number,
+        width: number,
+        maxSpeedPerSecond: number,
+        side: gopongmsg.Server.Config.PaddleSide,
+        isPlayer: boolean,
+     ) {
         this.height = height;
         this.width = width;
         this.maxSpeedPerSecond = maxSpeedPerSecond;
@@ -35,7 +41,7 @@ export class Paddle implements IDrawable {
 
     public draw(renderTarget: IRenderTarget) {
         // Dealing with [0,1] coordinates
-        const x = this.side === ServerPaddleSide.Left ? 0 : 1 - this.width;
+        const x = this.side === gopongmsg.Server.Config.PaddleSide.SIDE_LEFT ? 0 : 1 - this.width;
         const y = this.center - this.height * 0.5;
 
         renderTarget.rect(x, y, this.width, this.height);

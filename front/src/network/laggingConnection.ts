@@ -1,3 +1,4 @@
+import { gopongmsg } from '../../../messages/tsmessage/messages';
 import { DataCallback, IConnection } from './connection';
 
 /**
@@ -17,10 +18,10 @@ export class LaggingConnection implements IConnection {
         this.endpoint = endpoint;
     }
 
-    public write(data: string) {
+    public write(data: gopongmsg.IClient) {
         setTimeout(() => {
             if (this.ws && this.isOpen) {
-                this.ws.send(data);
+                this.ws.send(gopongmsg.Client.encode(data).finish());
             }
         }, this.latencyMs);
     }
@@ -35,6 +36,7 @@ export class LaggingConnection implements IConnection {
 
     public start() {
         this.ws = new WebSocket(this.endpoint);
+        this.ws.binaryType = 'arraybuffer';
 
         this.ws.onopen = () => {
             console.log('OPEN');
@@ -49,7 +51,10 @@ export class LaggingConnection implements IConnection {
         this.ws.onmessage = (evt: any) => {
             setTimeout(() => {
                 if (this.onData) {
-                    this.onData(evt.data);
+                    const array = new Uint8Array(evt.data);
+                    const decoded = gopongmsg.Server.decode(array);
+
+                    this.onData(decoded);
                 }
             }, this.latencyMs);
         };

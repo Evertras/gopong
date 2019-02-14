@@ -1,4 +1,6 @@
-export type DataCallback = (data: string) => void;
+import { gopongmsg } from '../../../messages/tsmessage/messages';
+
+export type DataCallback = (data: gopongmsg.Server) => void;
 
 /**
  * Connection is an abstracted WebSocket connection to a server.
@@ -7,7 +9,7 @@ export type DataCallback = (data: string) => void;
 export interface IConnection {
 
     /**
-     * Callback for when data is received, passed back as a simple string.
+     * Callback for when data is received from the server.
      */
     onData: DataCallback | null;
     /**
@@ -16,7 +18,7 @@ export interface IConnection {
      *
      * @param data The data to write to the connection
      */
-    write(data: string): void;
+    write(data: gopongmsg.IClient): void;
 
     /**
      * The current latency of the connection, in milliseconds.

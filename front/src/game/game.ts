@@ -1,6 +1,6 @@
+import { gopongmsg } from '../../../messages/tsmessage/messages';
 import { IRenderTarget } from '../graphics/renderTarget';
 import { IConnection } from '../network/connection';
-import { IMessageClientConfig, IMessageInput, IMessageState, ServerState } from '../network/messageTypes';
 import { StoreConfig } from '../store/config';
 import { StoreInput } from '../store/input';
 import { IStateFactory } from './states/factory';
@@ -19,7 +19,7 @@ export class Game {
 
     // Current state that we can blindly send server updates and input to
     private currentState: IState | null = null;
-    private currentStateType: ServerState | null = null;
+    private currentStateType: gopongmsg.Server.State.Type | null = null;
 
     // Timing data for frames
     private updateInterval: any;
@@ -44,24 +44,24 @@ export class Game {
         this.stateFactory = stateFactory;
         this.connection = connection;
 
-        this.connection.onData = (data: string) => {
-            const parsed = JSON.parse(data);
-
+        this.connection.onData = (msg: gopongmsg.IServer) => {
             // Is this a config message?
-            if (parsed.gameConfig) {
-                this.storeConfig.updateFromMessage(parsed as IMessageClientConfig);
+            if (msg.config) {
+                this.storeConfig.updateFromMessage(msg.config);
 
                 return;
             }
 
-            const stateMessage = parsed as IMessageState;
+            if (!msg.state) {
+                throw new Error('Did not have config or state on message, something went wrong with encoding');
+            }
 
-            this.storeInput.deleteUntil(stateMessage.n);
+            this.storeInput.deleteUntil(msg.state.lastInputIndex || 0);
 
             // Do we need to change to a new state?
-            if (this.currentStateType !== stateMessage.t) {
-                this.currentStateType = stateMessage.t;
-                this.currentState = this.stateFactory.create(stateMessage.t);
+            if (msg.state.type && this.currentStateType !== msg.state.type) {
+                this.currentStateType = msg.state.type;
+                this.currentState = this.stateFactory.create(msg.state.type);
             }
 
             // If we don't have any state, nothing more to do
@@ -69,7 +69,7 @@ export class Game {
                 return;
             }
 
-            this.currentState.applyServerUpdate(stateMessage.s);
+            this.currentState.applyServerUpdate(msg.state);
 
             // If we don't want server reconciliation, nothing more to do
             if (!this.storeConfig.serverReconciliationEnabled) {
@@ -132,13 +132,15 @@ export class Game {
             }
         }
 
-        const inputMessage: IMessageInput = {
-            m: input.movementAxis,
-            n: input.index,
-            d: input.durationSeconds,
+        const inputMessage = {
+            input: {
+                durationSeconds: input.durationSeconds,
+                inputIndex: input.index,
+                movementAxis: input.movementAxis,
+            },
         };
 
-        this.connection.write(JSON.stringify(inputMessage));
+        this.connection.write(inputMessage);
     }
 
     private update(deltaMs: number) {

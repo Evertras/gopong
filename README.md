@@ -50,6 +50,7 @@ The following is required to build this project after cloning the repo.
 
 * [Go 1.11](https://golang.org/doc/install)
 * [Node 8.x](https://nodejs.org/en/)
+* [Docker](https://www.docker.com/)
 
 Older versions may work, but GLHF because you're on your own.  Newer versions should be fine.
 
@@ -72,10 +73,6 @@ If you need `make` for Windows, [you can get it here](http://gnuwin32.sourceforg
 
 You should now be able to just run `make` in the root directory of this repository to test and
 build everything with a `gopong` executable artifact created for your system.
-
-#### Docker
-
-If you want to build the Docker image or use the provided infrastructure stack in [the compose directory](compose).
 
 ## Running
 

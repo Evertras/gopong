@@ -17,6 +17,9 @@ gopong
 # Can be created by dep when an issue happens while updating, we definitely don't want this
 .vendor-new
 
+# Protobuf compilation
+messages/*message
+
 # Output of generate
 lib/static/build.go
 
