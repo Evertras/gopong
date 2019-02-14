@@ -18,26 +18,24 @@ $root.gopongmsg = (function() {
      */
     var gopongmsg = {};
 
-    gopongmsg.Input = (function() {
+    gopongmsg.Client = (function() {
 
         /**
-         * Properties of an Input.
+         * Properties of a Client.
          * @memberof gopongmsg
-         * @interface IInput
-         * @property {number|null} [movementAxis] Input movementAxis
-         * @property {number|null} [durationSeconds] Input durationSeconds
-         * @property {number|null} [inputIndex] Input inputIndex
+         * @interface IClient
+         * @property {gopongmsg.Client.IInput|null} [input] Client input
          */
 
         /**
-         * Constructs a new Input.
+         * Constructs a new Client.
          * @memberof gopongmsg
-         * @classdesc Represents an Input.
-         * @implements IInput
+         * @classdesc Represents a Client.
+         * @implements IClient
          * @constructor
-         * @param {gopongmsg.IInput=} [properties] Properties to set
+         * @param {gopongmsg.IClient=} [properties] Properties to set
          */
-        function Input(properties) {
+        function Client(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -45,101 +43,89 @@ $root.gopongmsg = (function() {
         }
 
         /**
-         * Input movementAxis.
-         * @member {number} movementAxis
-         * @memberof gopongmsg.Input
+         * Client input.
+         * @member {gopongmsg.Client.IInput|null|undefined} input
+         * @memberof gopongmsg.Client
          * @instance
          */
-        Input.prototype.movementAxis = 0;
+        Client.prototype.input = null;
+
+        // OneOf field names bound to virtual getters and setters
+        var $oneOfFields;
 
         /**
-         * Input durationSeconds.
-         * @member {number} durationSeconds
-         * @memberof gopongmsg.Input
+         * Client msg.
+         * @member {"input"|undefined} msg
+         * @memberof gopongmsg.Client
          * @instance
          */
-        Input.prototype.durationSeconds = 0;
+        Object.defineProperty(Client.prototype, "msg", {
+            get: $util.oneOfGetter($oneOfFields = ["input"]),
+            set: $util.oneOfSetter($oneOfFields)
+        });
 
         /**
-         * Input inputIndex.
-         * @member {number} inputIndex
-         * @memberof gopongmsg.Input
-         * @instance
-         */
-        Input.prototype.inputIndex = 0;
-
-        /**
-         * Creates a new Input instance using the specified properties.
+         * Creates a new Client instance using the specified properties.
          * @function create
-         * @memberof gopongmsg.Input
+         * @memberof gopongmsg.Client
          * @static
-         * @param {gopongmsg.IInput=} [properties] Properties to set
-         * @returns {gopongmsg.Input} Input instance
+         * @param {gopongmsg.IClient=} [properties] Properties to set
+         * @returns {gopongmsg.Client} Client instance
          */
-        Input.create = function create(properties) {
-            return new Input(properties);
+        Client.create = function create(properties) {
+            return new Client(properties);
         };
 
         /**
-         * Encodes the specified Input message. Does not implicitly {@link gopongmsg.Input.verify|verify} messages.
+         * Encodes the specified Client message. Does not implicitly {@link gopongmsg.Client.verify|verify} messages.
          * @function encode
-         * @memberof gopongmsg.Input
+         * @memberof gopongmsg.Client
          * @static
-         * @param {gopongmsg.IInput} message Input message or plain object to encode
+         * @param {gopongmsg.IClient} message Client message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        Input.encode = function encode(message, writer) {
+        Client.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.movementAxis != null && message.hasOwnProperty("movementAxis"))
-                writer.uint32(/* id 1, wireType 5 =*/13).float(message.movementAxis);
-            if (message.durationSeconds != null && message.hasOwnProperty("durationSeconds"))
-                writer.uint32(/* id 2, wireType 5 =*/21).float(message.durationSeconds);
-            if (message.inputIndex != null && message.hasOwnProperty("inputIndex"))
-                writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.inputIndex);
+            if (message.input != null && message.hasOwnProperty("input"))
+                $root.gopongmsg.Client.Input.encode(message.input, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
             return writer;
         };
 
         /**
-         * Encodes the specified Input message, length delimited. Does not implicitly {@link gopongmsg.Input.verify|verify} messages.
+         * Encodes the specified Client message, length delimited. Does not implicitly {@link gopongmsg.Client.verify|verify} messages.
          * @function encodeDelimited
-         * @memberof gopongmsg.Input
+         * @memberof gopongmsg.Client
          * @static
-         * @param {gopongmsg.IInput} message Input message or plain object to encode
+         * @param {gopongmsg.IClient} message Client message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        Input.encodeDelimited = function encodeDelimited(message, writer) {
+        Client.encodeDelimited = function encodeDelimited(message, writer) {
             return this.encode(message, writer).ldelim();
         };
 
         /**
-         * Decodes an Input message from the specified reader or buffer.
+         * Decodes a Client message from the specified reader or buffer.
          * @function decode
-         * @memberof gopongmsg.Input
+         * @memberof gopongmsg.Client
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
-         * @returns {gopongmsg.Input} Input
+         * @returns {gopongmsg.Client} Client
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        Input.decode = function decode(reader, length) {
+        Client.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
-            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.gopongmsg.Input();
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.gopongmsg.Client();
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
                 case 1:
-                    message.movementAxis = reader.float();
-                    break;
-                case 2:
-                    message.durationSeconds = reader.float();
-                    break;
-                case 3:
-                    message.inputIndex = reader.uint32();
+                    message.input = $root.gopongmsg.Client.Input.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -150,104 +136,329 @@ $root.gopongmsg = (function() {
         };
 
         /**
-         * Decodes an Input message from the specified reader or buffer, length delimited.
+         * Decodes a Client message from the specified reader or buffer, length delimited.
          * @function decodeDelimited
-         * @memberof gopongmsg.Input
+         * @memberof gopongmsg.Client
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {gopongmsg.Input} Input
+         * @returns {gopongmsg.Client} Client
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        Input.decodeDelimited = function decodeDelimited(reader) {
+        Client.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
                 reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
-         * Verifies an Input message.
+         * Verifies a Client message.
          * @function verify
-         * @memberof gopongmsg.Input
+         * @memberof gopongmsg.Client
          * @static
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-        Input.verify = function verify(message) {
+        Client.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.movementAxis != null && message.hasOwnProperty("movementAxis"))
-                if (typeof message.movementAxis !== "number")
-                    return "movementAxis: number expected";
-            if (message.durationSeconds != null && message.hasOwnProperty("durationSeconds"))
-                if (typeof message.durationSeconds !== "number")
-                    return "durationSeconds: number expected";
-            if (message.inputIndex != null && message.hasOwnProperty("inputIndex"))
-                if (!$util.isInteger(message.inputIndex))
-                    return "inputIndex: integer expected";
+            var properties = {};
+            if (message.input != null && message.hasOwnProperty("input")) {
+                properties.msg = 1;
+                {
+                    var error = $root.gopongmsg.Client.Input.verify(message.input);
+                    if (error)
+                        return "input." + error;
+                }
+            }
             return null;
         };
 
         /**
-         * Creates an Input message from a plain object. Also converts values to their respective internal types.
+         * Creates a Client message from a plain object. Also converts values to their respective internal types.
          * @function fromObject
-         * @memberof gopongmsg.Input
+         * @memberof gopongmsg.Client
          * @static
          * @param {Object.<string,*>} object Plain object
-         * @returns {gopongmsg.Input} Input
+         * @returns {gopongmsg.Client} Client
          */
-        Input.fromObject = function fromObject(object) {
-            if (object instanceof $root.gopongmsg.Input)
+        Client.fromObject = function fromObject(object) {
+            if (object instanceof $root.gopongmsg.Client)
                 return object;
-            var message = new $root.gopongmsg.Input();
-            if (object.movementAxis != null)
-                message.movementAxis = Number(object.movementAxis);
-            if (object.durationSeconds != null)
-                message.durationSeconds = Number(object.durationSeconds);
-            if (object.inputIndex != null)
-                message.inputIndex = object.inputIndex >>> 0;
+            var message = new $root.gopongmsg.Client();
+            if (object.input != null) {
+                if (typeof object.input !== "object")
+                    throw TypeError(".gopongmsg.Client.input: object expected");
+                message.input = $root.gopongmsg.Client.Input.fromObject(object.input);
+            }
             return message;
         };
 
         /**
-         * Creates a plain object from an Input message. Also converts values to other types if specified.
+         * Creates a plain object from a Client message. Also converts values to other types if specified.
          * @function toObject
-         * @memberof gopongmsg.Input
+         * @memberof gopongmsg.Client
          * @static
-         * @param {gopongmsg.Input} message Input
+         * @param {gopongmsg.Client} message Client
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        Input.toObject = function toObject(message, options) {
+        Client.toObject = function toObject(message, options) {
             if (!options)
                 options = {};
             var object = {};
-            if (options.defaults) {
-                object.movementAxis = 0;
-                object.durationSeconds = 0;
-                object.inputIndex = 0;
+            if (message.input != null && message.hasOwnProperty("input")) {
+                object.input = $root.gopongmsg.Client.Input.toObject(message.input, options);
+                if (options.oneofs)
+                    object.msg = "input";
             }
-            if (message.movementAxis != null && message.hasOwnProperty("movementAxis"))
-                object.movementAxis = options.json && !isFinite(message.movementAxis) ? String(message.movementAxis) : message.movementAxis;
-            if (message.durationSeconds != null && message.hasOwnProperty("durationSeconds"))
-                object.durationSeconds = options.json && !isFinite(message.durationSeconds) ? String(message.durationSeconds) : message.durationSeconds;
-            if (message.inputIndex != null && message.hasOwnProperty("inputIndex"))
-                object.inputIndex = message.inputIndex;
             return object;
         };
 
         /**
-         * Converts this Input to JSON.
+         * Converts this Client to JSON.
          * @function toJSON
-         * @memberof gopongmsg.Input
+         * @memberof gopongmsg.Client
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-        Input.prototype.toJSON = function toJSON() {
+        Client.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
-        return Input;
+        Client.Input = (function() {
+
+            /**
+             * Properties of an Input.
+             * @memberof gopongmsg.Client
+             * @interface IInput
+             * @property {number|null} [movementAxis] Input movementAxis
+             * @property {number|null} [durationSeconds] Input durationSeconds
+             * @property {number|null} [inputIndex] Input inputIndex
+             */
+
+            /**
+             * Constructs a new Input.
+             * @memberof gopongmsg.Client
+             * @classdesc Represents an Input.
+             * @implements IInput
+             * @constructor
+             * @param {gopongmsg.Client.IInput=} [properties] Properties to set
+             */
+            function Input(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * Input movementAxis.
+             * @member {number} movementAxis
+             * @memberof gopongmsg.Client.Input
+             * @instance
+             */
+            Input.prototype.movementAxis = 0;
+
+            /**
+             * Input durationSeconds.
+             * @member {number} durationSeconds
+             * @memberof gopongmsg.Client.Input
+             * @instance
+             */
+            Input.prototype.durationSeconds = 0;
+
+            /**
+             * Input inputIndex.
+             * @member {number} inputIndex
+             * @memberof gopongmsg.Client.Input
+             * @instance
+             */
+            Input.prototype.inputIndex = 0;
+
+            /**
+             * Creates a new Input instance using the specified properties.
+             * @function create
+             * @memberof gopongmsg.Client.Input
+             * @static
+             * @param {gopongmsg.Client.IInput=} [properties] Properties to set
+             * @returns {gopongmsg.Client.Input} Input instance
+             */
+            Input.create = function create(properties) {
+                return new Input(properties);
+            };
+
+            /**
+             * Encodes the specified Input message. Does not implicitly {@link gopongmsg.Client.Input.verify|verify} messages.
+             * @function encode
+             * @memberof gopongmsg.Client.Input
+             * @static
+             * @param {gopongmsg.Client.IInput} message Input message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Input.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.movementAxis != null && message.hasOwnProperty("movementAxis"))
+                    writer.uint32(/* id 1, wireType 5 =*/13).float(message.movementAxis);
+                if (message.durationSeconds != null && message.hasOwnProperty("durationSeconds"))
+                    writer.uint32(/* id 2, wireType 5 =*/21).float(message.durationSeconds);
+                if (message.inputIndex != null && message.hasOwnProperty("inputIndex"))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.inputIndex);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified Input message, length delimited. Does not implicitly {@link gopongmsg.Client.Input.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof gopongmsg.Client.Input
+             * @static
+             * @param {gopongmsg.Client.IInput} message Input message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Input.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes an Input message from the specified reader or buffer.
+             * @function decode
+             * @memberof gopongmsg.Client.Input
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {gopongmsg.Client.Input} Input
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Input.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.gopongmsg.Client.Input();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.movementAxis = reader.float();
+                        break;
+                    case 2:
+                        message.durationSeconds = reader.float();
+                        break;
+                    case 3:
+                        message.inputIndex = reader.uint32();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes an Input message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof gopongmsg.Client.Input
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {gopongmsg.Client.Input} Input
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Input.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies an Input message.
+             * @function verify
+             * @memberof gopongmsg.Client.Input
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            Input.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.movementAxis != null && message.hasOwnProperty("movementAxis"))
+                    if (typeof message.movementAxis !== "number")
+                        return "movementAxis: number expected";
+                if (message.durationSeconds != null && message.hasOwnProperty("durationSeconds"))
+                    if (typeof message.durationSeconds !== "number")
+                        return "durationSeconds: number expected";
+                if (message.inputIndex != null && message.hasOwnProperty("inputIndex"))
+                    if (!$util.isInteger(message.inputIndex))
+                        return "inputIndex: integer expected";
+                return null;
+            };
+
+            /**
+             * Creates an Input message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof gopongmsg.Client.Input
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {gopongmsg.Client.Input} Input
+             */
+            Input.fromObject = function fromObject(object) {
+                if (object instanceof $root.gopongmsg.Client.Input)
+                    return object;
+                var message = new $root.gopongmsg.Client.Input();
+                if (object.movementAxis != null)
+                    message.movementAxis = Number(object.movementAxis);
+                if (object.durationSeconds != null)
+                    message.durationSeconds = Number(object.durationSeconds);
+                if (object.inputIndex != null)
+                    message.inputIndex = object.inputIndex >>> 0;
+                return message;
+            };
+
+            /**
+             * Creates a plain object from an Input message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof gopongmsg.Client.Input
+             * @static
+             * @param {gopongmsg.Client.Input} message Input
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            Input.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.movementAxis = 0;
+                    object.durationSeconds = 0;
+                    object.inputIndex = 0;
+                }
+                if (message.movementAxis != null && message.hasOwnProperty("movementAxis"))
+                    object.movementAxis = options.json && !isFinite(message.movementAxis) ? String(message.movementAxis) : message.movementAxis;
+                if (message.durationSeconds != null && message.hasOwnProperty("durationSeconds"))
+                    object.durationSeconds = options.json && !isFinite(message.durationSeconds) ? String(message.durationSeconds) : message.durationSeconds;
+                if (message.inputIndex != null && message.hasOwnProperty("inputIndex"))
+                    object.inputIndex = message.inputIndex;
+                return object;
+            };
+
+            /**
+             * Converts this Input to JSON.
+             * @function toJSON
+             * @memberof gopongmsg.Client.Input
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            Input.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return Input;
+        })();
+
+        return Client;
     })();
 
     gopongmsg.Server = (function() {
@@ -895,7 +1106,7 @@ $root.gopongmsg = (function() {
                 if (message.type != null && message.hasOwnProperty("type"))
                     writer.uint32(/* id 1, wireType 0 =*/8).int32(message.type);
                 if (message.lastInputIndex != null && message.hasOwnProperty("lastInputIndex"))
-                    writer.uint32(/* id 2, wireType 0 =*/16).int32(message.lastInputIndex);
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.lastInputIndex);
                 if (message.play != null && message.hasOwnProperty("play"))
                     $root.gopongmsg.Server.State.Play.encode(message.play, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                 if (message.start != null && message.hasOwnProperty("start"))
@@ -938,7 +1149,7 @@ $root.gopongmsg = (function() {
                         message.type = reader.int32();
                         break;
                     case 2:
-                        message.lastInputIndex = reader.int32();
+                        message.lastInputIndex = reader.uint32();
                         break;
                     case 3:
                         message.play = $root.gopongmsg.Server.State.Play.decode(reader, reader.uint32());
@@ -1037,7 +1248,7 @@ $root.gopongmsg = (function() {
                     break;
                 }
                 if (object.lastInputIndex != null)
-                    message.lastInputIndex = object.lastInputIndex | 0;
+                    message.lastInputIndex = object.lastInputIndex >>> 0;
                 if (object.play != null) {
                     if (typeof object.play !== "object")
                         throw TypeError(".gopongmsg.Server.State.play: object expected");

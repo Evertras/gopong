@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package gopongmsg;
+
+message Client {
+    message Input {
+        float movement_axis = 1;
+        float duration_seconds = 2;
+        uint32 input_index = 3;
+    }
+
+    oneof msg {
+        Input input = 1;
+    }
+}

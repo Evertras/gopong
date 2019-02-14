@@ -42,7 +42,7 @@ message Server {
         }
 
         Type type = 1;
-        int32 last_input_index = 2;
+        uint32 last_input_index = 2;
 
         oneof state {
             Play play = 3;

@@ -11,8 +11,8 @@ func TestStateWaitsForSpecifiedTime(t *testing.T) {
 	waitTime := time.Second
 	s := New(store.New(), waitTime)
 
-	if s.RemainingMilliseconds < 1000 {
-		t.Fatal("Unexpected wait time to start:", s.RemainingMilliseconds)
+	if s.Remaining < time.Second {
+		t.Fatal("Unexpected wait time to start:", s.Remaining)
 	}
 
 	next := s.Step(time.Millisecond * 500)

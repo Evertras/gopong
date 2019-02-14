@@ -18,10 +18,10 @@ export class LaggingConnection implements IConnection {
         this.endpoint = endpoint;
     }
 
-    public write(data: string) {
+    public write(data: gopongmsg.IClient) {
         setTimeout(() => {
             if (this.ws && this.isOpen) {
-                this.ws.send(data);
+                this.ws.send(gopongmsg.Client.encode(data).finish());
             }
         }, this.latencyMs);
     }

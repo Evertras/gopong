@@ -38,7 +38,7 @@ proto: messages/gomessage messages/tsmessage
 .PHONY: all clean test build bench run-dev generate proto
 
 # Actual files that must be generated
-front/game.js: node_modules proto
+front/game.js: node_modules messages/tsmessage
 	npx webpack
 
 lib/static/build.go: front/game.js
@@ -49,7 +49,8 @@ node_modules:
 
 messages/gomessage:
 	mkdir messages/gomessage
-	@# Slightly weird PWD syntax here to deal with Windows gitbash mangling it otherwise... this is intentional, don't remove the initial slash!
+	@# Slightly weird PWD syntax here to deal with Windows gitbash mangling it otherwise.
+	@# This is intentional, don't remove the initial slash!
 	docker run -v /${PWD}/messages:/defs namely/protoc-all -f *.proto -l go -o gomessage
 
 messages/tsmessage: node_modules

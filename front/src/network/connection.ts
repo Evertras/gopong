@@ -18,7 +18,7 @@ export interface IConnection {
      *
      * @param data The data to write to the connection
      */
-    write(data: string): void;
+    write(data: gopongmsg.IClient): void;
 
     /**
      * The current latency of the connection, in milliseconds.

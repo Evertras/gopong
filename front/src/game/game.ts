@@ -132,13 +132,15 @@ export class Game {
             }
         }
 
-        const inputMessage = new gopongmsg.Input({
-            durationSeconds: input.durationSeconds,
-            inputIndex: input.index,
-            movementAxis: input.movementAxis,
-        });
+        const inputMessage = {
+            input: {
+                durationSeconds: input.durationSeconds,
+                inputIndex: input.index,
+                movementAxis: input.movementAxis,
+            },
+        };
 
-        this.connection.write(JSON.stringify(inputMessage));
+        this.connection.write(inputMessage);
     }
 
     private update(deltaMs: number) {

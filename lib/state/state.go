@@ -3,7 +3,7 @@ package state
 import (
 	"time"
 
-	"github.com/Evertras/gopong/lib/message"
+	gopongmsg "github.com/Evertras/gopong/messages/gomessage"
 )
 
 // State is a singular state of the game that can be advanced
@@ -12,11 +12,10 @@ type State interface {
 	// now in.  Note that this may be a new state entirely due to a state transition.
 	Step(delta time.Duration) State
 
-	// Marshal must marshal the current state as a JSON message and put it into
-	// a message.State object to send to clients.
-	Marshal() (message.State, error)
+	// Marshal must fill in msg with the appropriate state information.
+	Marshal(msg *gopongmsg.Server_State) error
 
 	// ApplyInput applies the given input on the given side.  Note that we use the side
 	// explicitly separate here to enforce that we can't trust any message from the client.
-	ApplyInput(input message.Input, side message.PlayerSide)
+	ApplyInput(input gopongmsg.Client_Input, side gopongmsg.Server_Config_PaddleSide)
 }

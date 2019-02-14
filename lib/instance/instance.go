@@ -4,8 +4,9 @@ import (
 	"log"
 	"time"
 
+	gopongmsg "github.com/Evertras/gopong/messages/gomessage"
+
 	"github.com/Evertras/gopong/lib/client"
-	"github.com/Evertras/gopong/lib/message"
 	"github.com/Evertras/gopong/lib/state"
 	"github.com/Evertras/gopong/lib/state/starting"
 	"github.com/Evertras/gopong/lib/store"
@@ -48,12 +49,12 @@ func (i *Instance) Run() {
 		i.clientRight.Close()
 	}()
 
-	if err := i.clientLeft.WriteConfig(i.cfg, message.PlayerSideLeft); err != nil {
+	if err := i.clientLeft.WriteConfig(i.cfg, gopongmsg.Server_Config_SIDE_LEFT); err != nil {
 		log.Println("Error writing config to left client", err)
 		return
 	}
 
-	if err := i.clientRight.WriteConfig(i.cfg, message.PlayerSideRight); err != nil {
+	if err := i.clientRight.WriteConfig(i.cfg, gopongmsg.Server_Config_SIDE_RIGHT); err != nil {
 		log.Println("Error writing config to right client", err)
 		return
 	}
@@ -67,7 +68,9 @@ func (i *Instance) Run() {
 			i.processInputs()
 			i.currentState = i.currentState.Step(stepDelta)
 
-			stateMessage, err := i.currentState.Marshal()
+			stateMessage := gopongmsg.Server_State{}
+
+			err := i.currentState.Marshal(&stateMessage)
 
 			if err != nil {
 				log.Println("Error marshaling state:", err)
@@ -105,7 +108,7 @@ func (i *Instance) processInputs() {
 
 		metrics.AddSample(metricKeyReceivedInputDuration, float32(input.DurationSeconds))
 
-		i.currentState.ApplyInput(input, message.PlayerSideLeft)
+		i.currentState.ApplyInput(input, gopongmsg.Server_Config_SIDE_LEFT)
 	}
 
 	inputsRight := i.clientRight.FlushInputs()
@@ -121,6 +124,6 @@ func (i *Instance) processInputs() {
 
 		metrics.AddSample(metricKeyReceivedInputDuration, float32(input.DurationSeconds))
 
-		i.currentState.ApplyInput(input, message.PlayerSideRight)
+		i.currentState.ApplyInput(input, gopongmsg.Server_Config_SIDE_RIGHT)
 	}
 }

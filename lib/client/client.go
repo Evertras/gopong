@@ -6,9 +6,10 @@ import (
 	"log"
 	"sync"
 
-	"github.com/Evertras/gopong/lib/message"
 	"github.com/Evertras/gopong/lib/store"
+	gopongmsg "github.com/Evertras/gopong/messages/gomessage"
 	metrics "github.com/armon/go-metrics"
+	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
 )
@@ -22,8 +23,8 @@ const inputFlushThreshold = 100
 type Client struct {
 	id             int
 	conn           *websocket.Conn
-	lastInput      int
-	receivedInputs []message.Input
+	lastInput      uint32
+	receivedInputs []gopongmsg.Client_Input
 	ctx            context.Context
 
 	mu sync.RWMutex
@@ -53,20 +54,25 @@ func New(id int, conn *websocket.Conn) *Client {
 
 			metrics.IncrCounter(metricKeyWsDataRead, float32(len(data)))
 
-			inputMessage := message.Input{}
+			msg := gopongmsg.Client{}
 
-			// Assuming it's this for now, figure out how to select between multiple message types later
-			json.Unmarshal(data, &inputMessage)
+			proto.Unmarshal(data, &msg)
+
+			input := msg.GetInput()
+
+			if input == nil {
+				continue
+			}
 
 			client.mu.Lock()
 
-			client.lastInput = inputMessage.InputIndex
-			client.receivedInputs = append(client.receivedInputs, inputMessage)
+			client.lastInput = input.InputIndex
+			client.receivedInputs = append(client.receivedInputs, *input)
 
 			// Failsafe... if we haven't been asked about inputs for a while, we're going to assume
 			// that we can just drop what we have
 			if len(client.receivedInputs) > inputFlushThreshold {
-				client.receivedInputs = []message.Input{}
+				client.receivedInputs = []gopongmsg.Client_Input{}
 			}
 
 			client.mu.Unlock()
@@ -77,7 +83,7 @@ func New(id int, conn *websocket.Conn) *Client {
 }
 
 // GetLastInputIndex gets the last received input index that this client has seen
-func (c *Client) GetLastInputIndex() int {
+func (c *Client) GetLastInputIndex() uint32 {
 	c.mu.RLock()
 
 	index := c.lastInput
@@ -89,7 +95,7 @@ func (c *Client) GetLastInputIndex() int {
 
 // FlushInputs returns all waiting inputs received from the client and removes
 // them from the buffer.  This is a destructive call!
-func (c *Client) FlushInputs() []message.Input {
+func (c *Client) FlushInputs() []gopongmsg.Client_Input {
 	c.mu.Lock()
 
 	inputs := c.receivedInputs
@@ -112,7 +118,7 @@ func (c *Client) write(msg []byte) error {
 
 // WriteState writes a state message to the client.  Note that the last input index
 // is filled in automatically by WriteState.
-func (c *Client) WriteState(m message.State) error {
+func (c *Client) WriteState(m gopongmsg.Server_State) error {
 	m.LastInputIndex = c.GetLastInputIndex()
 	msg, err := json.Marshal(m)
 
@@ -124,10 +130,16 @@ func (c *Client) WriteState(m message.State) error {
 }
 
 // WriteConfig writes a config message to the client
-func (c *Client) WriteConfig(cfg store.Config, side message.PlayerSide) error {
-	cfgMsg := message.ClientConfig{
-		Config:     cfg,
-		PaddleSide: side,
+func (c *Client) WriteConfig(cfg store.Config, side gopongmsg.Server_Config_PaddleSide) error {
+	cfgMsg := gopongmsg.Server{
+		Msg: &gopongmsg.Server_Config_{
+			Config: &gopongmsg.Server_Config{
+				BallRadius:              float32(cfg.BallRadius),
+				MaxPaddleSpeedPerSecond: float32(cfg.MaxPaddleSpeedPerSecond),
+				PaddleHeight:            float32(cfg.PaddleHeight),
+				PaddleWidth:             float32(cfg.PaddleWidth),
+			},
+		},
 	}
 
 	data, err := json.Marshal(cfgMsg)

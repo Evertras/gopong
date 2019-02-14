@@ -2,14 +2,6 @@
 
 
 [[projects]]
-  digest = "1:2c5ee369e5b0b6c5e9423095135748972b9a8f191d765aa1f8e3a51a349cf612"
-  name = "github.com/Evertras/go-ts-type-generator"
-  packages = ["typegen"]
-  pruneopts = "UT"
-  revision = "94a1937458c562af1f6688a675f94a70f1d89b57"
-  version = "v1.3.3"
-
-[[projects]]
   branch = "master"
   digest = "1:8b9a2d28ead02b53ab32a0aacd457bc7bd50b9ae93f5bc269b145d54c51806c9"
   name = "github.com/armon/go-metrics"
@@ -29,12 +21,12 @@
   revision = "3a771d992973f24aa725d07868b467d1ddfceafb"
 
 [[projects]]
-  digest = "1:97df918963298c287643883209a2c3f642e6593379f97ab400c2a2e219ab647d"
+  branch = "master"
+  digest = "1:318f1c959a8a740366fce4b1e1eb2fd914036b4af58fbd0a003349b305f118ad"
   name = "github.com/golang/protobuf"
   packages = ["proto"]
   pruneopts = "UT"
-  revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
-  version = "v1.2.0"
+  revision = "c823c79ea1570fb5ff454033735a8e68575d1d0f"
 
 [[projects]]
   digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
@@ -133,9 +125,9 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/Evertras/go-ts-type-generator/typegen",
     "github.com/armon/go-metrics",
     "github.com/armon/go-metrics/prometheus",
+    "github.com/golang/protobuf/proto",
     "github.com/gorilla/websocket",
     "github.com/pkg/errors",
     "github.com/prometheus/client_golang/prometheus/promhttp",
