@@ -2,11 +2,29 @@ version: '3'
 
 services:
 
+  traefik:
+    image: traefik:alpine
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./etc/traefik.toml:/traefik.toml:ro
+    ports:
+      - "80:80"
+    labels:
+      traefik.enable: true
+      traefik.frontend.rule: "Host: traefik.localhost"
+      traefik.backend: traefik
+      traefik.port: 8001
+    networks:
+      - gopong
+
   gopong:
     image: evertras/gopong:latest
-    ports:
-      - "8000:8000"
     command: --statsd telegraf:8125 --prometheus :9001
+    labels:
+      traefik.enable: true
+      traefik.frontend.rule: "Host: gopong.localhost"
+      traefik.backend: gopong
+      traefik.port: 8000
     networks:
       - gopong
 
@@ -27,8 +45,11 @@ services:
     environment:
       INFLUXDB_URL: http://influxdb:8086
       KAPACITOR_URL: http://kapacitor:9092
-    ports:
-      - "8888:8888"
+    labels:
+      traefik.enable: true
+      traefik.frontend.rule: "Host: chronograf.localhost,metrics.localhost"
+      traefik.backend: chronograf
+      traefik.port: 8888
     networks:
       - gopong
 
@@ -44,25 +65,12 @@ services:
     image: prom/prometheus
     volumes:
       - ./etc/prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
     command: "--config.file=/etc/prometheus/prometheus.yml"
-    networks:
-      - gopong
-
-  traefik:
-    image: traefik:1.3.6-alpine
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./etc/traefik.toml:/traefik.toml:ro
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
     labels:
-      traefik.frontend.rule: "Host:monitor.localhost"
-      traefik.port: "8080"
-    command: "--docker"
+      traefik.enable: true
+      traefik.frontend.rule: "Host: prometheus.localhost,prom.localhost"
+      traefik.backend: prometheus
+      traefik.port: 9090
     networks:
       - gopong
 

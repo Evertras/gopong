@@ -3,16 +3,37 @@
 #defaultEntryPoints = ["http", "https"]
 defaultEntryPoints = ["http"]
 
-[web]
-address = ":8080"
+# Totally insecure, only use for dev
+[api]
+entryPoint = "traefik"
+dashboard = true
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "localhost"
+exposedByDefault = false
+
+[metrics]
+    [metrics.prometheus]
+        entryPoint = "metrics"
+        buckets = [0.1,0.3,1.2,5.0]
+    [metrics.statsd]
+        address = "telegraf:8125"
+        pushInterval = "10s"
+
+
 
 [entryPoints]
     [entryPoints.http]
     address = ":80"
+    [entryPoints.metrics]
+    address = ":8000"
+    [entryPoints.traefik]
+    address = ":8001"
     #[entryPoints.https]
     #address = ":443"
         #[entryPoints.https.tls]
-#
+# Fix this later
 #[acme]
 #email = "bfullj@gmail.com"
 #storage = "acme.json"

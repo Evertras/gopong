@@ -2,16 +2,18 @@
 
 This stack includes the following:
 
-* A single running instace of a Gopong server
+* Traefik to handle all incoming traffic
+* A single running instance of a Gopong server
 * A full TICK stack (Telegraf, InfluxDB, Chronograf, Kapacitor) for statsd metrics
-* Prometheus configured to watch itself and Gopong
+* Prometheus configured to watch itself, Traefik, and Gopong
 
 ## Exposed service ports
 
 The following can be reached on localhost:
 
-| Service    | Port                          |
+| Service    | Address                       |
 |------------|-------------------------------|
-| Gopong     | [8000](http://localhost:8000) |
-| Chronograf | [8888](http://localhost:8888) |
-| Prometheus | [9090](http://localhost:9090) |
+| Gopong     | [gopong.localhost](http://gopong.localhost) |
+| Traefik    | [traefik.localhost](http://traefik.localhost) |
+| Chronograf | [chronograf.localhost](http://chronograf.localhost) |
+| Prometheus | [prometheus.localhost](http://prometheus.localhost) |

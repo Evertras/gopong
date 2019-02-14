@@ -10,7 +10,12 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var upgrader = websocket.Upgrader{}
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		// For now, until traefik config is sane
+		return true
+	},
+}
 
 var connectionIDCounter = 0
 
