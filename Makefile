@@ -25,20 +25,20 @@ bench:
 run-dev: front/game.js lib/static/build.go
 	go run -race ./cmd/gopong/main.go -d -t 3
 
-generate: front/game.js lib/static/build.go
+generate: front/game.js lib/static/build.go proto
 
 docker: clean generate
 	docker build --rm -t evertras/gopong .
 
 proto: node_modules
-	@# Slightly weird PWD syntax here to deal with Windows gitbash mangling it otherwise... this is intentional, don't remove
+	@# Slightly weird PWD syntax here to deal with Windows gitbash mangling it otherwise... this is intentional, don't remove the initial slash!
 	docker run -v /${PWD}/messages:/defs namely/protoc-all -f *.proto -l go -o gomessage
 
 	npx pbjs -t static-module -w commonjs messages/*.proto > messages/tsmessage/messages.js
 	npx pbts -o messages/tsmessage/messages.d.ts messages/tsmessage/messages.js
 
 # These are not files, so always run them when asked to
-.PHONY: all clean test build bench run-dev generate
+.PHONY: all clean test build bench run-dev generate proto
 
 # Actual files that must be generated
 front/game.js: \
