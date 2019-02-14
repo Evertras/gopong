@@ -4,6 +4,8 @@
 
 A simple game of multiplayer browser Pong in Typescript with a Go server backing it.
 
+If you want to just try it out locally, [go to the compose directory](compose).  All you'll need is Docker.
+
 The Go server is completely self-contained as a single binary for easy distribution; no separate
 content or libraries are required.  The pages and javascript files being served to the browser are baked into
 the executable via `go generate ./lib/static` creating a `build.go` file in the [lib/static](lib/static)
@@ -37,6 +39,10 @@ meets the following self-imposed requirements:
 The code entry point for the back end is [cmd/gopong/main.go](cmd/gopong/main.go).
 
 The code entry point for the front end is [front/src/main.ts](front/src/main.ts).
+
+**IMPORTANT:** Because Go requires code to be on the $GOPATH, you *must* clone this repository into
+`${GOPATH}/src/github.com/Evertras/gopong`.  Putting it anywhere else will make Go very confused.  This is
+standard for Go projects, but just adding a friendly strong reminder here.
 
 ### Minimum requirements
 
