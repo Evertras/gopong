@@ -22,7 +22,7 @@ export class Game {
     private currentStateType: ServerState | null = null;
 
     // Timing data for frames
-    private updateInterval: number | undefined;
+    private updateInterval: any;
     private lastUpdateMs: number = 0;
 
     // What we draw to
