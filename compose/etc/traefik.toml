@@ -21,8 +21,6 @@ exposedByDefault = false
         address = "telegraf:8125"
         pushInterval = "10s"
 
-
-
 [entryPoints]
     [entryPoints.http]
     address = ":80"
@@ -30,10 +28,11 @@ exposedByDefault = false
     address = ":8000"
     [entryPoints.traefik]
     address = ":8001"
+
+    # Fix all this when LetsEncrypt is figured out... low priority
     #[entryPoints.https]
     #address = ":443"
         #[entryPoints.https.tls]
-# Fix this later
 #[acme]
 #email = "bfullj@gmail.com"
 #storage = "acme.json"
