@@ -67,6 +67,10 @@ If you need `make` for Windows, [you can get it here](http://gnuwin32.sourceforg
 You should now be able to just run `make` in the root directory of this repository to test and
 build everything with a `gopong` executable artifact created for your system.
 
+#### Docker
+
+If you want to build the Docker image or use the provided infrastructure stack in [the compose directory](compose).
+
 ## Running
 
 ```bash
@@ -103,9 +107,9 @@ make docker
 docker run --rm -d -p 8080:8000 evertras/gopong -t 10
 ```
 
-### Running a full infrastructure stack with Docker Compose
+### Running a full infrastructure/metrics stack with Docker Compose
 
-See [Metrics](docs/Metrics.md) for more information.
+See [the compose directory](compose) for more information.
 
 ## Running in development mode
 

@@ -1,0 +1,21 @@
+# Serious WIP here...
+
+#defaultEntryPoints = ["http", "https"]
+defaultEntryPoints = ["http"]
+
+[web]
+address = ":8080"
+
+[entryPoints]
+    [entryPoints.http]
+    address = ":80"
+    #[entryPoints.https]
+    #address = ":443"
+        #[entryPoints.https.tls]
+#
+#[acme]
+#email = "bfullj@gmail.com"
+#storage = "acme.json"
+#entryPoint = "https"
+#onHostRule = true
+#onDemand = false

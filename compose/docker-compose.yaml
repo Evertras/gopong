@@ -50,5 +50,21 @@ services:
     networks:
       - gopong
 
+  traefik:
+    image: traefik:1.3.6-alpine
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./etc/traefik.toml:/traefik.toml:ro
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    labels:
+      traefik.frontend.rule: "Host:monitor.localhost"
+      traefik.port: "8080"
+    command: "--docker"
+    networks:
+      - gopong
+
 networks:
   gopong:
