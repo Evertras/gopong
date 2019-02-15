@@ -3,6 +3,8 @@
 package main
 
 import (
+	"bytes"
+	"compress/gzip"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -26,7 +28,30 @@ func main() {
 		panic(err)
 	}
 
+	wasmExec, err := ioutil.ReadFile("../../front/wasm_exec.js")
+
+	if err != nil {
+		panic(err)
+	}
+
 	style, err := ioutil.ReadFile("../../front/style.css")
+
+	if err != nil {
+		panic(err)
+	}
+
+	wasm, err := ioutil.ReadFile("../../front/lib.wasm")
+
+	if err != nil {
+		panic(err)
+	}
+
+	var b bytes.Buffer
+
+	w := gzip.NewWriter(&b)
+
+	_, err = w.Write(wasm)
+	w.Close()
 
 	if err != nil {
 		panic(err)
@@ -39,19 +64,29 @@ func main() {
 		panic(err)
 	}
 
-	packageTemplate.Execute(
+	err = packageTemplate.Execute(
 		f,
 		struct {
 			Timestamp time.Time
 			Index     string
 			Game      string
+			WasmExec  string
 			Style     string
+			WasmBytes []byte
 		}{
 			Timestamp: time.Now(),
 			Index:     sanitize(string(index)),
 			Game:      sanitize(string(game)),
+			WasmExec:  sanitize(string(wasmExec)),
 			Style:     sanitize(string(style)),
+			WasmBytes: b.Bytes(),
 		})
+
+	if err != nil {
+		f.Close()
+		os.Remove("build.go")
+		panic(err)
+	}
 }
 
 func sanitize(str string) string {
@@ -67,5 +102,14 @@ var StaticHtmlIndex = ` + "`{{ .Index }}`" + `
 // StaticJsGame is the raw contents of game.js
 var StaticJsGame = ` + "`{{ .Game }}`" + `
 
+// StaticJsWasmExec is the raw contents of wasm_exec.js
+var StaticJsWasmExec = ` + "`{{ .WasmExec }}`" + `
+
 // StaticCssStyle is the raw contents of style.css
-var StaticCssStyle = ` + "`{{ .Style }}`"))
+var StaticCssStyle = ` + "`{{ .Style }}`" + `
+
+// StaticLibWasm is the raw binary contents of lib.wasm
+var StaticLibWasm = []byte{
+	// {{ len .WasmBytes }} bytes
+	{{ range .WasmBytes }} {{ . | printf "%#x," }} {{ end }}
+}`))

@@ -23,6 +23,16 @@ function getContext(): CanvasRenderingContext2D {
 }
 
 window.addEventListener('load', () => {
+    // Go WASM playground
+    /*
+    const go = new Go();
+    fetch('/lib.wasm')
+        .then((resp) => resp.arrayBuffer())
+        .then((data) => WebAssembly.instantiate(data, go.importObject))
+        .then((instance) => go.run(instance));
+    */
+    // /Go WASM Playground
+
     const target: SquareRenderTarget = new SquareRenderTarget(getContext());
 
     target.updateSize(window.innerWidth, window.innerHeight);
@@ -51,5 +61,5 @@ window.addEventListener('load', () => {
     connection.setLatencyMs(50);
     connection.start();
 
-    game.start(30);
+    game.start();
 });

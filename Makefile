@@ -1,15 +1,13 @@
 BINARY_NAME=gopong
 
-all: clean generate test build
+all: generate test build
 
 clean:
 	rm -f gopong
 	rm -f lib/static/build.go
 	rm -f front/game.js
 	rm -f front/game.js.map
-	rm -f front/src/network/messageTypes.ts
-	rm -f front/src/game/states/play/messageTypes.ts
-	rm -f front/src/game/states/starting/messageTypes.ts
+	rm -f front/lib.wasm
 	rm -rf messages/gomessage
 	rm -rf messages/tsmessage
 
@@ -18,8 +16,11 @@ test: node_modules lib/static/build.go
 	npm test
 	go test -v ./lib/...
 
-build: lib/static/build.go
+build: messages/gomessage lib/static/build.go
 	CG_ENABLED=0 go build -o $(BINARY_NAME) -v ./cmd/gopong/main.go
+
+build-wasm: 
+	GOARCH=wasm GOOS=js go build -o front/lib.wasm cmd/wasm/main.go
 
 bench:
 	go test -v -benchmem -bench . ./lib/...
@@ -41,7 +42,7 @@ proto: messages/gomessage messages/tsmessage
 front/game.js: node_modules messages/tsmessage
 	npx webpack
 
-lib/static/build.go: front/game.js
+lib/static/build.go: front/lib.wasm front/game.js
 	go generate ./lib/static/
 
 node_modules:
@@ -57,3 +58,6 @@ messages/tsmessage: node_modules
 	mkdir messages/tsmessage
 	npx pbjs -t static-module -w commonjs messages/*.proto > messages/tsmessage/messages.js
 	npx pbts -o messages/tsmessage/messages.d.ts messages/tsmessage/messages.js
+
+front/lib.wasm:
+	GOARCH=wasm GOOS=js go build -o front/lib.wasm cmd/wasm/main.go
