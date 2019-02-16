@@ -50,7 +50,7 @@ func (s *State) Step(d time.Duration) state.State {
 }
 
 // ApplyInput applies a given input to the state
-func (s *State) ApplyInput(i gopongmsg.Client_Input, side gopongmsg.Config_PaddleSide) {
+func (s *State) ApplyInput(i gopongmsg.Input, side gopongmsg.Config_PaddleSide) {
 	var paddle *Paddle
 
 	if side == gopongmsg.Config_SIDE_LEFT {

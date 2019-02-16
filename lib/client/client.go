@@ -23,7 +23,7 @@ type Client struct {
 	id             int
 	conn           *websocket.Conn
 	lastInput      uint32
-	receivedInputs []gopongmsg.Client_Input
+	receivedInputs []gopongmsg.Input
 	ctx            context.Context
 
 	mu sync.RWMutex
@@ -71,7 +71,7 @@ func New(id int, conn *websocket.Conn) *Client {
 			// Failsafe... if we haven't been asked about inputs for a while, we're going to assume
 			// that we can just drop what we have
 			if len(client.receivedInputs) > inputFlushThreshold {
-				client.receivedInputs = []gopongmsg.Client_Input{}
+				client.receivedInputs = []gopongmsg.Input{}
 			}
 
 			client.mu.Unlock()
@@ -94,7 +94,7 @@ func (c *Client) GetLastInputIndex() uint32 {
 
 // FlushInputs returns all waiting inputs received from the client and removes
 // them from the buffer.  This is a destructive call!
-func (c *Client) FlushInputs() []gopongmsg.Client_Input {
+func (c *Client) FlushInputs() []gopongmsg.Input {
 	c.mu.Lock()
 
 	inputs := c.receivedInputs
