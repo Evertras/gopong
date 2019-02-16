@@ -11,12 +11,12 @@ clean:
 	rm -rf messages/gomessage
 	rm -rf messages/tsmessage
 
-test: node_modules messages/gomessage lib/static/build.go
+test: node_modules protos lib/static/build.go
 	npx tslint -p .
 	npm test
 	go test -v ./lib/...
 
-build: messages/gomessage lib/static/build.go
+build: protos lib/static/build.go
 	CG_ENABLED=0 go build -o $(BINARY_NAME) -v ./cmd/gopong/main.go
 
 build-wasm: 
@@ -28,12 +28,10 @@ bench:
 run-dev: front/game.js lib/static/build.go
 	go run -race ./cmd/gopong/main.go -d -t 3
 
-generate: proto front/game.js lib/static/build.go
-
 docker: clean generate
 	docker build --rm -t evertras/gopong .
 
-proto: messages/gomessage messages/tsmessage
+protos: messages/gomessage messages/tsmessage
 
 # These are not files, so always run them when asked to
 .PHONY: all clean test build bench run-dev generate proto
