@@ -22,17 +22,7 @@ function getContext(): CanvasRenderingContext2D {
     return ctxOrNull as CanvasRenderingContext2D;
 }
 
-window.addEventListener('load', () => {
-    // Go WASM playground
-    /*
-    const go = new Go();
-    fetch('/lib.wasm')
-        .then((resp) => resp.arrayBuffer())
-        .then((data) => WebAssembly.instantiate(data, go.importObject))
-        .then((instance) => go.run(instance));
-    */
-    // /Go WASM Playground
-
+function start() {
     const target: SquareRenderTarget = new SquareRenderTarget(getContext());
 
     target.updateSize(window.innerWidth, window.innerHeight);
@@ -62,4 +52,21 @@ window.addEventListener('load', () => {
     connection.start();
 
     game.start();
+
+}
+
+window.addEventListener('load', () => {
+    // The gowasm module is created by the WASM instance, so we're going to save ourselves
+    // a Typescript headache and use this little workaround here.
+    const g: any = global;
+    const waitForWasm = () => {
+        if (!g.gowasm || !gowasm.ready) {
+            setTimeout(waitForWasm, 100);
+            return;
+        }
+
+        start();
+    };
+
+    setTimeout(waitForWasm, 0);
 });

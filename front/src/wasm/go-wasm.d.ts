@@ -1,5 +1,5 @@
-declare module 'go-wasm';
+declare module gowasm {
+    function sayHello(): void;
 
-declare var Go: any;
-
-declare var WebAssembly: any;
+    const ready: boolean;
+}

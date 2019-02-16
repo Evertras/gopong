@@ -14,14 +14,23 @@
 				return await WebAssembly.instantiate(source, importObject);
 			};
 		}
-		const go = new Go();
-		let mod, inst;
+        const go = new Go();
+        let mod, inst;
 		WebAssembly.instantiateStreaming(fetch("lib.wasm"), go.importObject).then((result) => {
 			mod = result.module;
             inst = result.instance;
 
-            return go.run(inst);
-		}).catch((err) => {
+            go.run(inst);
+
+            const waitForReady = () => {
+                if (!gowasm && !gowasm.ready) {
+                    setTimeout(waitForReady, 1000);
+                    return;
+                }
+            }
+
+            setTimeout(waitForReady, 100);
+        }).catch((err) => {
 			console.error(err);
         });
         </script>
