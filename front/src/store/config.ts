@@ -7,9 +7,9 @@ export class StoreConfig {
     public paddleWidth: number = 0.1;
     public paddleMaxSpeedPerSecond: number = 0.1;
     public ballRadius: number  = 0.02;
-    public side: gopongmsg.Server.Config.PaddleSide = gopongmsg.Server.Config.PaddleSide.SIDE_LEFT;
+    public side: gopongmsg.Config.PaddleSide = gopongmsg.Config.PaddleSide.SIDE_LEFT;
 
-    public updateFromMessage(msg: gopongmsg.Server.IConfig) {
+    public updateFromMessage(msg: gopongmsg.IConfig) {
         if (msg.ballRadius) {
             this.ballRadius = msg.ballRadius;
         }

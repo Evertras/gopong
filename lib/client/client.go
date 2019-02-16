@@ -23,7 +23,7 @@ type Client struct {
 	id             int
 	conn           *websocket.Conn
 	lastInput      uint32
-	receivedInputs []gopongmsg.Client_Input
+	receivedInputs []gopongmsg.Input
 	ctx            context.Context
 
 	mu sync.RWMutex
@@ -71,7 +71,7 @@ func New(id int, conn *websocket.Conn) *Client {
 			// Failsafe... if we haven't been asked about inputs for a while, we're going to assume
 			// that we can just drop what we have
 			if len(client.receivedInputs) > inputFlushThreshold {
-				client.receivedInputs = []gopongmsg.Client_Input{}
+				client.receivedInputs = []gopongmsg.Input{}
 			}
 
 			client.mu.Unlock()
@@ -94,7 +94,7 @@ func (c *Client) GetLastInputIndex() uint32 {
 
 // FlushInputs returns all waiting inputs received from the client and removes
 // them from the buffer.  This is a destructive call!
-func (c *Client) FlushInputs() []gopongmsg.Client_Input {
+func (c *Client) FlushInputs() []gopongmsg.Input {
 	c.mu.Lock()
 
 	inputs := c.receivedInputs
@@ -127,10 +127,10 @@ func (c *Client) Write(msg gopongmsg.Server) error {
 
 // WriteState writes a state message to the client.  Note that the last input index
 // is filled in automatically by WriteState.
-func (c *Client) WriteState(m gopongmsg.Server_State) error {
+func (c *Client) WriteState(m gopongmsg.State) error {
 	m.LastInputIndex = c.GetLastInputIndex()
 	msg := gopongmsg.Server{
-		Msg: &gopongmsg.Server_State_{
+		Msg: &gopongmsg.Server_State{
 			State: &m,
 		},
 	}
@@ -139,10 +139,10 @@ func (c *Client) WriteState(m gopongmsg.Server_State) error {
 }
 
 // WriteConfig writes a config message to the client
-func (c *Client) WriteConfig(cfg store.Config, side gopongmsg.Server_Config_PaddleSide) error {
+func (c *Client) WriteConfig(cfg store.Config, side gopongmsg.Config_PaddleSide) error {
 	msg := gopongmsg.Server{
-		Msg: &gopongmsg.Server_Config_{
-			Config: &gopongmsg.Server_Config{
+		Msg: &gopongmsg.Server_Config{
+			Config: &gopongmsg.Config{
 				BallRadius:              float32(cfg.BallRadius),
 				MaxPaddleSpeedPerSecond: float32(cfg.MaxPaddleSpeedPerSecond),
 				PaddleHeight:            float32(cfg.PaddleHeight),

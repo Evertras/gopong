@@ -49,12 +49,12 @@ func (i *Instance) Run() {
 		i.clientRight.Close()
 	}()
 
-	if err := i.clientLeft.WriteConfig(i.cfg, gopongmsg.Server_Config_SIDE_LEFT); err != nil {
+	if err := i.clientLeft.WriteConfig(i.cfg, gopongmsg.Config_SIDE_LEFT); err != nil {
 		log.Println("Error writing config to left client", err)
 		return
 	}
 
-	if err := i.clientRight.WriteConfig(i.cfg, gopongmsg.Server_Config_SIDE_RIGHT); err != nil {
+	if err := i.clientRight.WriteConfig(i.cfg, gopongmsg.Config_SIDE_RIGHT); err != nil {
 		log.Println("Error writing config to right client", err)
 		return
 	}
@@ -68,7 +68,7 @@ func (i *Instance) Run() {
 			i.processInputs()
 			i.currentState = i.currentState.Step(stepDelta)
 
-			stateMessage := gopongmsg.Server_State{}
+			stateMessage := gopongmsg.State{}
 
 			err := i.currentState.Marshal(&stateMessage)
 
@@ -108,7 +108,7 @@ func (i *Instance) processInputs() {
 
 		metrics.AddSample(metricKeyReceivedInputDuration, float32(input.DurationSeconds))
 
-		i.currentState.ApplyInput(input, gopongmsg.Server_Config_SIDE_LEFT)
+		i.currentState.ApplyInput(input, gopongmsg.Config_SIDE_LEFT)
 	}
 
 	inputsRight := i.clientRight.FlushInputs()
@@ -124,6 +124,6 @@ func (i *Instance) processInputs() {
 
 		metrics.AddSample(metricKeyReceivedInputDuration, float32(input.DurationSeconds))
 
-		i.currentState.ApplyInput(input, gopongmsg.Server_Config_SIDE_RIGHT)
+		i.currentState.ApplyInput(input, gopongmsg.Config_SIDE_RIGHT)
 	}
 }

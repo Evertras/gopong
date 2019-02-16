@@ -30,17 +30,17 @@ export class StatePlay implements IState {
             this.storeConfig.paddleHeight,
             this.storeConfig.paddleWidth,
             this.storeConfig.paddleMaxSpeedPerSecond,
-            gopongmsg.Server.Config.PaddleSide.SIDE_LEFT,
+            gopongmsg.Config.PaddleSide.SIDE_LEFT,
             true);
 
         this.paddleRight = new Paddle(
             this.storeConfig.paddleHeight,
             this.storeConfig.paddleWidth,
             this.storeConfig.paddleMaxSpeedPerSecond,
-            gopongmsg.Server.Config.PaddleSide.SIDE_RIGHT,
+            gopongmsg.Config.PaddleSide.SIDE_RIGHT,
             false);
 
-        if (this.storeConfig.side === gopongmsg.Server.Config.PaddleSide.SIDE_LEFT) {
+        if (this.storeConfig.side === gopongmsg.Config.PaddleSide.SIDE_LEFT) {
             this.paddleActive = this.paddleLeft;
         } else {
             this.paddleActive = this.paddleRight;
@@ -55,7 +55,7 @@ export class StatePlay implements IState {
         this.ball.draw(renderTarget);
     }
 
-    public applyServerUpdate(msg: gopongmsg.Server.IState): void {
+    public applyServerUpdate(msg: gopongmsg.IState): void {
         const play = msg.play;
 
         if (!play) {

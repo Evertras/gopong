@@ -21,7 +21,7 @@ export class Game {
 
     // Current state that we can blindly send server updates and input to
     private currentState: IState | null = null;
-    private currentStateType: gopongmsg.Server.State.Type | null = null;
+    private currentStateType: gopongmsg.State.Type | null = null;
 
     // Timing data for frames
     private lastUpdateMs: number = 0;

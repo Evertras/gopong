@@ -89,12 +89,12 @@ describe('game', () => {
             const clientSidePrediction = true;
             const serverReconciliation = false;
 
-            const fakeConfig: gopongmsg.Server.IConfig = {
+            const fakeConfig: gopongmsg.IConfig = {
                 ballRadius: 0.5,
                 paddleHeight: 0.4,
                 paddleWidth: 0.1,
                 maxPaddleSpeedPerSecond: 4,
-                side: gopongmsg.Server.Config.PaddleSide.SIDE_LEFT,
+                side: gopongmsg.Config.PaddleSide.SIDE_LEFT,
             };
 
             // Shouldn't create a state based off of this...
@@ -125,13 +125,13 @@ describe('game', () => {
         });
 
         describe('with state message from server', () => {
-            const stateType = gopongmsg.Server.State.Type.STATE_START;
+            const stateType = gopongmsg.State.Type.STATE_START;
 
             beforeEach(() => {
                 const stateMsg = new gopongmsg.Server({
                     state: {
                         lastInputIndex: 1,
-                        type: gopongmsg.Server.State.Type.STATE_START,
+                        type: gopongmsg.State.Type.STATE_START,
                         start: {
                             secondsRemaining: 3,
                         },

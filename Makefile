@@ -38,7 +38,7 @@ protos: messages/gomessage messages/tsmessage
 
 # Actual files that must be generated
 front/game.js: node_modules messages/tsmessage
-	npx webpack
+	npx webpack || (rm -f front/game.js && exit 1)
 
 lib/static/build.go: front/lib.wasm front/game.js
 	go generate ./lib/static/

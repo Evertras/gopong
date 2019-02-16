@@ -9,24 +9,24 @@ import (
 
 func genMarshalableMessage() *gopongmsg.Server {
 	return &gopongmsg.Server{
-		Msg: &gopongmsg.Server_State_{
-			State: &gopongmsg.Server_State{
+		Msg: &gopongmsg.Server_State{
+			State: &gopongmsg.State{
 				LastInputIndex: 3,
-				State: &gopongmsg.Server_State_Play_{
-					Play: &gopongmsg.Server_State_Play{
-						Ball: &gopongmsg.Server_State_Play_Ball{
+				Current: &gopongmsg.State_Play_{
+					Play: &gopongmsg.State_Play{
+						Ball: &gopongmsg.State_Play_Ball{
 							CenterX: 0.5,
 							CenterY: 0.4,
 						},
-						PaddleLeft: &gopongmsg.Server_State_Play_Paddle{
+						PaddleLeft: &gopongmsg.State_Play_Paddle{
 							Center: 0.3,
 						},
-						PaddleRight: &gopongmsg.Server_State_Play_Paddle{
+						PaddleRight: &gopongmsg.State_Play_Paddle{
 							Center: 0.8,
 						},
 					},
 				},
-				Type: gopongmsg.Server_State_STATE_PLAY,
+				Type: gopongmsg.State_STATE_PLAY,
 			},
 		},
 	}
