@@ -8,13 +8,13 @@ export class Paddle implements IDrawable {
     public width: number;
     public maxSpeedPerSecond: number;
     public isPlayer: boolean;
-    public side: gopongmsg.Server.Config.PaddleSide;
+    public side: gopongmsg.Config.PaddleSide;
 
     constructor(
         height: number,
         width: number,
         maxSpeedPerSecond: number,
-        side: gopongmsg.Server.Config.PaddleSide,
+        side: gopongmsg.Config.PaddleSide,
         isPlayer: boolean,
      ) {
         this.height = height;
@@ -41,7 +41,7 @@ export class Paddle implements IDrawable {
 
     public draw(renderTarget: IRenderTarget) {
         // Dealing with [0,1] coordinates
-        const x = this.side === gopongmsg.Server.Config.PaddleSide.SIDE_LEFT ? 0 : 1 - this.width;
+        const x = this.side === gopongmsg.Config.PaddleSide.SIDE_LEFT ? 0 : 1 - this.width;
         const y = this.center - this.height * 0.5;
 
         renderTarget.rect(x, y, this.width, this.height);

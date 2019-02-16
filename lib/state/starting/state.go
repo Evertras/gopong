@@ -53,4 +53,4 @@ func (s *State) Marshal(msg *gopongmsg.Server_State) error {
 }
 
 // ApplyInput does nothing for this state, no one can do anything while waiting for the count down
-func (s *State) ApplyInput(_ gopongmsg.Client_Input, _ gopongmsg.Server_Config_PaddleSide) {}
+func (s *State) ApplyInput(_ gopongmsg.Client_Input, _ gopongmsg.Config_PaddleSide) {}

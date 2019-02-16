@@ -89,12 +89,12 @@ describe('game', () => {
             const clientSidePrediction = true;
             const serverReconciliation = false;
 
-            const fakeConfig: gopongmsg.Server.IConfig = {
+            const fakeConfig: gopongmsg.IConfig = {
                 ballRadius: 0.5,
                 paddleHeight: 0.4,
                 paddleWidth: 0.1,
                 maxPaddleSpeedPerSecond: 4,
-                side: gopongmsg.Server.Config.PaddleSide.SIDE_LEFT,
+                side: gopongmsg.Config.PaddleSide.SIDE_LEFT,
             };
 
             // Shouldn't create a state based off of this...

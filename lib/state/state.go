@@ -17,5 +17,5 @@ type State interface {
 
 	// ApplyInput applies the given input on the given side.  Note that we use the side
 	// explicitly separate here to enforce that we can't trust any message from the client.
-	ApplyInput(input gopongmsg.Client_Input, side gopongmsg.Server_Config_PaddleSide)
+	ApplyInput(input gopongmsg.Client_Input, side gopongmsg.Config_PaddleSide)
 }

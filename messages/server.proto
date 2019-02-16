@@ -1,22 +1,10 @@
 syntax = "proto3";
 
+import "config.proto";
+
 package gopongmsg;
 
 message Server {
-    message Config {
-        enum PaddleSide {
-            SIDE_NULL = 0;
-            SIDE_LEFT = 1;
-            SIDE_RIGHT = 2;
-        }
-
-        PaddleSide side = 1;
-        float paddle_height = 2;
-        float paddle_width = 3;
-        float ball_radius = 4;
-        float max_paddle_speed_per_second = 5;
-    }
-
     message State {
         enum Type {
             STATE_NULL = 0;

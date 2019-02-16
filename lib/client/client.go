@@ -139,10 +139,10 @@ func (c *Client) WriteState(m gopongmsg.Server_State) error {
 }
 
 // WriteConfig writes a config message to the client
-func (c *Client) WriteConfig(cfg store.Config, side gopongmsg.Server_Config_PaddleSide) error {
+func (c *Client) WriteConfig(cfg store.Config, side gopongmsg.Config_PaddleSide) error {
 	msg := gopongmsg.Server{
-		Msg: &gopongmsg.Server_Config_{
-			Config: &gopongmsg.Server_Config{
+		Msg: &gopongmsg.Server_Config{
+			Config: &gopongmsg.Config{
 				BallRadius:              float32(cfg.BallRadius),
 				MaxPaddleSpeedPerSecond: float32(cfg.MaxPaddleSpeedPerSecond),
 				PaddleHeight:            float32(cfg.PaddleHeight),
