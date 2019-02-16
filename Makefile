@@ -36,7 +36,7 @@ protos: messages/gomessage messages/tsmessage
 # These are not files, so always run them when asked to
 .PHONY: all clean test build bench run-dev generate proto
 
-# Actual files that must be generated
+# Actual files/directories that must be generated
 front/game.js: node_modules messages/tsmessage
 	npx webpack || (rm -f front/game.js && exit 1)
 
