@@ -48,7 +48,7 @@ export class LaggingConnection implements IConnection {
             this.ws = null;
         };
 
-        this.ws.onmessage = (evt: any) => {
+        this.ws.onmessage = (evt: MessageEvent) => {
             setTimeout(() => {
                 if (this.onData) {
                     const array = new Uint8Array(evt.data);

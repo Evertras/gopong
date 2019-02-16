@@ -20,7 +20,6 @@ describe('game', () => {
     let clock: sinon.SinonFakeTimers;
 
     // So we get one frame every millisecond tick
-    const fps = 1000;
     const testTicks = 10;
 
     let mockStateFactory: MockStateFactory;
@@ -34,6 +33,13 @@ describe('game', () => {
 
     before(() => {
         clock = sinon.useFakeTimers();
+
+        // Superjank, but we're in testing land and this is dead simple
+        const g: any = global;
+        g.requestAnimationFrame = (cb: FrameRequestCallback) => {
+            // We'll pretend we get a frame every millisecond
+            setTimeout(cb, 1);
+        };
     });
 
     after(() => {
@@ -57,7 +63,7 @@ describe('game', () => {
 
     describe('draw', () => {
         it('calls begin() on its render context each loop', () => {
-            game.start(fps);
+            game.start();
 
             clock.tick(testTicks);
 
@@ -113,7 +119,7 @@ describe('game', () => {
     describe('state', () => {
         describe('isolated', () => {
             it('does not create a state on its own', () => {
-                game.start(fps);
+                game.start();
                 expect(mockStateFactory.create).to.have.not.been.called;
             });
         });
@@ -140,7 +146,7 @@ describe('game', () => {
             });
 
             it('calls step and draw for the state each frame', () => {
-                game.start(1000);
+                game.start();
                 clock.tick(10);
 
                 expect(mockState.step).to.have.callCount(testTicks);

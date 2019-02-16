@@ -62,7 +62,7 @@ func (s *Server) Listen(addr string) error {
 
 		fileReaderFactory := func(f string, contentType string) func(w http.ResponseWriter, req *http.Request) {
 			return func(w http.ResponseWriter, req *http.Request) {
-				index, err := ioutil.ReadFile(f)
+				data, err := ioutil.ReadFile(f)
 
 				if err != nil {
 					log.Printf("Error reading %s: %v", f, err)
@@ -71,18 +71,24 @@ func (s *Server) Listen(addr string) error {
 				}
 
 				w.Header().Set("Content-Type", contentType)
-				io.WriteString(w, string(index))
+				w.Write(data)
 			}
 		}
 
 		mux.HandleFunc("/", fileReaderFactory("./front/index.html", "text/html"))
+		mux.HandleFunc("/wasm_exec.js", fileReaderFactory("./front/wasm_exec.js", "script/javascript"))
 		mux.HandleFunc("/game.js", fileReaderFactory("./front/game.js", "script/javascript"))
 		mux.HandleFunc("/game.js.map", fileReaderFactory("./front/game.js.map", "script/javascript"))
 		mux.HandleFunc("/style.css", fileReaderFactory("./front/style.css", "text/css"))
+		mux.HandleFunc("/lib.wasm", fileReaderFactory("./front/lib.wasm", "application/wasm"))
 	} else {
 		mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 			w.Header().Set("Content-Type", "text/html")
 			io.WriteString(w, static.StaticHtmlIndex)
+		})
+		mux.HandleFunc("/wasm_exec.js", func(w http.ResponseWriter, req *http.Request) {
+			w.Header().Set("Content-Type", "script/javascript")
+			io.WriteString(w, static.StaticJsWasmExec)
 		})
 		mux.HandleFunc("/game.js", func(w http.ResponseWriter, req *http.Request) {
 			w.Header().Set("Content-Type", "script/javascript")
@@ -91,6 +97,11 @@ func (s *Server) Listen(addr string) error {
 		mux.HandleFunc("/style.css", func(w http.ResponseWriter, req *http.Request) {
 			w.Header().Set("Content-Type", "text/css")
 			io.WriteString(w, static.StaticCssStyle)
+		})
+		mux.HandleFunc("/lib.wasm", func(w http.ResponseWriter, req *http.Request) {
+			w.Header().Set("Content-Type", "application/wasm")
+			w.Header().Set("Content-Encoding", "gzip")
+			w.Write(static.StaticLibWasm)
 		})
 	}
 	// </jank>

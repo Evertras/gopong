@@ -10,6 +10,8 @@ import { IState } from './states/state';
  * Controls the game loop and passes information on to underlying states.
  */
 export class Game {
+    private running: boolean = false;
+
     // Stores to share data
     private storeInput: StoreInput;
     private storeConfig: StoreConfig;
@@ -22,7 +24,6 @@ export class Game {
     private currentStateType: gopongmsg.Server.State.Type | null = null;
 
     // Timing data for frames
-    private updateInterval: any;
     private lastUpdateMs: number = 0;
 
     // What we draw to
@@ -84,19 +85,22 @@ export class Game {
         };
     }
 
-    public start(fps: number) {
-        clearInterval(this.updateInterval);
+    public start() {
         this.lastUpdateMs = Date.now();
+        this.running = true;
 
-        const stepSizeMilliseconds = 1000 / fps;
+        const step = () => {
+            if (this.running) {
+                this.gameLoopStep();
+                requestAnimationFrame(step);
+            }
+        };
 
-        this.updateInterval = setInterval(() => {
-            this.gameLoopStep();
-        }, stepSizeMilliseconds);
+        requestAnimationFrame(step);
     }
 
     public stop() {
-        clearInterval(this.updateInterval);
+        this.running = false;
     }
 
     private gameLoopStep() {

@@ -20,6 +20,9 @@ gopong
 # Protobuf compilation
 messages/*message
 
+# Our WASM module
+front/lib.wasm
+
 # Output of generate
 lib/static/build.go
 
