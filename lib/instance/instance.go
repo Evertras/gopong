@@ -68,7 +68,7 @@ func (i *Instance) Run() {
 			i.processInputs()
 			i.currentState = i.currentState.Step(stepDelta)
 
-			stateMessage := gopongmsg.Server_State{}
+			stateMessage := gopongmsg.State{}
 
 			err := i.currentState.Marshal(&stateMessage)
 

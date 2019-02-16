@@ -125,13 +125,13 @@ describe('game', () => {
         });
 
         describe('with state message from server', () => {
-            const stateType = gopongmsg.Server.State.Type.STATE_START;
+            const stateType = gopongmsg.State.Type.STATE_START;
 
             beforeEach(() => {
                 const stateMsg = new gopongmsg.Server({
                     state: {
                         lastInputIndex: 1,
-                        type: gopongmsg.Server.State.Type.STATE_START,
+                        type: gopongmsg.State.Type.STATE_START,
                         start: {
                             secondsRemaining: 3,
                         },

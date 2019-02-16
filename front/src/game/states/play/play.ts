@@ -55,7 +55,7 @@ export class StatePlay implements IState {
         this.ball.draw(renderTarget);
     }
 
-    public applyServerUpdate(msg: gopongmsg.Server.IState): void {
+    public applyServerUpdate(msg: gopongmsg.IState): void {
         const play = msg.play;
 
         if (!play) {

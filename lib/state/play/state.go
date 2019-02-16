@@ -64,21 +64,21 @@ func (s *State) ApplyInput(i gopongmsg.Client_Input, side gopongmsg.Config_Paddl
 }
 
 // Marshal creates a state message of this play state to send to clients
-func (s *State) Marshal(msg *gopongmsg.Server_State) error {
+func (s *State) Marshal(msg *gopongmsg.State) error {
 	if msg == nil {
 		return errors.New("Received nil message in play Marshal")
 	}
 
-	msg.Type = gopongmsg.Server_State_STATE_PLAY
-	msg.State = &gopongmsg.Server_State_Play_{
-		Play: &gopongmsg.Server_State_Play{
-			PaddleLeft: &gopongmsg.Server_State_Play_Paddle{
+	msg.Type = gopongmsg.State_STATE_PLAY
+	msg.Current = &gopongmsg.State_Play_{
+		Play: &gopongmsg.State_Play{
+			PaddleLeft: &gopongmsg.State_Play_Paddle{
 				Center: float32(s.PaddleLeft.Center),
 			},
-			PaddleRight: &gopongmsg.Server_State_Play_Paddle{
+			PaddleRight: &gopongmsg.State_Play_Paddle{
 				Center: float32(s.PaddleRight.Center),
 			},
-			Ball: &gopongmsg.Server_State_Play_Ball{
+			Ball: &gopongmsg.State_Play_Ball{
 				CenterX: float32(s.Ball.PosX),
 				CenterY: float32(s.Ball.PosY),
 			},

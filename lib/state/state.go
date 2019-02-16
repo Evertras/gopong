@@ -13,7 +13,7 @@ type State interface {
 	Step(delta time.Duration) State
 
 	// Marshal must fill in msg with the appropriate state information.
-	Marshal(msg *gopongmsg.Server_State) error
+	Marshal(msg *gopongmsg.State) error
 
 	// ApplyInput applies the given input on the given side.  Note that we use the side
 	// explicitly separate here to enforce that we can't trust any message from the client.

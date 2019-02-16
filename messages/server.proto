@@ -1,45 +1,11 @@
 syntax = "proto3";
 
 import "config.proto";
+import "state.proto";
 
 package gopongmsg;
 
 message Server {
-    message State {
-        enum Type {
-            STATE_NULL = 0;
-            STATE_PLAY = 1;
-            STATE_START = 2;
-        }
-
-        message Play {
-            message Paddle {
-                float center = 1;
-            }
-
-            message Ball {
-                float center_x = 1;
-                float center_y = 2;
-            }
-
-            Paddle paddle_left = 1;
-            Paddle paddle_right = 2;
-            Ball ball = 3;
-        }
-
-        message Start {
-            float seconds_remaining = 1;
-        }
-
-        Type type = 1;
-        uint32 last_input_index = 2;
-
-        oneof state {
-            Play play = 3;
-            Start start = 4;
-        }
-    }
-
     oneof msg {
         Config config = 1;
         State state = 2;

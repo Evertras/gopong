@@ -37,14 +37,14 @@ func (s *State) Step(delta time.Duration) state.State {
 }
 
 // Marshal will tell the client how much time is remaining
-func (s *State) Marshal(msg *gopongmsg.Server_State) error {
+func (s *State) Marshal(msg *gopongmsg.State) error {
 	if msg == nil {
 		return errors.New("Received nil message in starting state Marshal")
 	}
-	msg.Type = gopongmsg.Server_State_STATE_START
+	msg.Type = gopongmsg.State_STATE_START
 
-	msg.State = &gopongmsg.Server_State_Start_{
-		Start: &gopongmsg.Server_State_Start{
+	msg.Current = &gopongmsg.State_Start_{
+		Start: &gopongmsg.State_Start{
 			SecondsRemaining: float32(s.Remaining.Seconds()),
 		},
 	}

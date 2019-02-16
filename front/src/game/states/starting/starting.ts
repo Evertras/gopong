@@ -18,7 +18,7 @@ export class StateStarting implements IState {
         }
     }
 
-    public applyServerUpdate(msg: gopongmsg.Server.IState): void {
+    public applyServerUpdate(msg: gopongmsg.IState): void {
         const start = msg.start;
 
         if (!start) {

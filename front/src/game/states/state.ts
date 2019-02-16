@@ -16,7 +16,7 @@ export interface IState {
      *
      * @param msg The state message received by the server.
      */
-    applyServerUpdate(msg: gopongmsg.Server.IState): void;
+    applyServerUpdate(msg: gopongmsg.IState): void;
 
     /**
      * Apply input to the state.  Used for client side prediction and server reconciliation.

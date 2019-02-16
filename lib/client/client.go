@@ -127,10 +127,10 @@ func (c *Client) Write(msg gopongmsg.Server) error {
 
 // WriteState writes a state message to the client.  Note that the last input index
 // is filled in automatically by WriteState.
-func (c *Client) WriteState(m gopongmsg.Server_State) error {
+func (c *Client) WriteState(m gopongmsg.State) error {
 	m.LastInputIndex = c.GetLastInputIndex()
 	msg := gopongmsg.Server{
-		Msg: &gopongmsg.Server_State_{
+		Msg: &gopongmsg.Server_State{
 			State: &m,
 		},
 	}

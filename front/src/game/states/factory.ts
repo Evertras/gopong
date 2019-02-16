@@ -5,7 +5,7 @@ import { StateStarting } from './starting/starting';
 import { IState } from './state';
 
 export interface IStateFactory {
-    create(state: gopongmsg.Server.State.Type): IState;
+    create(state: gopongmsg.State.Type): IState;
 }
 
 export class StateFactory implements IStateFactory {
@@ -15,12 +15,12 @@ export class StateFactory implements IStateFactory {
         this.storeConfig = storeConfig;
     }
 
-    public create(state: gopongmsg.Server.State.Type): IState {
+    public create(state: gopongmsg.State.Type): IState {
         switch (state) {
-            case gopongmsg.Server.State.Type.STATE_PLAY:
+            case gopongmsg.State.Type.STATE_PLAY:
                 return new StatePlay(this.storeConfig);
 
-            case gopongmsg.Server.State.Type.STATE_START:
+            case gopongmsg.State.Type.STATE_START:
                 return new StateStarting();
         }
 
