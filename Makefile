@@ -1,6 +1,6 @@
 BINARY_NAME=gopong
 
-all: generate test build
+all: test build
 
 clean:
 	rm -f gopong
@@ -11,7 +11,7 @@ clean:
 	rm -rf messages/gomessage
 	rm -rf messages/tsmessage
 
-test: node_modules lib/static/build.go
+test: node_modules messages/gomessage lib/static/build.go
 	npx tslint -p .
 	npm test
 	go test -v ./lib/...
