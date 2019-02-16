@@ -34,7 +34,7 @@ docker: clean generate
 protos: messages/gomessage messages/tsmessage
 
 # These are not files, so always run them when asked to
-.PHONY: all clean test build bench run-dev generate proto
+.PHONY: all clean test build bench run-dev proto
 
 # Actual files/directories that must be generated
 front/game.js: node_modules messages/tsmessage
