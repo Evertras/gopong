@@ -42,7 +42,7 @@ export class SquareRenderTarget implements IRenderTarget {
      * @param width The width of the rectangle within [0,1]
      * @param height The height of the rectangle within [0,1]
      */
-    public rect(x: number, y: number, width: number, height: number) {
+    public rect(_: number, x: number, y: number, width: number, height: number) {
         this.ctx.rect(x * this.pixelScale, y * this.pixelScale, width * this.pixelScale, height * this.pixelScale);
         this.ctx.fill();
     }
@@ -54,7 +54,7 @@ export class SquareRenderTarget implements IRenderTarget {
      * @param y The y coordinate of the center within [0,1]
      * @param r The radius of the circle within [0,1]
      */
-    public circle(x: number, y: number, r: number) {
+    public circle(_: number, x: number, y: number, r: number) {
         this.ctx.arc(x * this.pixelScale, y * this.pixelScale, r * this.pixelScale, 0, Math.PI * 2);
         this.ctx.fill();
     }
@@ -66,7 +66,7 @@ export class SquareRenderTarget implements IRenderTarget {
      * @param x The x coordinate of the bottom left corner within [0,1]
      * @param y The y coordinate of the bottom left corner within [0,1]
      */
-    public text(s: string, x: number, y: number) {
+    public text(_: number, s: string, x: number, y: number) {
         this.ctx.fillText(s, x * this.pixelScale, y * this.pixelScale);
     }
 }

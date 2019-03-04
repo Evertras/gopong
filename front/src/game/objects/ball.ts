@@ -13,6 +13,6 @@ export class Ball implements IDrawable {
     }
 
     public draw(renderTarget: IRenderTarget) {
-        renderTarget.circle(this.x, this.y, this.radius);
+        renderTarget.circle(this.entityID.ID, this.x, this.y, this.radius);
     }
 }

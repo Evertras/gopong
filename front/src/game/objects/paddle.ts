@@ -46,6 +46,6 @@ export class Paddle implements IDrawable {
         const x = this.side === gopongmsg.Config.PaddleSide.SIDE_LEFT ? 0 : 1 - this.width;
         const y = this.center - this.height * 0.5;
 
-        renderTarget.rect(x, y, this.width, this.height);
+        renderTarget.rect(this.entityID.ID, x, y, this.width, this.height);
     }
 }

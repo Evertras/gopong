@@ -10,26 +10,29 @@ export interface IRenderTarget {
 
     /**
      * Draws a rect in [0,1] space.
+     * @param id The Entity ID for the rectangle
      * @param x The top left of the rectangle within [0,1]
      * @param y The top left of the rectangle within [0,1]
      * @param width The width of the rectangle within [0,1]
      * @param height The height of the rectangle within [0,1]
      */
-    rect(x: number, y: number, width: number, height: number): void;
+    rect(id: number, x: number, y: number, width: number, height: number): void;
 
     /**
      * Draws a circle in [0,1] space.
+     * @param id The Entity ID for the circle
      * @param x The x coordinate of the center within [0,1]
      * @param y The y coordinate of the center within [0,1]
      * @param r The radius of the circle within [0,1]
      */
-    circle(x: number, y: number, r: number): void;
+    circle(id: number, x: number, y: number, r: number): void;
 
     /**
-     *
+     * Draws text on the screen
+     * @param id The Entity ID for the text
      * @param s The text string to draw.
      * @param x The x coordinate of the bottom left corner within [0,1]
      * @param y The y coordinate of the bottom left corner within [0,1]
      */
-    text(s: string, x: number, y: number): void;
+    text(id: number, s: string, x: number, y: number): void;
 }
