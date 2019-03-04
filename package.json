@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "main": "index.js",
   "devDependencies": {
+    "@babylonjs/core": "^4.0.0-alpha.18",
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.5",
     "@types/sinon": "^7.0.5",
