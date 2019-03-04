@@ -1,6 +1,7 @@
 import { gopongmsg } from '../../../../messages/tsmessage/messages';
 import { IRenderTarget } from '../../graphics/renderTarget';
 import { IDrawable } from '../drawable';
+import { EntityID } from './entityID';
 
 export class Paddle implements IDrawable {
     public center: number = 0.5;
@@ -9,6 +10,7 @@ export class Paddle implements IDrawable {
     public maxSpeedPerSecond: number;
     public isPlayer: boolean;
     public side: gopongmsg.Config.PaddleSide;
+    public entityID: EntityID = new EntityID();
 
     constructor(
         height: number,
