@@ -77,16 +77,13 @@ function start(renderType: RenderType) {
 }
 
 window.addEventListener('load', () => {
-    // The gowasm module is created by the WASM instance, so we're going to save ourselves
-    // a Typescript headache and use this little workaround here.
-    const g: any = global;
     const waitForWasm = () => {
-        if (!g.gowasm || !gowasm.ready) {
+        if (!global.gowasm || !gowasm.ready) {
             setTimeout(waitForWasm, 100);
             return;
         }
 
-        start(RenderType.Simple2D);
+        start(RenderType.Babylon3D);
     };
 
     setTimeout(waitForWasm, 0);

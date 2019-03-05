@@ -1,23 +1,34 @@
-import { ArcRotateCamera, Color4, Engine, HemisphericLight, Mesh, MeshBuilder, Scene, Vector3 } from '@babylonjs/core';
+import {
+    ArcRotateCamera,
+    Color4,
+    Engine,
+    HemisphericLight,
+    Mesh,
+    MeshBuilder,
+    Nullable,
+    Scene,
+    Vector3,
+} from '@babylonjs/core';
+
 import { IRenderTarget } from './renderTarget';
 
 export class BabylonRenderTarget implements IRenderTarget {
     private canvas: HTMLCanvasElement;
     private engine: Engine;
-    private scene: Scene;
+    private scene: Nullable<Scene> = null;
 
     private meshes: Map<number, Mesh> = new Map<number, Mesh>();
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         this.engine = new Engine(canvas, true);
-        this.scene = new Scene(this.engine);
 
-        // Needed?
         this.beginScene();
 
         this.engine.runRenderLoop(() => {
-            this.scene.render();
+            if (this.scene) {
+                this.scene.render();
+            }
         });
     }
 
@@ -32,6 +43,10 @@ export class BabylonRenderTarget implements IRenderTarget {
     }
 
     public beginScene(): void {
+        if (this.scene) {
+            this.scene.dispose();
+        }
+
         this.scene = new Scene(this.engine);
         this.meshes = new Map<number, Mesh>();
 
@@ -46,8 +61,6 @@ export class BabylonRenderTarget implements IRenderTarget {
             new Vector3(0.5, 0.5, 0),
             this.scene);
 
-        // camera.attachControl(this.canvas);
-
         this.scene.activeCamera = camera;
 
         // tslint:disable-next-line: no-unused-expression
@@ -55,19 +68,19 @@ export class BabylonRenderTarget implements IRenderTarget {
     }
 
     public rect(id: number, x: number, y: number, width: number, height: number): void {
-        // We want the center, but we're given the top left, so adjust accordingly
-        x += width / 2;
-        y += height / 2;
-
         if (!this.meshes.has(id)) {
             const createdMesh = MeshBuilder.CreateBox(id.toString(), {
                 width,
                 height,
-                depth: 0.001,
+                depth: 0.1,
             }, this.scene);
 
             this.meshes.set(id, createdMesh);
         }
+
+        // We want the center, but we're given the top left, so adjust accordingly
+        x += width / 2;
+        y += height / 2;
 
         const mesh: Mesh = this.meshes.get(id) as Mesh;
 
