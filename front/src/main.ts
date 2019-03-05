@@ -73,7 +73,6 @@ function start(renderType: RenderType) {
     connection.start();
 
     game.start();
-
 }
 
 window.addEventListener('load', () => {
@@ -83,7 +82,14 @@ window.addEventListener('load', () => {
             return;
         }
 
-        start(RenderType.Babylon3D);
+        let renderType = RenderType.Simple2D;
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('mode') === 'babylon') {
+            renderType = RenderType.Babylon3D;
+        }
+
+        start(renderType);
     };
 
     setTimeout(waitForWasm, 0);

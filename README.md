@@ -84,6 +84,9 @@ make
 ./gopong
 ```
 
+The server is now running [on localhost:8000](http://localhost:8000).  If you want to use the BabylonJS
+3D renderer, you can supply [the mode=babylon query parameter](http://localhost:8000?mode=babylon).
+
 ### Flags
 
 The following flags can be provided at runtime:
