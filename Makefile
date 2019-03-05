@@ -47,12 +47,14 @@ node_modules:
 	npm install
 
 messages/gomessage:
+	rm -rf messages/gomessage
 	mkdir messages/gomessage
 	@# Slightly weird PWD syntax here to deal with Windows gitbash mangling it otherwise.
 	@# This is intentional, don't remove the initial slash!
 	docker run -v /${PWD}/messages:/defs namely/protoc-all -f *.proto -l go -o gomessage || (rm -rf messages/gomessage && exit 1)
 
 messages/tsmessage: node_modules
+	rm -rf messages/tsmessage
 	mkdir messages/tsmessage
 	npx pbjs -t static-module -w commonjs messages/*.proto > messages/tsmessage/messages.js || (rm -rf messages/tsmessage && exit 1)
 	npx pbts -o messages/tsmessage/messages.d.ts messages/tsmessage/messages.js || (rm -rf messages/tsmessage && exit 1)

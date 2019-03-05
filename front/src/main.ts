@@ -1,13 +1,19 @@
 import { Game } from './game/game';
 import { StateFactory } from './game/states/factory';
+import { BabylonRenderTarget } from './graphics/babylonRenderTarget';
+import { IRenderTarget } from './graphics/renderTarget';
 import { SquareRenderTarget } from './graphics/squareRenderTarget';
 import { Input } from './input/input';
 import { LaggingConnection } from './network/laggingConnection';
 import { StoreConfig } from './store/config';
 import { StoreInput } from './store/input';
 
+function getCanvas(): HTMLCanvasElement {
+    return document.getElementById('playArea') as HTMLCanvasElement;
+}
+
 function getContext(): CanvasRenderingContext2D {
-    const canvas = document.getElementById('playArea') as HTMLCanvasElement;
+    const canvas = getCanvas();
 
     if (canvas === undefined) {
         throw new Error('Could not find canvas');
@@ -22,13 +28,28 @@ function getContext(): CanvasRenderingContext2D {
     return ctxOrNull as CanvasRenderingContext2D;
 }
 
-function start() {
-    const target: SquareRenderTarget = new SquareRenderTarget(getContext());
+export enum RenderType {
+    Simple2D,
+    Babylon3D,
+}
 
-    target.updateSize(window.innerWidth, window.innerHeight);
+function start(renderType: RenderType) {
+    let target: IRenderTarget;
+
+    switch (renderType) {
+        case RenderType.Babylon3D:
+            target = new BabylonRenderTarget(getCanvas());
+            break;
+
+        case RenderType.Simple2D:
+        default:
+            target = new SquareRenderTarget(getContext());
+    }
+
+    target.resize(window.innerWidth, window.innerHeight);
 
     window.addEventListener('resize', () => {
-        target.updateSize(window.innerWidth, window.innerHeight);
+        target.resize(window.innerWidth, window.innerHeight);
     });
 
     // Dependencies
@@ -65,7 +86,7 @@ window.addEventListener('load', () => {
             return;
         }
 
-        start();
+        start(RenderType.Simple2D);
     };
 
     setTimeout(waitForWasm, 0);

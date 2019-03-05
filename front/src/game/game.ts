@@ -88,6 +88,7 @@ export class Game {
             if (msg.state.type && this.currentStateType !== msg.state.type) {
                 this.currentStateType = msg.state.type;
                 this.currentState = this.stateFactory.create(msg.state.type);
+                this.renderTarget.beginScene();
             }
 
             // If we don't have any state, nothing more to do
@@ -185,7 +186,7 @@ export class Game {
     }
 
     private draw() {
-        this.renderTarget.begin();
+        this.renderTarget.beginFrame();
 
         if (this.currentState) {
             this.currentState.draw(this.renderTarget);

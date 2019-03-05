@@ -67,7 +67,7 @@ describe('game', () => {
 
             clock.tick(testTicks);
 
-            expect(mockRenderTarget.begin).to.have.callCount(testTicks);
+            expect(mockRenderTarget.beginFrame).to.have.callCount(testTicks);
         });
     });
 

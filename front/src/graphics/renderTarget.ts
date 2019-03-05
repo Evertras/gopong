@@ -4,9 +4,24 @@
  */
 export interface IRenderTarget {
     /**
+     * Updates the size, keeping the dimensions square such that the entire target
+     * will fit within the smaller of the two dimensions.
+     *
+     * @param width The width in pixels
+     * @param height The height in pixels
+     */
+    resize(width: number, height: number): void;
+
+    /**
      * Begins a new frame by clearing the draw area and starting a new path.
      */
-    begin(): void;
+    beginFrame(): void;
+
+    /**
+     * Begins a new scene, giving the render target a chance to initialize its
+     * world/cache if it has one.
+     */
+    beginScene(): void;
 
     /**
      * Draws a rect in [0,1] space.

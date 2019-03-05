@@ -9,7 +9,7 @@ export class SquareRenderTarget implements IRenderTarget {
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
-        this.updateSize(this.ctx.canvas.width, this.ctx.canvas.height);
+        this.resize(this.ctx.canvas.width, this.ctx.canvas.height);
     }
 
     /**
@@ -19,7 +19,7 @@ export class SquareRenderTarget implements IRenderTarget {
      * @param width The width in pixels
      * @param height The height in pixels
      */
-    public updateSize(width: number, height: number) {
+    public resize(width: number, height: number) {
         this.pixelScale = Math.min(width, height);
         this.ctx.canvas.width = this.pixelScale;
         this.ctx.canvas.height = this.pixelScale;
@@ -29,9 +29,16 @@ export class SquareRenderTarget implements IRenderTarget {
     /**
      * Begins a new frame by clearing the draw area and starting a new path.
      */
-    public begin() {
+    public beginFrame() {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         this.ctx.beginPath();
+    }
+
+    /**
+     * Begins a new scene, which means nothing for this renderer.
+     */
+    public beginScene() {
+        // No-op
     }
 
     /**

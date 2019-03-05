@@ -47,12 +47,17 @@ func getConfig() config {
 	statsd := pflag.StringP("statsd", "", "", "The address to send statsd metrics to.  Example: localhost:8125")
 	prometheus := pflag.StringP("prometheus", "", "", "The address to listen on for Prometheus scrapes.  Example: :9090")
 
+	paddleSpeed := pflag.Float64P("paddle-speed", "p", 0.05, "How fast the paddles can move")
+	ballRadius := pflag.Float64P("ball-radius", "b", 0.01, "The radius of the ball")
+
 	pflag.Parse()
 
 	// Use mostly defaults
 	gameCfg := store.New()
 
 	gameCfg.StepInterval = time.Second / time.Duration(*tickRate)
+	gameCfg.MaxPaddleSpeedPerSecond = *paddleSpeed
+	gameCfg.BallRadius = *ballRadius
 
 	cfg := server.Config{
 		GameCfg:                   gameCfg,
