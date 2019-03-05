@@ -1,10 +1,17 @@
 import { gopongmsg } from '../../../../../messages/tsmessage/messages';
 import { IRenderTarget } from '../../../graphics/renderTarget';
 import { InputStep } from '../../../store/input';
+import { UIText } from '../../objects/uiText';
 import { IState } from '../state';
 
 export class StateStarting implements IState {
     private remainingSeconds: number | null = null;
+    private text: UIText = new UIText();
+
+    constructor() {
+        this.text.x = 0.1;
+        this.text.y = 0.9;
+    }
 
     public step(durationMilliseconds: number) {
         if (!this.remainingSeconds) {
@@ -36,7 +43,8 @@ export class StateStarting implements IState {
 
     public draw(renderTarget: IRenderTarget): void {
         if (this.remainingSeconds !== null) {
-            renderTarget.text(this.remainingSeconds.toFixed(1), 0.1, 0.9);
+            this.text.text = this.remainingSeconds.toFixed(1);
+            this.text.draw(renderTarget);
         }
     }
 }

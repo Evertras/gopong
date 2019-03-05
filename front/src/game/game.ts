@@ -3,6 +3,7 @@ import { IRenderTarget } from '../graphics/renderTarget';
 import { IConnection } from '../network/connection';
 import { StoreConfig } from '../store/config';
 import { StoreInput } from '../store/input';
+import { UIText } from './objects/uiText';
 import { IStateFactory } from './states/factory';
 import { IState } from './states/state';
 
@@ -29,6 +30,21 @@ export class Game {
     // What we draw to
     private renderTarget: IRenderTarget;
 
+    // Some debug text to display
+    private debugTextClientSidePrediction: UIText = new UIText();
+    private debugTextServerReconciliation: UIText = new UIText();
+    private debugTextUnprocessedInputs: UIText = new UIText();
+    private debugTextLatency: UIText = new UIText();
+    private debugTextState: UIText = new UIText();
+
+    private debugText: UIText[] = [
+        this.debugTextClientSidePrediction,
+        this.debugTextServerReconciliation,
+        this.debugTextUnprocessedInputs,
+        this.debugTextLatency,
+        this.debugTextState,
+    ];
+
     // Connection to the server
     private connection: IConnection;
 
@@ -44,6 +60,15 @@ export class Game {
         this.renderTarget = renderTarget;
         this.stateFactory = stateFactory;
         this.connection = connection;
+
+        {
+            const step = 0.05;
+
+            this.debugText.forEach((element, i) => {
+                element.x = 0.3;
+                element.y = 0.1 + step * i;
+            });
+        }
 
         this.connection.onData = (msg: gopongmsg.IServer) => {
             // Is this a config message?
@@ -63,6 +88,7 @@ export class Game {
             if (msg.state.type && this.currentStateType !== msg.state.type) {
                 this.currentStateType = msg.state.type;
                 this.currentState = this.stateFactory.create(msg.state.type);
+                this.renderTarget.beginScene();
             }
 
             // If we don't have any state, nothing more to do
@@ -160,27 +186,29 @@ export class Game {
     }
 
     private draw() {
-        this.renderTarget.begin();
+        this.renderTarget.beginFrame();
 
         if (this.currentState) {
             this.currentState.draw(this.renderTarget);
         }
 
         // Some info/debug text regardless of whether we have a state or not yet
-        const left = 0.3;
-        const top = 0.05;
-        const step = 0.05;
+        this.debugTextClientSidePrediction.text =
+            'Client Side Prediction (P): ' + (this.storeConfig.clientSidePredictionEnabled ? 'ON' : 'off');
+        this.debugTextServerReconciliation.text =
+            'Server Reconciliation (R): ' + (this.storeConfig.serverReconciliationEnabled ? 'ON' : 'off');
 
-        const text = [
-            'Client Side Prediction (P): ' + (this.storeConfig.clientSidePredictionEnabled ? 'ON' : 'off'),
-            'Server Reconciliation (R): ' + (this.storeConfig.serverReconciliationEnabled ? 'ON' : 'off'),
-            'Unprocessed inputs: ' + this.storeInput.inputBufferLength(),
-            'Latency: ' + this.connection.currentLatencyMs() + 'ms',
-            'State: ' + this.currentStateType,
-        ];
+        this.debugTextUnprocessedInputs.text =
+            'Unprocessed inputs: ' + this.storeInput.inputBufferLength();
 
-        for (let i = 0; i < text.length; ++i) {
-            this.renderTarget.text(text[i], left, top + step * i);
-        }
+        this.debugTextLatency.text =
+            'Latency: ' + this.connection.currentLatencyMs() + 'ms';
+
+        this.debugTextState.text =
+            'State: ' + this.currentStateType;
+
+        this.debugText.forEach((element) => {
+            element.draw(this.renderTarget);
+        });
     }
 }

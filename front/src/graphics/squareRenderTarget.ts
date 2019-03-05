@@ -9,7 +9,7 @@ export class SquareRenderTarget implements IRenderTarget {
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
-        this.updateSize(this.ctx.canvas.width, this.ctx.canvas.height);
+        this.resize(this.ctx.canvas.width, this.ctx.canvas.height);
     }
 
     /**
@@ -19,7 +19,7 @@ export class SquareRenderTarget implements IRenderTarget {
      * @param width The width in pixels
      * @param height The height in pixels
      */
-    public updateSize(width: number, height: number) {
+    public resize(width: number, height: number) {
         this.pixelScale = Math.min(width, height);
         this.ctx.canvas.width = this.pixelScale;
         this.ctx.canvas.height = this.pixelScale;
@@ -29,9 +29,16 @@ export class SquareRenderTarget implements IRenderTarget {
     /**
      * Begins a new frame by clearing the draw area and starting a new path.
      */
-    public begin() {
+    public beginFrame() {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         this.ctx.beginPath();
+    }
+
+    /**
+     * Begins a new scene, which means nothing for this renderer.
+     */
+    public beginScene() {
+        // No-op
     }
 
     /**
@@ -42,7 +49,7 @@ export class SquareRenderTarget implements IRenderTarget {
      * @param width The width of the rectangle within [0,1]
      * @param height The height of the rectangle within [0,1]
      */
-    public rect(x: number, y: number, width: number, height: number) {
+    public rect(_: number, x: number, y: number, width: number, height: number) {
         this.ctx.rect(x * this.pixelScale, y * this.pixelScale, width * this.pixelScale, height * this.pixelScale);
         this.ctx.fill();
     }
@@ -54,7 +61,7 @@ export class SquareRenderTarget implements IRenderTarget {
      * @param y The y coordinate of the center within [0,1]
      * @param r The radius of the circle within [0,1]
      */
-    public circle(x: number, y: number, r: number) {
+    public circle(_: number, x: number, y: number, r: number) {
         this.ctx.arc(x * this.pixelScale, y * this.pixelScale, r * this.pixelScale, 0, Math.PI * 2);
         this.ctx.fill();
     }
@@ -66,7 +73,7 @@ export class SquareRenderTarget implements IRenderTarget {
      * @param x The x coordinate of the bottom left corner within [0,1]
      * @param y The y coordinate of the bottom left corner within [0,1]
      */
-    public text(s: string, x: number, y: number) {
+    public text(_: number, s: string, x: number, y: number) {
         this.ctx.fillText(s, x * this.pixelScale, y * this.pixelScale);
     }
 }

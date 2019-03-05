@@ -84,6 +84,9 @@ make
 ./gopong
 ```
 
+The server is now running [on localhost:8000](http://localhost:8000).  If you want to use the BabylonJS
+3D renderer, you can supply [the mode=babylon query parameter](http://localhost:8000?mode=babylon).
+
 ### Flags
 
 The following flags can be provided at runtime:
@@ -94,6 +97,8 @@ The following flags can be provided at runtime:
 | `--tick <rate-per-second>` | `-t <rate-per-second>` | How many ticks per second to run at for server side updates.  For example: `-t 10` will run at 10 Hz |
 | `--statsd` | (none) | Send statsd metrics to the given endpoint.  For example: "--statsd localhost:8125" |
 | `--prometheus` | (none) | Listen for Prometheus scrapes on the given address.  For example: "--prometheus :9090" |
+| `--paddle-speed` | `-p` | How fast the paddles can move at max speed, in units/second |
+| `--ball-radius` | `-b` | How large the ball's radius is, in units |
 
 ```bash
 # Run in development mode at 20 Hz

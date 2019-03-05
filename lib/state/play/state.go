@@ -35,8 +35,8 @@ func New(cfg store.Config) *State {
 		Ball: Ball{
 			PosX:   0.5,
 			PosY:   0.5,
-			VelX:   0.05,
-			VelY:   0.1,
+			VelX:   0.15,
+			VelY:   0.03,
 			Radius: cfg.BallRadius,
 		},
 	}
